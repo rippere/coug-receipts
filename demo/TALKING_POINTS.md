@@ -12,17 +12,17 @@ Wording corrections are listed at the bottom.
 ## 1 · Problem (0:00–0:40) · Evan
 **Ask the room where this team stands. Twelve files that disagree can't tell you; Receipts can, in one run.**
 - Team 4, UNIV 497, Week 9. Milestone 3 (the prototype and sponsor demo) is due Fri Oct 30, nine days out.
-- The kit has 12 files: 8 sets of meeting notes from 5 authors, a stale task list, the course brief, and an availability sheet.
+- The kit has 12 files: 8 sets of meeting notes from 5 authors, a stale task list, the course brief, an availability sheet, and a readme.
 - The notes disagree with each other, and the task list only gets updated when someone remembers.
 
 ## 2 · Week 9, live (0:40–2:20) · [driver]
 **We point it at the team's folder and get three things to do this week, each with a person, a date, a reason, and a receipt.**
 - Setup takes four steps: Project, Week, Files, Ground rules. The build counts up to 12 docs, 196 claims, and 29 findings.
 - **Card 1:** *Schedule the demo with Dana. Tyler, by tomorrow, Thu Oct 22.* The brief requires 7 days' notice, and the demo has to happen by Oct 29. The latest notes say it isn't done.
-- Click the receipt. It shows the exact quote, the file, and the line. Code did the date math; the AI only reads the notes.
+- Click the receipt. It shows the exact quote, the file, and the line. Code did the date math. The AI only pulled quoted claims out of the files.
 - The confidence reads High and says why: a course rule from the brief, plus notes saying it's still open.
 - **Card 2:** *Finish the accessibility check before Kwame is away (Tue Oct 27).* The board shows "away Oct 28 – Nov 1" and never says why.
-- **Card 3:** *Pick an owner for the privacy plan.* It carries the "Talk as a team" chip, because it's a team decision.
+- **Card 3:** *Pick an owner for the privacy plan.* It carries the "Talk as a team" chip, because nobody owns it yet.
 - Scroll down to where the documents disagree: Priya's notes say Kwame owns the accessibility check, while the task list says "Mei?". The board says "Ask the team" and shows both sides.
 - Then the item missing from the task list: the brief requires a contribution log with the milestone.
 - If there's time, click Check-in coach in the sidebar. It drafts the agenda for the next team meeting and labels it "A guide, not a verdict."
@@ -35,7 +35,7 @@ Wording corrections are listed at the bottom.
   - The accessibility check is still open. Five screens haven't been reviewed, and Kwame leaves today.
   - The privacy plan is in progress.
 - New top 3, with two days left:
-  - Confirm who runs Thursday's demo. It's at 4:30 pm, and Jordan is busy from 3 pm. The code caught that time clash.
+  - Confirm who runs Thursday's demo. It's at 4:30 pm, and Jordan is busy from 3 pm. The code caught that time clash. Open its receipt: the availability quote is withheld, and only the busy time shows.
   - Find a new owner for the WCAG review, because Kwame is away.
   - Set a date for the hours-tracking screens.
 - The missing list now says the contribution log costs 5 points if it's left out.
@@ -43,9 +43,9 @@ Wording corrections are listed at the bottom.
 ## 4 · Responsible AI (3:20–4:15) · [Ben]
 **A tool that names people can hurt people, so we wrote the rules before the code.**
 - It shows constraints and never the reason behind them: "away Oct 28 – Nov 1", never why.
-- It never ranks or scores anyone. The workload view says *"Counts aren't contribution."* It doesn't touch peer evaluations.
+- It never ranks or scores anyone. The workload view says *"Counts aren't contribution."* It never reads or writes peer evaluations; it only reminds the team when they're due.
 - Every line has a receipt, and every quote is checked word for word against the source file. A quote that doesn't match doesn't ship.
-- Dates and counts come from code. The AI only turns notes into claims, and a person can edit those claims before they reach the board.
+- Dates and counts come from code. The AI only turns files into quoted claims. Those claims sit in a plain file that a person can edit before rerunning the board.
 - It runs on our own GPU, a DGX Spark, so team notes never go to a cloud AI.
 - Nothing is hard-coded to Team 4. The roster, the rules, and today's date all come from the folder.
 
@@ -53,7 +53,7 @@ Wording corrections are listed at the bottom.
 **Four things it can't do.**
 - It only knows what's written down. Group chat, email, and Figma are invisible to it.
 - Reading messy notes is imperfect, so the claims are editable and confidence is always shown.
-- Matching "WCAG review" with "accessibility check" is a judgment call, so that card is marked Medium.
+- Matching "WCAG review" with "accessibility check" is a judgment call, so that disagreement is marked Medium.
 - It can start a conversation about workload, but it can't read how anyone feels.
 - **Evan closes:** *"Receipts: what will go wrong before the next deadline, who can stop it this week, and how we know. Thank you."*
 
@@ -72,4 +72,4 @@ Wording corrections are listed at the bottom.
 - **"How do you know the dates are right?"** Code computes every date, and we checked the boards against a golden answer file written before the build.
 - **"Privacy?"** Inference runs on our own hardware. Reasons for absences are never shown, only the dates.
 - **"Does it only work for Team 4?"** Point it at any folder named `project@date`. Nothing in the code names Team 4.
-- **"The tracker is right and the notes are wrong?"** The authority order is explicit: brief, then the newest notes, then the task list. The losing side is still shown.
+- **"The tracker is right and the notes are wrong?"** The brief wins on course dates and rules, and the newest dated file wins on status. A DECISION line in the notes beats the task list. The losing side is still shown.
