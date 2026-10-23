@@ -1,7 +1,7 @@
 # Talking points (5 minutes, 2:00 pm)
 
 Condensed from Evan's script in `CONTEXT.md` and checked against the real boards built at 12:55.
-Use the full script for practice. On stage, read only the bold line in each part.
+Practice with the full script. On stage, each part opens with one bold line; say it first, then work through the bullets.
 Wording corrections are listed at the bottom.
 
 **Open on screen:** http://benderman:8790/runs/index.html (Ctrl+Shift+R to refresh). Add `#board` to the URL to skip setup.
@@ -10,35 +10,35 @@ Wording corrections are listed at the bottom.
 ---
 
 ## 1 · Problem (0:00–0:40) · Evan
-**Where does this team stand right now? Nobody knows. That's what Receipts answers.**
+**Ask the room where this team stands. Twelve files that disagree can't tell you; Receipts can, in one run.**
 - Team 4, UNIV 497, Week 9. Milestone 3 (the prototype and sponsor demo) is due Fri Oct 30, nine days out.
 - The kit has 12 files: 8 sets of meeting notes from 5 authors, a stale task list, the course brief, and an availability sheet.
 - The notes disagree with each other, and the task list only gets updated when someone remembers.
 
 ## 2 · Week 9, live (0:40–2:20) · [driver]
-**Point it at the folder. In seconds you get three things to do, each with a person, a date, a reason, and a receipt.**
+**We point it at the team's folder and get three things to do this week, each with a person, a date, a reason, and a receipt.**
 - Setup takes four steps: Project, Week, Files, Ground rules. The build counts up to 12 docs, 196 claims, and 29 findings.
 - **Card 1:** *Schedule the demo with Dana. Tyler, by tomorrow, Thu Oct 22.* The brief requires 7 days' notice, and the demo has to happen by Oct 29. The latest notes say it isn't done.
 - Click the receipt. It shows the exact quote, the file, and the line. Code did the date math; the AI only reads the notes.
-- The confidence shows **High** and says why: a course rule from the brief, plus notes saying it's still open.
+- The confidence reads High and says why: a course rule from the brief, plus notes saying it's still open.
 - **Card 2:** *Finish the accessibility check before Kwame is away (Tue Oct 27).* The board shows "away Oct 28 – Nov 1" and never says why.
-- **Card 3:** *Pick an owner for the privacy plan.* This card carries the **Talk as a team** chip.
-- Scroll down to where the documents disagree: Priya's notes say Kwame owns the accessibility check, while the task list says "Mei?". The board marks it **Ask the team** and shows both sides.
-- Then the item missing from the task list: the brief requires a **contribution log** with the milestone.
-- If there is time, click **Check-in coach** in the sidebar. It drafts the agenda for the next team meeting and labels it "A guide, not a verdict."
+- **Card 3:** *Pick an owner for the privacy plan.* It carries the "Talk as a team" chip, because it's a team decision.
+- Scroll down to where the documents disagree: Priya's notes say Kwame owns the accessibility check, while the task list says "Mei?". The board says "Ask the team" and shows both sides.
+- Then the item missing from the task list: the brief requires a contribution log with the milestone.
+- If there's time, click Check-in coach in the sidebar. It drafts the agenda for the next team meeting and labels it "A guide, not a verdict."
 
 ## 3 · A week later (2:20–3:20) · [Ethan]
-**Run it again a week later, and it checks its own work.**
+**A week later we run it again, and it reports what happened to last week's warnings.**
 - Week 10 has 13 docs and 236 claims. Switch to it with the date dropdown at the top right.
-- Under **Since last run**, three things were flagged last week:
-  - **The demo is done.** Tyler emailed Dana on Fri 10/23, one day late. It only went ahead because Dr. Okafor made an exception ("she said ok this time"). The tool flagged it on Wednesday. We talk about outcomes and never blame anyone.
-  - **The accessibility check is still open.** Five screens haven't been reviewed, and Kwame leaves today.
-  - **The privacy plan is in progress.**
+- Under Since last run, last week's three warnings:
+  - The demo is done. Tyler emailed Dana on Fri 10/23, one day late. It only went ahead because Dr. Okafor made an exception ("she said ok this time"). The tool flagged it on Wednesday. We talk about outcomes and never blame anyone.
+  - The accessibility check is still open. Five screens haven't been reviewed, and Kwame leaves today.
+  - The privacy plan is in progress.
 - New top 3, with two days left:
-  - **Confirm who runs Thursday's demo.** It's at 4:30 pm, and Jordan is busy from 3 pm. The code caught that time clash.
-  - **Find a new owner for the WCAG review**, because Kwame is away.
-  - **Set a date for the hours-tracking screens.**
-- The missing list now says **contribution log: −5 points if missing.**
+  - Confirm who runs Thursday's demo. It's at 4:30 pm, and Jordan is busy from 3 pm. The code caught that time clash.
+  - Find a new owner for the WCAG review, because Kwame is away.
+  - Set a date for the hours-tracking screens.
+- The missing list now says the contribution log costs 5 points if it's left out.
 
 ## 4 · Responsible AI (3:20–4:15) · [Ben]
 **A tool that names people can hurt people, so we wrote the rules before the code.**
@@ -46,11 +46,11 @@ Wording corrections are listed at the bottom.
 - It never ranks or scores anyone. The workload view says *"Counts aren't contribution."* It doesn't touch peer evaluations.
 - Every line has a receipt, and every quote is checked word for word against the source file. A quote that doesn't match doesn't ship.
 - Dates and counts come from code. The AI only turns notes into claims, and a person can edit those claims before they reach the board.
-- **It runs on our own GPU, a DGX Spark, so team notes never go to a cloud AI.**
+- It runs on our own GPU, a DGX Spark, so team notes never go to a cloud AI.
 - Nothing is hard-coded to Team 4. The roster, the rules, and today's date all come from the folder.
 
 ## 5 · Limits + close (4:15–5:00) · [driver], then Evan
-**It's honest about what it can't see.**
+**Four things it can't do.**
 - It only knows what's written down. Group chat, email, and Figma are invisible to it.
 - Reading messy notes is imperfect, so the claims are editable and confidence is always shown.
 - Matching "WCAG review" with "accessibility check" is a judgment call, so that card is marked Medium.
