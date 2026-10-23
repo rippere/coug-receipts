@@ -15,7 +15,7 @@
       "date_label": "Wed Oct 28 \u00b7 today",
       "reason": "Kwame is away Wed Oct 28\u2013Sun Nov 1 and the work is still open.",
       "note": "",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "high",
         "word": "High",
@@ -67,7 +67,7 @@
       "date_label": "this week",
       "reason": "The task list has no date for it.",
       "note": "",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "high",
         "word": "High",
@@ -120,7 +120,7 @@
       "date_label": "Fri Oct 30 \u00b7 in 2 days",
       "reason": "Raised in 2 meetings since Tue Oct 13 without a decision.",
       "note": "",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "med",
         "word": "Medium",
@@ -243,7 +243,7 @@
       "date_label": "this week",
       "reason": "The task list has no date for it.",
       "note": "",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "high",
         "word": "High",

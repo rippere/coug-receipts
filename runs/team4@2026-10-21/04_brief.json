@@ -15,7 +15,7 @@
       "date_label": "Thu Oct 22 \u00b7 tomorrow",
       "reason": "Needs 7 days' notice and must happen by Thu Oct 29; still open.",
       "note": "Kwame away Wed Oct 28\u2013Sun Nov 1; Jordan busy 15:00\u201323:59 that day",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "high",
         "word": "High",
@@ -67,7 +67,7 @@
       "date_label": "Tue Oct 27 \u00b7 in 6 days",
       "reason": "Kwame is away Wed Oct 28\u2013Sun Nov 1; 4 working days left.",
       "note": "",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "high",
         "word": "High",
@@ -119,7 +119,7 @@
       "date_label": "Fri Oct 30 \u00b7 in 9 days",
       "reason": "The task list has no owner for it.",
       "note": "",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "high",
         "word": "High",
@@ -167,7 +167,7 @@
       "date_label": "this week",
       "reason": "The task list has no date for it.",
       "note": "",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "high",
         "word": "High",
@@ -212,7 +212,7 @@
       "date_label": "this week",
       "reason": "The task list has no date for it.",
       "note": "",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "high",
         "word": "High",
@@ -257,7 +257,7 @@
       "date_label": "this week",
       "reason": "The task list has no date for it.",
       "note": "",
-      "stakes": "0.5 pts of course grade at stake",
+      "stakes": "",
       "confidence": {
         "level": "high",
         "word": "High",

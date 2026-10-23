@@ -141,7 +141,8 @@ def make_card(rank, group, claims, docs, today):
     conf = lead["confidence"]
     return {"rank": rank, "action": short(action), "owner": owner, "date": date,
             "date_label": rel_label(date, today) if date else "this week", "reason": reason, "note": note,
-            "stakes": f"{lead['stakes_pct']:g} pts of course grade at stake" if lead.get("stakes_pct") else "",
+            # 0.5 is stage 03's "weight unknown" default, so only show stakes the brief actually states.
+            "stakes": f"{lead['stakes_pct']:g} pts of course grade at stake" if (lead.get("stakes_pct") or 0) > 0.5 else "",
             "confidence": {"level": conf["level"], "word": CONF_WORD.get(conf["level"], conf["level"]),
                            "dots": CONF_DOTS.get(conf["level"], "●○○"), "why": conf.get("why", "")},
             "talk_first": any(f.get("talk_first") for f in group),
