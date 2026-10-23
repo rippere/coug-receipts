@@ -90,6 +90,19 @@ footer{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padd
     
     <article class="card">
       <div class="top"><span class="rank">#1</span><span class="when">Wed Oct 28 · today</span></div>
+      <div class="action">Confirm who runs demo w/ Dana</div>
+      <div class="who">Owner: <b>Whole team</b> <span class="talk">Talk as a team</span></div>
+      <p class="reason">It's Thu Oct 29 at 16:30; Jordan is busy 15:00–23:59 that day.</p>
+      
+      <div class="facts"><span class="conf" title="the booked time falls inside a weekly busy block on record">●●● High</span></div>
+      <div class="stubs">
+  <details><summary>Notes Tue Oct 27 · Jordan · L4</summary><blockquote>“she can do thurs 10/29 at 4:30 at the warehouse”<small>02_Meeting_Notes/wk10 notes - oct 27.txt · L4</small></blockquote></details>
+  <details><summary>Availability · r3</summary><blockquote><em>Quote hidden: it may contain personal details. The constraint is on the card.</em><small>04_team availability.xlsx · r3</small></blockquote></details>
+</div>
+    </article>
+    
+    <article class="card">
+      <div class="top"><span class="rank">#2</span><span class="when">Wed Oct 28 · today</span></div>
       <div class="action">Find a new owner for WCAG review</div>
       <div class="who">Owner: <b>Whole team</b></div>
       <p class="reason">Kwame is away Wed Oct 28–Sun Nov 1 and the work is still open.</p>
@@ -104,7 +117,7 @@ footer{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padd
     </article>
     
     <article class="card">
-      <div class="top"><span class="rank">#2</span><span class="when">this week</span></div>
+      <div class="top"><span class="rank">#3</span><span class="when">this week</span></div>
       <div class="action">Set a date for hours tracking screens</div>
       <div class="who">Owner: <b>Team</b> <span class="talk">Talk as a team</span></div>
       <p class="reason">The task list has no date for it.</p>
@@ -115,19 +128,6 @@ footer{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padd
   <details><summary>Notes Tue Oct 27 · Jordan · L8</summary><blockquote>“mei said she can mock up 1-2 screens for it by thurs”<small>02_Meeting_Notes/wk10 notes - oct 27.txt · L8</small></blockquote></details>
   <details><summary>Task list (Tue Oct 27) · r37</summary><blockquote>“hours tracking screens | Mei | thurs”<small>Team4_tasks (updated oct 27).xlsx · r37</small></blockquote></details>
   <details><summary>Notes Tue Oct 20 · Sofia · p7</summary><blockquote>“Dana mentioned the hours tracking thing to Tyler a couple weeks ago, is that in or out?”<small>02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx · p7</small></blockquote></details>
-</div>
-    </article>
-    
-    <article class="card">
-      <div class="top"><span class="rank">#3</span><span class="when">Fri Oct 30 · in 2 days</span></div>
-      <div class="action">Decide privacy plan</div>
-      <div class="who">Owner: <b>Whole team</b> <span class="talk">Talk as a team</span></div>
-      <p class="reason">Raised in 2 meetings since Tue Oct 13 without a decision.</p>
-      
-      <div class="facts"><span class="conf" title="raised in 2 meetings, never settled">●●○ Medium</span></div>
-      <div class="stubs">
-  <details><summary>Notes Tue Oct 13 · Priya · p16</summary><blockquote>“Data & privacy plan: nobody has it yet. Maybe Tyler since he has been talking to Dana about what info they collect? Need to ask him.”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p16</small></blockquote></details>
-  <details><summary>Notes Tue Oct 20 · Sofia · p6</summary><blockquote>“wasn't sure what it's supposed to include”<small>02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx · p6</small></blockquote></details>
 </div>
     </article>
     
@@ -171,6 +171,10 @@ footer{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padd
     <thead><tr><th>Action</th><th>Owner</th><th>When</th><th>Why</th><th>Confidence</th></tr></thead>
     <tbody>
     
+      <tr><td>Decide privacy plan <span class="talk">Talk</span></td><td>Whole team</td>
+          <td class="mono">Fri Oct 30 · in 2 days</td><td class="muted">Raised in 2 meetings since Tue Oct 13 without a decision.</td>
+          <td class="conf" title="raised in 2 meetings, never settled">●●○ Medium</td></tr>
+    
       <tr><td>Pick an owner for peer evals <span class="talk">Talk</span></td><td>Team</td>
           <td class="mono">Fri Oct 30 · in 2 days</td><td class="muted">The task list has no owner for it.</td>
           <td class="conf" title="the task list has no owner">●●● High</td></tr>
@@ -178,10 +182,6 @@ footer{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padd
       <tr><td>Check in on workload this week <span class="talk">Talk</span></td><td>Whole team</td>
           <td class="mono">this week</td><td class="muted">Sofia holds 4 open items; the team median is 1.5.</td>
           <td class="conf" title="counts from the task list; they miss invisible work">●●○ Medium</td></tr>
-    
-      <tr><td>Set a date for get Dana's current signup spreadsheet</td><td>Team</td>
-          <td class="mono">this week</td><td class="muted">The task list has no date for it.</td>
-          <td class="conf" title="the task list has no date">●●● High</td></tr>
     
     </tbody>
   </table></div>
@@ -278,7 +278,7 @@ footer{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padd
   
   <section class="panel" aria-labelledby="s-q">
     <h2 id="s-q">Questions for the next meeting</h2>
-    <ul><li>Who takes peer evals?</li><li>Sofia has 4 open items. Can anyone take one?</li></ul>
+    <ul><li>Who takes peer evals?</li><li>Sofia has 4 open items. Can anyone take one?</li><li>Privacy plan has come up in 2 meetings. Can we decide it now?</li></ul>
   </section>
   
   

@@ -9,6 +9,44 @@
   "top": [
     {
       "rank": 1,
+      "action": "Confirm who runs demo w/ Dana",
+      "owner": "Whole team",
+      "date": "2026-10-28",
+      "date_label": "Wed Oct 28 \u00b7 today",
+      "reason": "It's Thu Oct 29 at 16:30; Jordan is busy 15:00\u201323:59 that day.",
+      "note": "",
+      "stakes": "",
+      "confidence": {
+        "level": "high",
+        "word": "High",
+        "dots": "\u25cf\u25cf\u25cf",
+        "why": "the booked time falls inside a weekly busy block on record"
+      },
+      "talk_first": true,
+      "detectors": [
+        "D10"
+      ],
+      "item_id": "i08",
+      "item_title": "schedule demo w/ Dana",
+      "receipts": [
+        {
+          "label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L4",
+          "file": "02_Meeting_Notes/wk10 notes - oct 27.txt",
+          "loc": "L4",
+          "quote": "she can do thurs 10/29 at 4:30 at the warehouse",
+          "private": false
+        },
+        {
+          "label": "Availability \u00b7 r3",
+          "file": "04_team availability.xlsx",
+          "loc": "r3",
+          "quote": null,
+          "private": true
+        }
+      ]
+    },
+    {
+      "rank": 2,
       "action": "Find a new owner for WCAG review",
       "owner": "Whole team",
       "date": "2026-10-28",
@@ -60,7 +98,7 @@
       ]
     },
     {
-      "rank": 2,
+      "rank": 3,
       "action": "Set a date for hours tracking screens",
       "owner": "Team",
       "date": null,
@@ -111,9 +149,11 @@
           "private": false
         }
       ]
-    },
+    }
+  ],
+  "also": [
     {
-      "rank": 3,
+      "rank": 4,
       "action": "Decide privacy plan",
       "owner": "Whole team",
       "date": "2026-10-30",
@@ -149,11 +189,9 @@
           "private": false
         }
       ]
-    }
-  ],
-  "also": [
+    },
     {
-      "rank": 4,
+      "rank": 5,
       "action": "Pick an owner for peer evals",
       "owner": "Team",
       "date": "2026-10-30",
@@ -184,7 +222,7 @@
       ]
     },
     {
-      "rank": 5,
+      "rank": 6,
       "action": "Check in on workload this week",
       "owner": "Whole team",
       "date": null,
@@ -231,44 +269,6 @@
           "file": "Team4_tasks (updated oct 27).xlsx",
           "loc": "r32",
           "quote": "traceability matrix | Sofia | 2026-10-23 | in progress",
-          "private": false
-        }
-      ]
-    },
-    {
-      "rank": 6,
-      "action": "Set a date for get Dana's current signup spreadsheet",
-      "owner": "Team",
-      "date": null,
-      "date_label": "this week",
-      "reason": "The task list has no date for it.",
-      "note": "",
-      "stakes": "",
-      "confidence": {
-        "level": "high",
-        "word": "High",
-        "dots": "\u25cf\u25cf\u25cf",
-        "why": "the task list has no date"
-      },
-      "talk_first": false,
-      "detectors": [
-        "D5"
-      ],
-      "item_id": "i35",
-      "item_title": "get Dana's current signup spreadsheet",
-      "receipts": [
-        {
-          "label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p18",
-          "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx",
-          "loc": "p18",
-          "quote": "Tyler: ask if Dana can share their current sign-up spreadsheet (for requirements)",
-          "private": false
-        },
-        {
-          "label": "Task list (Tue Oct 27) \u00b7 r21",
-          "file": "Team4_tasks (updated oct 27).xlsx",
-          "loc": "r21",
-          "quote": "get Dana's current signup spreadsheet | Tyler | ?",
           "private": false
         }
       ]
@@ -626,6 +626,10 @@
     {
       "text": "Sofia has 4 open items. Can anyone take one?",
       "talk_first": true
+    },
+    {
+      "text": "Privacy plan has come up in 2 meetings. Can we decide it now?",
+      "talk_first": true
     }
   ],
   "load": {
@@ -717,6 +721,6 @@
   "counts": {
     "docs": 13,
     "claims": 236,
-    "findings": 38
+    "findings": 39
   }
 }

@@ -1295,6 +1295,35 @@
       "id": "f07"
     },
     {
+      "detector": "D10",
+      "item_id": "i08",
+      "item_title": "schedule demo w/ Dana",
+      "facts": {
+        "event_date": "2026-10-29",
+        "event_time": "16:30",
+        "person": "Jordan Ellis",
+        "busy_from": "15:00",
+        "busy_to": "23:59",
+        "act_by": "2026-10-28"
+      },
+      "people": [
+        "Jordan Ellis"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "high",
+        "why": "the booked time falls inside a weekly busy block on record"
+      },
+      "receipts": [
+        "c159",
+        "c191"
+      ],
+      "days_left": 0,
+      "stakes_pct": 0.5,
+      "score": 0.3333,
+      "id": "f08"
+    },
+    {
       "detector": "D2",
       "item_id": "i10",
       "item_title": "WCAG review",
@@ -1330,7 +1359,7 @@
       "days_left": -1,
       "stakes_pct": 0.5,
       "score": 0.3333,
-      "id": "f08"
+      "id": "f09"
     },
     {
       "detector": "D4",
@@ -1383,7 +1412,7 @@
       "days_left": 2,
       "stakes_pct": 25.0,
       "score": 0.3205,
-      "id": "f09"
+      "id": "f10"
     },
     {
       "detector": "D4",
@@ -1427,7 +1456,7 @@
       "days_left": 2,
       "stakes_pct": 10.0,
       "score": 0.303,
-      "id": "f10"
+      "id": "f11"
     },
     {
       "detector": "D5",
@@ -1452,7 +1481,7 @@
       "days_left": 2,
       "stakes_pct": 10.0,
       "score": 0.303,
-      "id": "f11"
+      "id": "f12"
     },
     {
       "detector": "D9",
@@ -1478,7 +1507,7 @@
       "days_left": 2,
       "stakes_pct": 10.0,
       "score": 0.303,
-      "id": "f12"
+      "id": "f13"
     },
     {
       "detector": "D4",
@@ -1537,7 +1566,7 @@
       "days_left": -1,
       "stakes_pct": 0.5,
       "score": 0.2333,
-      "id": "f13"
+      "id": "f14"
     },
     {
       "detector": "D4",
@@ -1575,7 +1604,7 @@
       "days_left": -39,
       "stakes_pct": 0.5,
       "score": 0.2333,
-      "id": "f14"
+      "id": "f15"
     },
     {
       "detector": "D4",
@@ -1613,7 +1642,7 @@
       "days_left": -39,
       "stakes_pct": 0.5,
       "score": 0.2333,
-      "id": "f15"
+      "id": "f16"
     },
     {
       "detector": "D4",
@@ -1651,7 +1680,7 @@
       "days_left": -39,
       "stakes_pct": 0.5,
       "score": 0.2333,
-      "id": "f16"
+      "id": "f17"
     },
     {
       "detector": "D4",
@@ -1691,7 +1720,7 @@
       "days_left": -47,
       "stakes_pct": 0.5,
       "score": 0.2333,
-      "id": "f17"
+      "id": "f18"
     },
     {
       "detector": "D4",
@@ -1729,7 +1758,7 @@
       "days_left": -39,
       "stakes_pct": 0.5,
       "score": 0.2333,
-      "id": "f18"
+      "id": "f19"
     },
     {
       "detector": "D4",
@@ -1780,7 +1809,7 @@
       "days_left": -39,
       "stakes_pct": 0.5,
       "score": 0.2333,
-      "id": "f19"
+      "id": "f20"
     },
     {
       "detector": "D4",
@@ -1820,7 +1849,7 @@
       "days_left": -23,
       "stakes_pct": 0.5,
       "score": 0.2333,
-      "id": "f20"
+      "id": "f21"
     },
     {
       "detector": "D4",
@@ -1871,7 +1900,7 @@
       "days_left": -21,
       "stakes_pct": 0.5,
       "score": 0.2333,
-      "id": "f21"
+      "id": "f22"
     },
     {
       "detector": "D3",
@@ -1895,7 +1924,7 @@
       "days_left": 1,
       "stakes_pct": 0.5,
       "score": 0.1667,
-      "id": "f22"
+      "id": "f23"
     },
     {
       "detector": "D3",
@@ -1919,7 +1948,7 @@
       "days_left": 2,
       "stakes_pct": 1.0,
       "score": 0.1667,
-      "id": "f23"
+      "id": "f24"
     },
     {
       "detector": "D3",
@@ -1943,7 +1972,7 @@
       "days_left": 2,
       "stakes_pct": 1.0,
       "score": 0.1667,
-      "id": "f24"
+      "id": "f25"
     },
     {
       "detector": "D4",
@@ -1989,7 +2018,7 @@
       "days_left": 1,
       "stakes_pct": 0.5,
       "score": 0.1667,
-      "id": "f25"
+      "id": "f26"
     },
     {
       "detector": "D4",
@@ -2082,7 +2111,7 @@
       "days_left": 1,
       "stakes_pct": 0.5,
       "score": 0.1167,
-      "id": "f26"
+      "id": "f27"
     },
     {
       "detector": "D8",
@@ -2119,7 +2148,7 @@
       "days_left": 2,
       "stakes_pct": 1.0,
       "score": 0.1167,
-      "id": "f27"
+      "id": "f28"
     },
     {
       "detector": "D3",
@@ -2143,7 +2172,7 @@
       "days_left": 2,
       "stakes_pct": 0.5,
       "score": 0.1111,
-      "id": "f28"
+      "id": "f29"
     },
     {
       "detector": "D5",
@@ -2170,7 +2199,7 @@
       "days_left": 2,
       "stakes_pct": 0.5,
       "score": 0.1111,
-      "id": "f29"
+      "id": "f30"
     },
     {
       "detector": "D5",
@@ -2196,7 +2225,7 @@
       "days_left": 2,
       "stakes_pct": 0.5,
       "score": 0.1111,
-      "id": "f30"
+      "id": "f31"
     },
     {
       "detector": "D5",
@@ -2222,7 +2251,7 @@
       "days_left": 2,
       "stakes_pct": 0.5,
       "score": 0.1111,
-      "id": "f31"
+      "id": "f32"
     },
     {
       "detector": "D4",
@@ -2281,7 +2310,7 @@
       "days_left": 2,
       "stakes_pct": 0.5,
       "score": 0.0778,
-      "id": "f32"
+      "id": "f33"
     },
     {
       "detector": "D4",
@@ -2330,7 +2359,7 @@
       "days_left": 2,
       "stakes_pct": 0.5,
       "score": 0.0778,
-      "id": "f33"
+      "id": "f34"
     },
     {
       "detector": "D7",
@@ -2356,7 +2385,7 @@
       "days_left": 2,
       "stakes_pct": 0.5,
       "score": 0.0778,
-      "id": "f34"
+      "id": "f35"
     },
     {
       "detector": "D7",
@@ -2382,7 +2411,7 @@
       "days_left": 2,
       "stakes_pct": 0.5,
       "score": 0.0778,
-      "id": "f35"
+      "id": "f36"
     },
     {
       "detector": "D4",
@@ -2420,7 +2449,7 @@
       "days_left": 3,
       "stakes_pct": 0.5,
       "score": 0.0583,
-      "id": "f36"
+      "id": "f37"
     },
     {
       "detector": "D3",
@@ -2444,7 +2473,7 @@
       "days_left": 44,
       "stakes_pct": 25.0,
       "score": 0.0214,
-      "id": "f37"
+      "id": "f38"
     },
     {
       "detector": "D3",
@@ -2468,7 +2497,7 @@
       "days_left": 44,
       "stakes_pct": 25.0,
       "score": 0.0214,
-      "id": "f38"
+      "id": "f39"
     }
   ],
   "load": {

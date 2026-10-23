@@ -304,6 +304,44 @@ def availability_blocks(claims):
 WEEKDAY_CODES = ["M", "T", "W", "Th", "F", "Sa", "Su"]
 
 
+def clock_time(c):
+    """'HH:MM' if the claim names a time of day ('at 4:30', '3pm'), else None. Bare hours below 8 read as pm."""
+    text = f"{c.get('date_text') or ''} {c.get('quote') or ''}".lower()
+    m = re.search(r"\b(\d{1,2}):(\d\d)\s*(am|pm)?\b", text) or re.search(r"\b(\d{1,2})()\s*(am|pm)\b", text)
+    if not m:
+        return None
+    hour, minute, ampm = int(m[1]), m[2] or "00", m[3]
+    if ampm == "pm" and hour < 12 or (not ampm and hour < 8):
+        hour += 12
+    return f"{hour % 24:02d}:{minute}"
+
+
+def d10_event_clash(items, weekly, today):
+    """A booked event's time falls inside a teammate's weekly busy block: someone else may need to cover."""
+    out = []
+    for it in items:
+        events = [c for c in it["claims"] if c["_date"] and c["_date"] >= today
+                  and c["kind"] in ("task", "decision", "deadline") and clock_time(c)]
+        if not events:
+            continue
+        ev = min(events, key=lambda c: c["_date"])
+        at, code = clock_time(ev), WEEKDAY_CODES[ev["_date"].weekday()]
+        seen = set()
+        for person, blocks in weekly.items():
+            for b in blocks:
+                if person and person not in seen and code in (b["days"] or []) \
+                        and b.get("from") and b.get("to") and b["from"] <= at <= b["to"]:
+                    seen.add(person)
+                    act_by = max(today, ev["_date"] - timedelta(days=1))
+                    out.append(finding("D10", it, {
+                        "event_date": iso(ev["_date"]), "event_time": at, "person": person,
+                        "busy_from": b["from"], "busy_to": b["to"], "act_by": iso(act_by)},
+                        [ev["id"], b["claim"]], "high",
+                        "the booked time falls inside a weekly busy block on record",
+                        (act_by - today).days, people=[person], talk_first=True))
+    return out
+
+
 def d1_lead_time(items, away, weekly, today):
     out = []
     for it in items:
@@ -652,6 +690,7 @@ def reconcile(claims: list[dict], docs: list[dict], today: date, project: str = 
     load = compute_load(items, today, next_deadline)
 
     findings = (d1_lead_time(items, away, weekly, today)
+                + d10_event_clash(items, weekly, today)
                 + d2_owner_unavailable(items, away, today, next_deadline)
                 + d3_rubric_gaps(items, ctx["docs"], today, next_deadline)
                 + d4_disagree(items, today, next_deadline)

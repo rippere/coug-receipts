@@ -18,8 +18,8 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 HERE = Path(__file__).resolve().parent
-TOP_DETECTORS = {"D1", "D2", "D5", "D6", "D7", "D8"}  # D3/D4/D9 have their own sections
-TIER = {"D1": 0, "D2": 0, "D6": 1, "D7": 1, "D5": 2, "D8": 2}
+TOP_DETECTORS = {"D1", "D2", "D5", "D6", "D7", "D8", "D10"}  # D3/D4/D9 have their own sections
+TIER = {"D1": 0, "D2": 0, "D10": 0, "D6": 1, "D7": 1, "D5": 2, "D8": 2}
 CONF_DOTS = {"high": "●●●", "med": "●●○", "medium": "●●○", "low": "●○○"}
 CONF_WORD = {"high": "High", "med": "Medium", "medium": "Medium", "low": "Low"}
 
@@ -110,6 +110,11 @@ def card_text(f, today):
         return (cap(title), owner, x["latest_action"],
                 f"Needs {x['lead_days']} days' notice and must happen by {day_label(x['event_by'])}; still {x.get('status', 'open')}.",
                 "; ".join(others))
+    if f["detector"] == "D10":
+        event = title.split(" ", 1)[1] if title.split(" ", 1)[0].lower() in {"schedule", "book", "plan", "hold", "run", "submit"} else title
+        return (f"Confirm who runs {event}", "Whole team", x["act_by"],
+                f"It's {day_label(x['event_date'])} at {x['event_time']}; {first(x['person'])} is busy "
+                f"{x['busy_from']}–{x['busy_to']} that day.", "")
     if f["detector"] == "D2" and d(x["finish_by"]) < today:
         return (f"Find a new owner for {title}", "Whole team", today.isoformat(),
                 f"{first(x['owner'])} is away {day_label(x['away_from'])}–{day_label(x['away_to'])} "
