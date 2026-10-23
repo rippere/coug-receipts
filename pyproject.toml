@@ -2,4 +2,13 @@
 name = "coug-receipts"
 version = "0.1.0"
 requires-python = ">=3.11"
-dependencies = ["anthropic", "openpyxl", "python-docx", "pypdf", "dateparser", "rapidfuzz", "jinja2"]
+dependencies = [
+    "anthropic",
+    "openpyxl",
+    "python-docx",
+    "pypdf",
+    "dateparser",
+    "rapidfuzz",
+    "jinja2",
+    "openai>=3.37.0",
+]
