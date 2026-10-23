@@ -299,6 +299,33 @@ table.rec{width:100%;border-collapse:collapse;font-size:14.5px}
 .pulse-src span{font-size:13px;color:var(--muted)}
 @media (max-width:1060px){.pulse{grid-template-columns:auto 1fr}.pulse-cd,.pulse-src{border-left:0;padding-left:0}}
 @media (prefers-reduced-motion:reduce){.donut .seg{transition:none}}
+.recapbar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s4);width:100%;text-align:left;background:var(--ink);color:#fff;border-radius:var(--r3);padding:var(--s3) var(--s5);font-size:14.5px;transition:background .15s}
+.recapbar:hover{background:#000}
+.recapbar .k{font-weight:700}
+.recapbar .o{display:inline-flex;align-items:center;gap:6px;color:#E5E7EB}
+.recapbar .o i{width:9px;height:9px;border-radius:50%}
+.recapbar i.d{background:#4ADE80}.recapbar i.p{background:#93C5FD}.recapbar i.s{background:#FBBF24}
+.recapbar .go{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-weight:700}
+.recap-hero{background:var(--ink);color:#fff;border-radius:var(--r3);padding:var(--s5);display:grid;gap:var(--s4)}
+.recap-hero .k{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#FBBF24}
+.recap-hero h2{font-size:clamp(20px,2.4vw,26px);font-weight:800;letter-spacing:-.02em;margin-top:4px}
+.rh-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:var(--s3)}
+.rh-tile{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--r2);padding:var(--s3) var(--s4);border-top:3px solid #FBBF24}
+.rh-tile.done{border-top-color:#4ADE80}.rh-tile.prog{border-top-color:#93C5FD}.rh-tile.plain{border-top-color:rgba(255,255,255,.3)}
+.rh-tile b{display:block;font:600 30px/1.1 var(--mono)}
+.rh-tile span{font-size:13.5px;color:#D1D5DB}
+.sechead h2{font-size:18px;font-weight:700}
+.sechead p{color:var(--muted);font-size:14.5px}
+.flags{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+.flag{background:var(--card);border:1px solid var(--line);border-radius:var(--r3);box-shadow:var(--shadow);padding:var(--s5);display:grid;gap:var(--s3);align-content:start;border-top:4px solid var(--accent)}
+.flag.done{border-top-color:var(--ok)}.flag.prog{border-top-color:var(--blue)}
+.flag h3{font-size:17px;font-weight:700;line-height:1.3}
+.fl-track{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:12.5px;color:var(--muted);font-weight:600}
+.fl-track svg{width:12px;height:12px}
+.flag blockquote{margin:0;background:var(--slip);border-left:3px solid var(--line);border-radius:6px;padding:var(--s2) var(--s3);font-size:14.5px}
+.flag cite{display:block;font:500 12px var(--mono);color:var(--muted);margin-top:4px;font-style:normal}
+.flag .foot{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);font-size:13.5px}
+@media (max-width:1060px){.flags{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -383,6 +410,29 @@ function renderNav() {
     <button data-sec="${s.id}" ${s.id === state.section ? 'aria-current="page"' : ''}><span>${esc(s.name)}</span><span class="c">${s.count(b)}</span></button>`).join('');
 }
 
+function recap(b) {
+  const sl = b.since_last; if (!sl) return null;
+  const prev = RUNS.find(r => r.project === b.project && r.today === sl.prev_today);
+  const tally = {Done: 0, 'In progress': 0, 'Still open': 0};
+  sl.flagged.forEach(x => { tally[x.now] = (tally[x.now] || 0) + 1; });
+  const before = Object.fromEntries((prev?.items || []).map(i => [i.title, i]));
+  const finished = (b.items || []).filter(i => i.status === 'done' && before[i.title] && before[i.title].status !== 'done');
+  const started = (b.items || []).filter(i => i.status === 'in_progress' && before[i.title] && before[i.title].status === 'open');
+  const added = (b.items || []).filter(i => !before[i.title] && (i.owner.length || i.due) && i.status !== 'unknown' && !/^rule$|_/.test(i.title));
+  const oldFiles = new Set((prev?.docs || []).map(d => d.file));
+  const newFiles = (b.docs || []).filter(d => !oldFiles.has(d.file));
+  const days = Math.round((parse(b.today) - parse(sl.prev_today)) / DAY);
+  return {sl, prev, tally, finished, started, added, newFiles, days,
+    dClaims: prev ? b.counts.claims - prev.counts.claims : 0};
+}
+function recapBanner(b) {
+  const r = recap(b); if (!r) return '';
+  return `<button class="recapbar" data-sec="since"><span class="k">Since ${esc(r.sl.prev_label)}</span>
+    <span class="o"><i class="d"></i>${r.tally.Done} done</span><span class="o"><i class="p"></i>${r.tally['In progress']} in progress</span><span class="o"><i class="s"></i>${r.tally['Still open']} still open</span>
+    <span class="o">${r.finished.length} tasks finished</span><span class="go">See the recap ${icon('arrow')}</span></button>`;
+}
+const quoteLine = r => r.private ? `<span class="priv">Quote withheld: it may include personal details.</span>` : `“${esc(r.quote)}”`;
+
 function milestone(b) {
   const cd = b.countdown, items = b.items || [];
   const now = parse(b.today);
@@ -430,7 +480,7 @@ function card(c, i) {
 }
 
 const VIEWS = {
-  week: b => milestone(b)
+  week: b => recapBanner(b) + milestone(b)
     + (b.top.length ? `<div class="cards">${b.top.map(card).join('')}</div>` : `<div class="empty">Nothing urgent found for this week.</div>`)
     + ((b.also || []).length ? `<div class="panel"><h3>Also this week</h3><div class="list">${b.also.map(c => `
       <div class="item"><div><div class="t">${esc(c.action)}</div><div class="m">${esc(c.owner)} · ${esc(c.date_label)} · ${esc(c.reason)}</div></div>${rb(c.receipts, c.action)}</div>`).join('')}</div></div>` : '')
@@ -440,10 +490,25 @@ const VIEWS = {
       <div class="m">We trust: <b>${esc(x.trust)}</b>${x.why ? ` · ${esc(x.why)}` : ''}</div></div>${rb(x.sides.flatMap(s => s.receipts), x.topic)}</div>`).join('') : '<p class="muted">The files agree on everything current.</p>'}</div></div>
     <div class="panel"><h3>Not on your task list yet</h3><div class="list">${b.missing.length ? b.missing.map(m => `<div class="item"><div><div class="t">${esc(m.item)}</div><div class="m">${esc(m.impact)}${m.due ? ` · due ${esc(m.due)}` : ''}</div></div>${rb(m.receipts, m.item)}</div>`).join('') : '<p class="muted">Nothing missing.</p>'}</div></div></div>`
     + ((b.answered || []).length ? `<div class="panel"><h3>Already answered by the brief</h3><div class="list">${b.answered.map(a => `<div class="item"><div><div class="m">“${esc(a.question)}”</div><div class="t" style="margin-top:4px">${esc(a.answer)}</div></div>${rb(a.receipts, a.question)}</div>`).join('')}</div></div>` : ''),
-  since: b => `<p class="muted">What we flagged on ${esc(b.since_last.prev_label)}, and what the newest files say happened.</p>
-    <div class="rows">${b.since_last.flagged.map(x => { const cls = x.now === 'Done' ? 'done' : x.now === 'In progress' ? 'prog' : '';
-      return `<div class="row"><div><div class="t">${esc(x.was)}</div><div class="m">${esc(x.owner)} · flagged for ${esc(x.by)}</div></div>
-        <span class="pill ${cls}">${esc(x.now)}</span>${rb(x.receipts, x.was) || '<span></span>'}</div>`; }).join('')}</div>`,
+  since: b => {
+    const r = recap(b), S = {Done: ['done', 'check'], 'In progress': ['prog', 'clock'], 'Still open': ['', 'clock']};
+    return `<div class="recap-hero">
+      <div class="rh-head"><span class="k">${r.days} days since ${esc(r.sl.prev_label)}</span><h2>${r.tally.Done} of ${r.sl.flagged.length} warnings resolved. ${r.tally['Still open'] ? `${r.tally['Still open']} still needs someone.` : ''}</h2></div>
+      <div class="rh-tiles">${Object.entries(r.tally).map(([k, n]) => `<div class="rh-tile ${S[k][0]}"><b>${n}</b><span>${esc(k)}</span></div>`).join('')}
+        <div class="rh-tile plain"><b>${r.finished.length}</b><span>tasks finished</span></div>
+        <div class="rh-tile plain"><b>+${r.newFiles.length}</b><span>new file${r.newFiles.length === 1 ? '' : 's'} · +${r.dClaims} claims</span></div></div></div>
+    <div class="sechead"><h2>Last week's warnings</h2><p>What we flagged on ${esc(r.sl.prev_label)}, and what the newest files say happened.</p></div>
+    <div class="flags">${r.sl.flagged.map(x => { const [cls] = S[x.now] || ['']; const rc = (x.receipts || [])[0];
+      return `<article class="flag ${cls}"><div class="fl-track"><span>Flagged ${esc(r.sl.prev_label)}</span>${icon('arrow')}<span>Due ${esc(x.by)}</span></div><span class="pill ${cls}" style="justify-self:start">${esc(x.now)}</span>
+        <h3>${esc(x.was)}</h3><div class="chips"><span class="chip">${icon('user')}${esc(x.owner)}</span></div>
+        ${rc ? `<blockquote>${quoteLine(rc)}<cite>${esc(rc.label)}</cite></blockquote>` : '<p class="muted">No newer file mentions it.</p>'}
+        <div class="foot"><span class="muted">${x.now === 'Done' ? 'Closed. No follow-up needed.' : x.now === 'In progress' ? 'Moving. Check it at the next meeting.' : 'Carry it into this week.'}</span>${rb(x.receipts, x.was)}</div></article>`; }).join('')}</div>
+    <div class="grid2">
+      <div class="panel"><h3>Finished since ${esc(r.sl.prev_label)}</h3><div class="list">${r.finished.length ? r.finished.map(i => `<div class="item"><div><div class="t">${esc(cap(i.title))}</div><div class="m">${i.owner.length ? esc(i.owner.map(o => o.split(' ')[0]).join(', ')) : 'No owner listed'} · ${i.receipts} sources</div></div><span class="pill done">Done</span></div>`).join('') : '<p class="muted">Nothing newly finished.</p>'}</div></div>
+      <div class="panel"><h3>New this week</h3><div class="list">${r.newFiles.map(d => `<div class="item"><div><div class="t">${esc(d.file.split('/').pop())}</div><div class="m">New file · ${d.doc_date ? esc(short(d.doc_date)) : 'undated'}${d.author ? ` · ${esc(d.author)}` : ''} · ${d.claims} claims</div></div><span class="pill unk">File</span></div>`).join('')}
+        ${r.started.map(i => `<div class="item"><div><div class="t">${esc(cap(i.title))}</div><div class="m">Started since last run</div></div><span class="pill prog">In progress</span></div>`).join('')}
+        ${r.added.map(i => `<div class="item"><div><div class="t">${esc(cap(i.title))}</div><div class="m">${i.owner.length ? esc(i.owner.map(o => o.split(' ')[0]).join(', ')) : 'No owner yet'}${i.due ? ` · due ${esc(short(i.due))}` : ''}</div></div><span class="pill ${(ST[i.status] || [])[1] || ''}">${esc((ST[i.status] || [i.status])[0])}</span></div>`).join('')}</div></div></div>`;
+  },
   record: b => {
     const q = (state.q || '').toLowerCase(), f = state.filter || 'all';
     const rows = (b.items || []).filter(i => (f === 'all' || (f === 'done') === (i.status === 'done'))
