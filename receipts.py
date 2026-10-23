@@ -58,7 +58,8 @@ def main():
     prev = previous_run(out)
     run([py, ROOT / "stages/04_brief/brief.py", out] + (["--prev", prev] if prev else []))
     run([py, VALIDATE, "brief", out / "04_brief.json"])
-    print(f"\nBoard: {out / '04_board.html'}")
+    run([py, ROOT / "stages/04_brief/app.py", ROOT / "runs"])
+    print(f"\nApp: {ROOT / 'runs' / 'index.html'}   (single board: {out / '04_board.html'})")
 
 
 if __name__ == "__main__":

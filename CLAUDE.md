@@ -15,6 +15,7 @@ Built on ICM: folders carry sequencing, files carry state. Each stage folder has
 | `_shared/fixtures/` | hand-made stage outputs, so every lane can build against them before the lane upstream works |
 | `_shared/golden-team4.md` | the acceptance test: what a correct board says for Week 9 and Week 10 |
 | `inputs/<project>@<today>/` | one folder per project snapshot. The folder name sets "today". |
+| `runs/index.html` | **the app**: every run in one tabbed page (rebuilt by `receipts.py`); open it in a browser |
 | `runs/<project>@<today>/` | product: one folder per run, holding `01_docs.jsonl` … `04_board.html` |
 | `demo/` | the 5-minute script, the limitations, the kickoff guide |
 

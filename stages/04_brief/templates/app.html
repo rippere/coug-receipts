@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receipts</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23B45309%22 stroke-width=%222%22%3E%3Cpath d=%22M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: sidebar of runs (tabs) | main pane with section tabs | slide-in receipt slip. Light, projector-first. */
+:root{
+  --paper:#F7F6F1; --side:#EFEDE5; --card:#FFFFFF; --slip:#FFFDF6; --ink:#0F172A; --muted:#4B5563; --faint:#6B7280;
+  --line:#E3E0D6; --blue:#1E40AF; --blue-soft:#E8EDFB; --amber:#B45309; --amber-soft:#FDF0D5;
+  --ok:#166534; --ok-soft:#DCFCE7; --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 14px rgba(15,23,42,.05);
+  --sans:"Fira Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Fira Code",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+svg.i{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mono{font-family:var(--mono)}
+.shell{display:grid;grid-template-columns:268px minmax(0,1fr);min-height:100%}
+
+/* sidebar */
+.side{background:var(--side);border-right:1px solid var(--line);padding:1.5rem 1rem;display:flex;flex-direction:column;gap:1.5rem;position:sticky;top:0;height:100vh}
+.brand{display:grid;gap:.15rem;padding:0 .5rem}
+.brand b{font-size:1.45rem;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:.5rem}
+.brand b svg{width:22px;height:22px;color:var(--amber)}
+.brand span{font:500 .78rem var(--mono);color:var(--faint)}
+.group{display:grid;gap:.35rem}
+.group h2{margin:0 .5rem .2rem;font:600 .72rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
+.run{display:grid;gap:.1rem;text-align:left;padding:.65rem .75rem;border-radius:10px;transition:background .15s}
+.run:hover{background:rgba(255,255,255,.6)}
+.run[aria-selected="true"]{background:var(--card);box-shadow:var(--shadow),inset 3px 0 0 var(--amber)}
+.run .d{font-weight:600}
+.run .s{font:500 .78rem var(--mono);color:var(--faint)}
+.side .note{margin-top:auto;font-size:.8rem;color:var(--faint);padding:0 .5rem;line-height:1.45}
+
+/* main */
+main{min-width:0;padding:2rem clamp(16px,3vw,2.75rem) 4rem}
+.wrap{max-width:74rem;margin:0 auto;display:grid;gap:1.5rem}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:1rem}
+.eyebrow{font:500 .78rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
+h1{margin:.2rem 0 0;font-size:clamp(1.7rem,3vw,2.3rem);font-weight:700;letter-spacing:-.015em;line-height:1.15}
+.count{display:flex;align-items:center;gap:.85rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.65rem 1.1rem;box-shadow:var(--shadow)}
+.count .n{font:600 2.4rem/1 var(--mono);color:var(--amber);font-variant-numeric:tabular-nums}
+.count .t{font-size:.88rem;color:var(--muted);line-height:1.3}
+.count .t b{color:var(--ink);font-weight:600;display:block}
+.tabs{display:flex;gap:.25rem;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tab{display:flex;align-items:center;gap:.45rem;padding:.7rem .9rem;color:var(--muted);font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color .15s,border-color .15s}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tab .c{font:600 .72rem var(--mono);background:var(--side);color:var(--muted);border-radius:999px;padding:.05rem .45rem}
+.tab[aria-selected="true"] .c{background:var(--ink);color:#fff}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+@media (max-width:1180px){.cards{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);display:grid;grid-template-columns:84px minmax(0,1fr);overflow:hidden}
+.stamp{background:var(--amber-soft);display:grid;align-content:start;justify-items:center;gap:.1rem;padding:1.1rem .4rem;text-align:center;border-right:1px dashed #E9CF9E}
+.stamp .rk{font:600 .72rem var(--mono);color:var(--amber);opacity:.8;margin-bottom:.35rem}
+.stamp .dd{font:600 2.1rem/1 var(--mono);color:var(--amber)}
+.stamp .mm{font:600 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--amber)}
+.stamp .rel{margin-top:.5rem;font:500 .72rem var(--mono);color:var(--ink);background:#fff;border-radius:6px;padding:.1rem .35rem}
+.body{padding:1.1rem 1.15rem 1rem;display:grid;gap:.6rem;align-content:start;min-width:0}
+.action{margin:0;font-size:1.32rem;font-weight:600;line-height:1.25;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:.35rem;font-size:.86rem;font-weight:500;background:var(--side);border-radius:999px;padding:.15rem .6rem}
+.chip.talk{background:var(--blue-soft);color:var(--blue)}
+.reason{margin:0;color:var(--muted)}
+.note{display:flex;gap:.45rem;align-items:flex-start;font-size:.88rem;color:var(--muted);background:var(--paper);border-radius:8px;padding:.45rem .6rem}
+.note svg{margin-top:.2rem}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem;padding-top:.6rem;border-top:1px dashed var(--line)}
+.conf{font:500 .82rem var(--mono);color:var(--muted);cursor:help}
+.rbtn{display:inline-flex;align-items:center;gap:.35rem;font:500 .82rem var(--mono);color:var(--blue);padding:.3rem .55rem;border-radius:8px;border:1px solid var(--line);background:var(--card);transition:border-color .15s,background .15s}
+.rbtn:hover{border-color:var(--blue);background:var(--blue-soft)}
+.empty{color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:2rem;text-align:center}
+
+/* lists and panels */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:1.1rem 1.25rem;display:grid;gap:.8rem;align-content:start;min-width:0}
+.panel h3{margin:0;font-size:1.05rem;font-weight:600}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media (max-width:1000px){.grid2{grid-template-columns:1fr}}
+.rows{display:grid;gap:.75rem}
+.row{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:1rem 1.15rem;display:grid;grid-template-columns:minmax(0,1.4fr) auto minmax(0,1fr) auto;gap:1rem;align-items:center}
+@media (max-width:900px){.row{grid-template-columns:1fr}}
+.row .was{font-weight:600}
+.row .by{font:500 .82rem var(--mono);color:var(--faint)}
+.pill{justify-self:start;font:600 .8rem var(--mono);border-radius:999px;padding:.2rem .65rem;background:var(--amber-soft);color:var(--amber)}
+.pill.done{background:var(--ok-soft);color:var(--ok)}
+.pill.prog{background:var(--blue-soft);color:var(--blue)}
+.arrow{color:var(--faint)}
+.vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:.75rem}
+@media (max-width:900px){.vs{grid-template-columns:1fr}}
+.side-box{background:var(--paper);border-radius:10px;padding:.7rem .8rem;display:grid;gap:.45rem;align-content:start}
+.side-box .k{font:600 .7rem var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--faint)}
+.side-box .v{font-weight:600}
+.side-box.verdict{background:var(--ink);color:#fff}
+.side-box.verdict .k{color:#CBD5E1}
+.side-box.verdict .w{color:#E2E8F0;font-size:.88rem}
+ul.plain{margin:0;padding:0;list-style:none;display:grid;gap:.75rem}
+ul.plain li{display:grid;gap:.3rem;padding-bottom:.75rem;border-bottom:1px solid var(--line)}
+ul.plain li:last-child{border-bottom:0;padding-bottom:0}
+.muted{color:var(--muted)}
+.bar{display:grid;grid-template-columns:5.5rem minmax(0,1fr) 2rem;gap:.7rem;align-items:center}
+.bar .track{height:10px;background:var(--side);border-radius:999px;overflow:hidden}
+.bar .fill{height:100%;background:var(--blue);border-radius:999px}
+.bar .n{font:600 .9rem var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.caution{font-size:.86rem;color:var(--muted);background:var(--paper);border-radius:8px;padding:.55rem .7rem}
+
+/* receipt drawer */
+.scrim{position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);z-index:30;padding:1.25rem;overflow-y:auto;display:grid;align-content:start}
+.slip{background:var(--slip);font-family:var(--mono);font-size:.84rem;color:var(--ink);padding:1.4rem 1.3rem 2.2rem;box-shadow:0 10px 30px rgba(15,23,42,.25);
+  -webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%}
+.slip .top{display:flex;justify-content:space-between;align-items:center}
+.slip .top b{letter-spacing:.25em;font-size:.9rem}
+.slip .close{display:inline-flex;padding:.3rem;border-radius:6px}
+.slip .close:hover{background:var(--side)}
+.slip hr{border:0;border-top:1.5px dashed #CFC9B8;margin:.9rem 0}
+.slip .title{font-family:var(--sans);font-size:1.05rem;font-weight:600;line-height:1.3}
+.slip .src{display:grid;gap:.3rem;margin-bottom:1rem}
+.slip .lbl{font-weight:600}
+.slip .loc{color:var(--faint);font-size:.76rem;word-break:break-word}
+.slip q{font-family:var(--sans);font-style:italic;font-size:.95rem;line-height:1.45;display:block}
+.slip .priv{font-family:var(--sans);font-size:.88rem;color:var(--muted);background:var(--side);border-radius:6px;padding:.35rem .5rem}
+.slip .tot{display:flex;justify-content:space-between;font-weight:600}
+.slip .fine{color:var(--faint);font-size:.74rem;line-height:1.5;margin-top:.8rem;text-align:center}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;align-items:center;overflow-x:auto;gap:1rem;padding:.8rem 16px}
+  .group{grid-auto-flow:column}
+  .group h2,.side .note,.brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side" aria-label="Runs">
+    <div class="brand"><b><svg class="i" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg>Receipts</b><span>early warnings, with sources</span></div>
+    <div id="runs"></div>
+    <p class="note">Runs on your machine. Dates and counts are computed by code; every line cites the sentence it came from. Reasons for absences are never shown.</p>
+  </aside>
+  <main><div class="wrap" id="main"></div></main>
+</div>
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="Receipts"></aside>
+
+<script id="data" type="application/json">__RUNS_JSON__</script>
+<script>
+const RUNS = JSON.parse(document.getElementById('data').textContent);
+const SECTIONS = [
+  {id: 'week', name: 'This week', count: b => b.top.length + (b.also || []).length},
+  {id: 'since', name: 'Since last run', count: b => b.since_last ? b.since_last.flagged.length : 0, hide: b => !b.since_last},
+  {id: 'disagree', name: 'Disagreements', count: b => b.disagreements.length},
+  {id: 'gaps', name: 'Gaps & answers', count: b => b.missing.length + (b.answered || []).length},
+  {id: 'team', name: 'Team', count: b => (b.questions || []).length},
+];
+const ICON = {
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  talk: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  file: '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>',
+  arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+};
+const icon = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const parse = iso => { const [y, m, d] = iso.slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
+const short = iso => { const d = parse(iso); return `${DOW[d.getDay()]} ${MON[d.getMonth()]} ${d.getDate()}`; };
+
+let state = {run: RUNS.length - 1, section: 'week', from: null};
+let slips = [];   // receipt sets referenced by buttons on the current view
+
+function receiptButton(receipts, title) {
+  if (!receipts || !receipts.length) return '';
+  slips.push({receipts, title});
+  return `<button class="rbtn" data-slip="${slips.length - 1}">${icon('file')}${receipts.length} receipt${receipts.length > 1 ? 's' : ''}</button>`;
+}
+
+function renderRuns() {
+  const groups = {};
+  RUNS.forEach((b, i) => (groups[b.project] = groups[b.project] || []).push(i));
+  document.getElementById('runs').innerHTML = Object.entries(groups).map(([p, idx]) => `
+    <div class="group" role="tablist" aria-label="${esc(p)} runs"><h2>${esc(p)}</h2>
+      ${idx.map(i => { const b = RUNS[i]; return `
+        <button class="run" role="tab" data-run="${i}" aria-selected="${i === state.run}">
+          <span class="d">${esc(short(b.today))}</span>
+          <span class="s">${b.top.length} to act on · ${b.counts.docs} docs</span>
+        </button>`; }).join('')}
+    </div>`).join('');
+}
+
+function card(c) {
+  const d = c.date ? parse(c.date) : null;
+  const rel = (c.date_label || '').split(' · ')[1] || c.date_label || '';
+  return `<article class="card">
+    <div class="stamp">
+      <span class="rk">#${c.rank}</span>
+      ${d ? `<span class="dd">${d.getDate()}</span><span class="mm">${DOW[d.getDay()]} ${MON[d.getMonth()]}</span>` : `<span class="mm">this week</span>`}
+      ${d ? `<span class="rel">${esc(rel)}</span>` : ''}
+    </div>
+    <div class="body">
+      <h3 class="action">${esc(c.action)}</h3>
+      <div class="meta"><span class="chip">${icon('user')}${esc(c.owner)}</span>${c.talk_first ? `<span class="chip talk">${icon('talk')}Talk as a team</span>` : ''}</div>
+      <p class="reason">${esc(c.reason)}</p>
+      ${c.note ? `<div class="note">${icon('clock')}<span>${esc(c.note)}</span></div>` : ''}
+      <div class="foot">
+        <span class="conf" title="${esc(c.confidence.why)}">${esc(c.confidence.dots)} ${esc(c.confidence.word)} confidence</span>
+        ${receiptButton(c.receipts, c.action)}
+      </div>
+    </div>
+  </article>`;
+}
+
+function viewWeek(b) {
+  const top = b.top.length ? `<div class="cards">${b.top.map(card).join('')}</div>` : `<div class="empty">Nothing urgent found for this week.</div>`;
+  const also = (b.also || []).length ? `<div class="panel"><h3>Also this week</h3><ul class="plain">${b.also.map(c => `
+    <li><div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap"><b>${esc(c.action)}</b>${receiptButton(c.receipts, c.action)}</div>
+    <span class="muted">${esc(c.owner)} · ${esc(c.date_label)} · ${esc(c.reason)}</span></li>`).join('')}</ul></div>` : '';
+  return top + also;
+}
+
+function viewSince(b) {
+  const s = b.since_last;
+  return `<p class="muted" style="margin:0">What we flagged on ${esc(s.prev_label)}, and what the newest documents say happened.</p>
+  <div class="rows">${s.flagged.map(x => {
+    const cls = x.now === 'Done' ? 'done' : x.now === 'In progress' ? 'prog' : '';
+    return `<div class="row">
+      <div><div class="was">${esc(x.was)}</div><div class="by">${esc(x.owner)} · flagged for ${esc(x.by)}</div></div>
+      <span class="arrow">${icon('arrow')}</span>
+      <span class="pill ${cls}">${esc(x.now)}</span>
+      ${receiptButton(x.receipts, x.was) || '<span></span>'}
+    </div>`; }).join('')}</div>`;
+}
+
+function viewDisagree(b) {
+  if (!b.disagreements.length) return `<div class="empty">The documents agree on everything current.</div>`;
+  return `<div class="rows">${b.disagreements.map(x => `
+    <div class="panel"><h3>${esc(x.topic)}</h3><div class="vs">
+      ${x.sides.slice(0, 2).map((s, i) => `<div class="side-box"><span class="k">${i ? 'Another source says' : 'One source says'}</span>
+        <span class="v">${esc(s.says)}</span><div>${receiptButton(s.receipts, x.topic)}</div></div>`).join('')}
+      <div class="side-box verdict"><span class="k">We trust</span><span class="v">${esc(x.trust)}</span><span class="w">${esc(x.why)}</span></div>
+    </div></div>`).join('')}</div>`;
+}
+
+function viewGaps(b) {
+  const miss = b.missing.length ? b.missing.map(m => `<li><div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap"><b>${esc(m.item)}</b>${receiptButton(m.receipts, m.item)}</div>
+    <span class="muted">${esc(m.impact)}${m.due ? ` · due ${esc(m.due)}` : ''}</span></li>`).join('') : '<li class="muted">Nothing missing.</li>';
+  const ans = (b.answered || []).length ? b.answered.map(a => `<li><span class="muted">“${esc(a.question)}”</span><span>${esc(a.answer)}</span><div>${receiptButton(a.receipts, a.question)}</div></li>`).join('') : '<li class="muted">No open questions the brief already answers.</li>';
+  return `<div class="grid2"><div class="panel"><h3>Not on your task list yet</h3><ul class="plain">${miss}</ul></div>
+    <div class="panel"><h3>Already answered in the brief</h3><ul class="plain">${ans}</ul></div></div>`;
+}
+
+function viewTeam(b) {
+  const max = Math.max(1, ...b.load.people.map(p => p.open_items));
+  const qs = (b.questions || []).length ? b.questions.map(q => `<li>${esc(q.text)}</li>`).join('') : '<li class="muted">No team questions this week.</li>';
+  return `<div class="grid2">
+    <div class="panel"><h3>Questions for the next meeting</h3><ul class="plain">${qs}</ul></div>
+    <div class="panel"><h3>Who's carrying what</h3>
+      ${b.load.people.map(p => `<div class="bar"><span>${esc(p.name)}</span><div class="track"><div class="fill" style="width:${Math.round(100 * p.open_items / max)}%"></div></div><span class="n">${p.open_items}</span></div>`).join('')}
+      <div class="caution">${esc(b.load.note)}</div></div></div>`;
+}
+
+const VIEWS = {week: viewWeek, since: viewSince, disagree: viewDisagree, gaps: viewGaps, team: viewTeam};
+
+function renderMain() {
+  const b = RUNS[state.run];
+  slips = [];
+  const secs = SECTIONS.filter(s => !(s.hide && s.hide(b)));
+  if (!secs.find(s => s.id === state.section)) state.section = 'week';
+  const cd = b.countdown;
+  document.getElementById('main').innerHTML = `
+    <div class="head">
+      <div><div class="eyebrow">${esc(b.project)} · built from ${b.counts.docs} documents and ${b.counts.claims} quoted claims</div><h1>${esc(b.today_label)}</h1></div>
+      ${cd ? `<div class="count"><span class="n">${cd.days}</span><span class="t"><b>days left</b>${esc(cd.label)}</span></div>` : ''}
+    </div>
+    <div class="tabs" role="tablist" aria-label="Sections">${secs.map(s => `
+      <button class="tab" role="tab" data-sec="${s.id}" aria-selected="${s.id === state.section}">${esc(s.name)}<span class="c">${s.count(b)}</span></button>`).join('')}
+    </div>
+    <section role="tabpanel" style="display:grid;gap:1rem">${VIEWS[state.section](b)}</section>`;
+}
+
+function openSlip(i) {
+  const {receipts, title} = slips[i];
+  const d = document.getElementById('drawer');
+  d.innerHTML = `<div class="slip" role="dialog" aria-modal="true" aria-label="Receipts">
+    <div class="top"><b>RECEIPTS</b><button class="close" id="close" aria-label="Close">${icon('x')}</button></div>
+    <hr><div class="title">${esc(title)}</div><hr>
+    ${receipts.map(r => `<div class="src"><span class="lbl">${esc(r.label)}</span><span class="loc">${esc(r.file)} · ${esc(r.loc)}</span>
+      ${r.private ? `<span class="priv">Quote withheld: it may include personal details. The card shows only the constraint.</span>` : `<q>${esc(r.quote)}</q>`}</div>`).join('')}
+    <hr><div class="tot"><span>SOURCES</span><span>${receipts.length}</span></div>
+    <p class="fine">Every quote was checked word for word against its file.<br>Dates on the board are computed by code.</p>
+  </div>`;
+  d.hidden = false; document.getElementById('scrim').hidden = false;
+  document.getElementById('close').focus();
+}
+function closeSlip() {
+  document.getElementById('drawer').hidden = true; document.getElementById('scrim').hidden = true;
+  if (state.from) state.from.focus();
+}
+
+function render() { renderRuns(); renderMain(); }
+document.addEventListener('click', e => {
+  const run = e.target.closest('[data-run]'), sec = e.target.closest('[data-sec]'), slip = e.target.closest('[data-slip]');
+  if (run) { state.run = +run.dataset.run; render(); }
+  else if (sec) { state.section = sec.dataset.sec; renderMain(); }
+  else if (slip) { state.from = slip; openSlip(+slip.dataset.slip); }
+  else if (e.target.closest('#close') || e.target.id === 'scrim') closeSlip();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !document.getElementById('drawer').hidden) closeSlip();
+  if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && e.target.matches('[role="tab"]')) {
+    const tabs = [...e.target.parentElement.querySelectorAll('[role="tab"]')];
+    const next = tabs[(tabs.indexOf(e.target) + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+    next.click(); const again = document.querySelector(`[role="tab"][data-sec="${next.dataset.sec}"],[role="tab"][data-run="${next.dataset.run}"]`); if (again) again.focus();
+  }
+});
+render();
+</script>
+</body>
+</html>

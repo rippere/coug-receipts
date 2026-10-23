@@ -44,6 +44,19 @@ def rel_label(iso, today):
     return f"{day_label(iso)} · {when}"
 
 
+def clock(t):
+    """'16:30' -> '4:30 pm', '15:00' -> '3 pm'."""
+    h, m = (int(x) for x in t.split(":"))
+    suffix = "am" if h < 12 else "pm"
+    h = h % 12 or 12
+    return f"{h}{'' if m == 0 else f':{m:02d}'} {suffix}"
+
+
+def busy(a, b):
+    """A weekly busy block as words: '3 pm on' when it runs to the end of the day."""
+    return f"from {clock(a)} on" if b in ("23:59", "24:00") else f"{clock(a)}–{clock(b)}"
+
+
 def first(name):
     return (name or "").split()[0] if name else ""
 
@@ -105,7 +118,7 @@ def card_text(f, today):
             if k.get("away_from"):
                 others.append(f"{first(k['person'])} away {day_label(k['away_from'])}–{day_label(k['away_to'])}")
             elif k.get("busy_from"):
-                others.append(f"{first(k['person'])} busy {k['busy_from']}–{k['busy_to']} that day")
+                others.append(f"{first(k['person'])} busy {busy(k['busy_from'], k['busy_to'])} that day")
         others = list(dict.fromkeys(others))
         return (cap(title), owner, x["latest_action"],
                 f"Needs {x['lead_days']} days' notice and must happen by {day_label(x['event_by'])}; still {x.get('status', 'open')}.",
@@ -113,8 +126,8 @@ def card_text(f, today):
     if f["detector"] == "D10":
         event = title.split(" ", 1)[1] if title.split(" ", 1)[0].lower() in {"schedule", "book", "plan", "hold", "run", "submit"} else title
         return (f"Confirm who runs {event}", "Whole team", x["act_by"],
-                f"It's {day_label(x['event_date'])} at {x['event_time']}; {first(x['person'])} is busy "
-                f"{x['busy_from']}–{x['busy_to']} that day.", "")
+                f"It's {day_label(x['event_date'])} at {clock(x['event_time'])}; {first(x['person'])} is busy "
+                f"{busy(x['busy_from'], x['busy_to'])} that day.", "")
     if f["detector"] == "D2" and d(x["finish_by"]) < today:
         return (f"Find a new owner for {title}", "Whole team", today.isoformat(),
                 f"{first(x['owner'])} is away {day_label(x['away_from'])}–{day_label(x['away_to'])} "
