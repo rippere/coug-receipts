@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receipts · {{ b.project }} · {{ b.today }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: three cards above the fold (the ten-second read), dense sections below. Light theme for projectors. */
+:root{
+  --paper:#FAFAF7; --card:#FFFFFF; --ink:#0F172A; --muted:#475569; --line:#E2E8F0;
+  --blue:#1E40AF; --blue-soft:#EEF2FF; --amber:#B45309; --amber-soft:#FEF3C7; --stub:#F1F0EA; --ok:#166534; --ok-soft:#DCFCE7;
+  --sans:"Fira Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Fira Code",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 18px/1.55 var(--sans)}
+.wrap{max-width:72rem;margin:0 auto;padding:1.5rem max(16px,env(safe-area-inset-right,0px)) 4rem max(16px,env(safe-area-inset-left,0px));display:grid;gap:2.25rem}
+h1,h2,h3{margin:0;line-height:1.2;text-wrap:balance}
+h2{font-size:1.3rem;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:3px}
+
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.75rem;border-bottom:1px solid var(--line);padding-bottom:1rem}
+.brand{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap}
+.brand h1{font-size:1.6rem;font-weight:700;letter-spacing:-.01em}
+.brand span{font:500 .9rem var(--mono);color:var(--muted)}
+.count{font:600 1rem var(--mono);color:var(--amber);background:var(--amber-soft);padding:.3rem .7rem;border-radius:6px}
+
+section{display:grid;gap:.9rem;min-width:0}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+@media (max-width:900px){.cards{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.1rem 0;display:grid;gap:.55rem;align-content:start;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.rank{font:600 .85rem var(--mono);color:var(--muted)}
+.when{font:600 .85rem var(--mono);color:var(--amber);background:var(--amber-soft);padding:.15rem .5rem;border-radius:4px}
+.action{font-size:1.4rem;font-weight:600;line-height:1.25}
+.who{font-size:.95rem}
+.who b{font-weight:600}
+.reason{font-size:1rem;color:var(--muted)}
+.note{font-size:.88rem;color:var(--muted);border-left:2px solid var(--line);padding-left:.6rem}
+.facts{display:flex;flex-wrap:wrap;gap:.35rem .9rem;font-size:.85rem;color:var(--muted)}
+.conf{font-family:var(--mono);cursor:help}
+.talk{font:500 .78rem var(--mono);color:var(--blue);background:var(--blue-soft);padding:.15rem .45rem;border-radius:4px}
+.stubs{margin:.2rem -1.1rem 0;padding:.6rem 1.1rem .8rem;border-top:1.5px dashed var(--line);background:var(--stub);border-radius:0 0 10px 10px;display:flex;flex-wrap:wrap;gap:.4rem}
+.stubs.flat{margin:0;border-radius:6px;border:1px dashed var(--line)}
+details{font:.78rem var(--mono)}
+summary{cursor:pointer;list-style:none;border:1px solid var(--line);background:var(--card);padding:.15rem .45rem;border-radius:4px;color:var(--blue);transition:border-color .2s}
+summary::-webkit-details-marker{display:none}
+summary:hover{border-color:var(--blue)}
+details[open]{flex-basis:100%}
+blockquote{margin:.4rem 0 0;padding:.45rem .6rem;background:var(--card);border:1px solid var(--line);border-radius:4px;font:.9rem/1.45 var(--sans);color:var(--ink)}
+blockquote small{display:block;margin-top:.25rem;font:.74rem var(--mono);color:var(--muted)}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.95rem;min-width:38rem}
+th,td{text-align:left;vertical-align:top;padding:.6rem .8rem;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:500 .74rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--stub)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media (max-width:900px){.pair{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;background:var(--card);display:grid;gap:.6rem;align-content:start;min-width:0}
+.panel ul{margin:0;padding-left:1.1rem;display:grid;gap:.5rem}
+.bar{display:grid;grid-template-columns:6rem 1fr 2.5rem;gap:.6rem;align-items:center;font-size:.92rem}
+.bar i{display:block;height:.6rem;background:var(--blue);border-radius:3px;opacity:.75}
+.bar .mono{text-align:right;font-variant-numeric:tabular-nums}
+.now{font:600 .78rem var(--mono);padding:.1rem .45rem;border-radius:4px;background:var(--stub);color:var(--muted)}
+.now.done{background:var(--ok-soft);color:var(--ok)}
+footer{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+{% macro stubs(rs, flat=false) -%}
+<div class="stubs{% if flat %} flat{% endif %}">
+  {%- for r in rs %}
+  <details><summary>{{ r.label }}</summary><blockquote>
+    {%- if r.private %}<em>Quote hidden: it may contain personal details. The constraint is on the card.</em>{% else %}“{{ r.quote }}”{% endif -%}
+    <small>{{ r.file }} · {{ r.loc }}</small></blockquote></details>
+  {%- endfor %}
+</div>
+{%- endmacro %}
+
+<header>
+  <div class="brand"><h1>Receipts</h1><span>{{ b.project }} · {{ b.today_label }}</span></div>
+  {% if b.countdown %}<div class="count">{{ b.countdown.label }} · {{ b.countdown.days }} days</div>{% endif %}
+</header>
+
+<section aria-labelledby="s-top">
+  <h2 id="s-top">This week: three things</h2>
+  <div class="cards">
+    {% for c in b.top %}
+    <article class="card">
+      <div class="top"><span class="rank">#{{ c.rank }}</span><span class="when">{{ c.date_label }}</span></div>
+      <div class="action">{{ c.action }}</div>
+      <div class="who">Owner: <b>{{ c.owner }}</b>{% if c.talk_first %} <span class="talk">Talk as a team</span>{% endif %}</div>
+      <p class="reason">{{ c.reason }}</p>
+      {% if c.note %}<p class="note">{{ c.note }}</p>{% endif %}
+      <div class="facts">{% if c.stakes %}<span>{{ c.stakes }}</span>{% endif %}<span class="conf" title="{{ c.confidence.why }}">{{ c.confidence.dots }} {{ c.confidence.word }}</span></div>
+      {{ stubs(c.receipts) }}
+    </article>
+    {% else %}
+    <p class="muted">Nothing urgent found for this week.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% if b.since_last %}
+<section aria-labelledby="s-since">
+  <h2 id="s-since">Since the last run ({{ b.since_last.prev_label }})</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>We flagged</th><th>Owner</th><th>By</th><th>Now</th><th>Receipt</th></tr></thead>
+    <tbody>
+    {% for x in b.since_last.flagged %}
+      <tr><td>{{ x.was }}</td><td>{{ x.owner }}</td><td class="mono">{{ x.by }}</td>
+          <td><span class="now{% if x.now == 'Done' %} done{% endif %}">{{ x.now }}</span></td>
+          <td>{% if x.receipts %}{{ stubs(x.receipts, true) }}{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</section>
+{% endif %}
+
+{% if b.also %}
+<section aria-labelledby="s-also">
+  <h2 id="s-also">Also this week</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Action</th><th>Owner</th><th>When</th><th>Why</th><th>Confidence</th></tr></thead>
+    <tbody>
+    {% for c in b.also %}
+      <tr><td>{{ c.action }}{% if c.talk_first %} <span class="talk">Talk</span>{% endif %}</td><td>{{ c.owner }}</td>
+          <td class="mono">{{ c.date_label }}</td><td class="muted">{{ c.reason }}</td>
+          <td class="conf" title="{{ c.confidence.why }}">{{ c.confidence.dots }} {{ c.confidence.word }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</section>
+{% endif %}
+
+{% if b.disagreements %}
+<section aria-labelledby="s-dis">
+  <h2 id="s-dis">The documents disagree</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Topic</th><th>One source says</th><th>Another says</th><th>We trust</th></tr></thead>
+    <tbody>
+    {% for x in b.disagreements %}
+      <tr><td>{{ x.topic }}</td>
+        {% for s in x.sides[:2] %}<td>{{ s.says }}{{ stubs(s.receipts, true) }}</td>{% endfor %}
+        {% if x.sides|length < 2 %}<td></td>{% endif %}
+        <td><b>{{ x.trust }}</b><br><span class="muted">{{ x.why }}</span></td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</section>
+{% endif %}
+
+<div class="pair">
+  {% if b.missing %}
+  <section class="panel" aria-labelledby="s-miss">
+    <h2 id="s-miss">Not on your task list yet</h2>
+    <ul>{% for m in b.missing %}<li><b>{{ m.item }}</b> <span class="muted">· {{ m.impact }}{% if m.due %} · due {{ m.due }}{% endif %}</span>{{ stubs(m.receipts, true) }}</li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+  {% if b.answered %}
+  <section class="panel" aria-labelledby="s-ans">
+    <h2 id="s-ans">Already answered in the brief</h2>
+    <ul>{% for a in b.answered %}<li><span class="muted">“{{ a.question }}”</span><br>{{ a.answer }}{{ stubs(a.receipts, true) }}</li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+  {% if b.questions %}
+  <section class="panel" aria-labelledby="s-q">
+    <h2 id="s-q">Questions for the next meeting</h2>
+    <ul>{% for q in b.questions %}<li>{{ q.text }}</li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+  {% if b.load.people %}
+  <section class="panel" aria-labelledby="s-load">
+    <h2 id="s-load">Who's carrying what</h2>
+    {% for p in b.load.people %}
+    <div class="bar"><span>{{ p.name }}</span><i style="width:{{ (100 * p.open_items / max_load)|round }}%"></i><span class="mono">{{ p.open_items }}</span></div>
+    {% endfor %}
+    <p class="muted">{{ b.load.note }}</p>
+  </section>
+  {% endif %}
+</div>
+
+<footer>Built from {{ b.counts.docs }} documents and {{ b.counts.claims }} quoted claims. Dates and counts are computed by code; every line links to its source. Reasons for absences are never shown.</footer>
+</div>
+</body>
+</html>
