@@ -171,8 +171,11 @@ def status_evidence(claims):
 
 def newest_status(claims):
     # Prefer direct task evidence over a decision on the same dated source.
+    # On a same-day tie, the less-finished status wins: an early warning should never assume "done".
+    unfinished = {"open": 1, "in_progress": 1, "done": 0}
     return max(status_evidence(claims),
-               key=lambda c: (recency(c), c["kind"] != "decision"), default=None)
+               key=lambda c: (recency(c)[0], unfinished.get(c.get("status"), 0), recency(c)[1],
+                              c["kind"] != "decision"), default=None)
 
 
 def build_items(groups, ctx, today) -> list[dict]:
@@ -190,7 +193,8 @@ def build_items(groups, ctx, today) -> list[dict]:
         owners = list(owner_claim["who"]) if owner_claim else []
 
         # Due date: the brief wins; otherwise the newest dated source.
-        dated = [c for c in cl if c["_date"]]
+        # Only claims that set a due date count; a status report's date ("did it sat") is when work happened.
+        dated = [c for c in cl if c["_date"] and c["kind"] in ("task", "deadline", "rule", "decision")]
         brief_dated = [c for c in dated if c["_doc_kind"] == "brief"]
         if brief_dated:
             due_claim, basis = min(brief_dated, key=lambda c: c["_date"]), "brief"
@@ -304,7 +308,8 @@ def d1_lead_time(items, away, weekly, today):
     out = []
     for it in items:
         rules = [c for c in it["claims"] if c.get("rule") == "lead_time"]
-        events = [c for c in it["claims"] if c["kind"] in ("rule", "deadline") and c["_date"]]
+        # Only upcoming events count; a past meeting filed under the same item is history, not a deadline.
+        events = [c for c in it["claims"] if c["kind"] in ("rule", "deadline") and c["_date"] and c["_date"] >= today]
         if not rules or not events or it["status"] == "done":
             continue
         rule, event = rules[0], min(events, key=lambda c: c["_date"])
@@ -336,15 +341,29 @@ def d1_lead_time(items, away, weekly, today):
     return out
 
 
+def merged_ranges(ranges):
+    """Join overlapping or touching away-ranges from different sources into one span."""
+    out = []
+    for (a, b), ids in sorted(ranges.items()):
+        if out and a <= out[-1][0][1] + timedelta(days=1):
+            (pa, pb), pids = out[-1]
+            out[-1] = ((pa, max(pb, b)), [*pids, *ids])
+        else:
+            out.append(((a, b), list(ids)))
+    return out
+
+
 def d2_owner_unavailable(items, away, today, next_deadline):
     out = []
     for it in items:
-        if it["status"] == "done" or not it["owner"]:
+        # Only work due by the next deadline; that deadline is when the work is actually needed.
+        if it["status"] == "done" or not it["owner"] or not next_deadline:
             continue
-        window_end = max(d for d in (it["due"], it["milestone_date"], None if it["due"] else next_deadline,
-                                     date.min) if d)
+        if it["due"] and (it["due"] > next_deadline or it["due"] < today - timedelta(days=7)):
+            continue  # due after this milestone, or overdue by over a week (stale record, not this week's work)
+        window_end = next_deadline
         for person in it["owner"]:
-            for (a, b), ids in away.get(person, {}).items():
+            for (a, b), ids in merged_ranges(away.get(person, {})):
                 if a <= window_end and b >= today:
                     finish_by = a - timedelta(days=1)
                     task_ids = [c["id"] for c in it["claims"] if person in (c.get("who") or [])]
@@ -561,7 +580,7 @@ def d9_answered_by_brief(items, all_claims, today, next_deadline):
         facts = {"question_claims": [q["id"] for q in questions], "answer_claim": a["id"]}
         receipts = [*facts["question_claims"], a["id"]]
         if a.get("rule") == "late_penalty":
-            facts.update(pct_per_day=a["pct_per_day"], max_days=a["max_days"])
+            facts.update(pct_per_day=a.get("pct_per_day"), max_days=a.get("max_days"))
             if ext and next_deadline:
                 hours = notice_hours(ext)
                 if hours is not None:
@@ -597,7 +616,7 @@ def compute_load(items, today, next_deadline):
     return load
 
 
-def d8_load(load, today, next_deadline):
+def d8_load(load, items, today, next_deadline):
     if not load:
         return []
     median = statistics.median(v["open_items"] for v in load.values())
@@ -605,7 +624,10 @@ def d8_load(load, today, next_deadline):
     for person, v in load.items():
         if (v["open_items"] >= 3 and v["open_items"] >= 2 * median) or v["blocks_others"] >= 2:
             days = (next_deadline - today).days if next_deadline else 0
-            f = finding("D8", None, {"person": person, **v, "team_median": median}, [], "med",
+            by_id = {it["item_id"]: it for it in items}
+            receipts = [c["id"] for i in v["items"] for c in by_id[i]["claims"]
+                        if person in (c.get("who") or [])][:6]
+            f = finding("D8", None, {"person": person, **v, "team_median": median}, receipts, "med",
                         "counts from the task list; they miss invisible work", days,
                         people=[person], talk_first=True, stakes=1.0)
             out.append(f)
@@ -637,7 +659,7 @@ def reconcile(claims: list[dict], docs: list[dict], today: date, project: str = 
                 + d6_dependency(items, today)
                 + d7_carried_question(items, today, next_deadline)
                 + d9_answered_by_brief(items, claims, today, next_deadline)
-                + d8_load(load, today, next_deadline))
+                + d8_load(load, items, today, next_deadline))
     findings.sort(key=lambda f: f["score"], reverse=True)
     for n, f in enumerate(findings, 1):
         f["id"] = f"f{n:02d}"
