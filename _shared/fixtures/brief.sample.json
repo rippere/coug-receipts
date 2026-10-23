@@ -1,0 +1,88 @@
+{
+  "project": "Team 4 · Palouse Harvest Food Share",
+  "today": "2026-10-21",
+  "today_label": "Wed Oct 21 · Week 9",
+  "countdown": {"label": "M3 due Fri Oct 30", "days": 9},
+  "top": [
+    {"rank": 1, "action": "Request the sponsor demo", "owner": "Tyler",
+     "date": "2026-10-22", "date_label": "Thu Oct 22 · tomorrow",
+     "reason": "Sponsor requests need 7 days' notice and the demo must happen by Oct 29.",
+     "stakes": "Demo + feedback = 15% of M3",
+     "confidence": {"level": "high", "why": "Course brief and Week 9 notes agree the request hasn't gone out."},
+     "talk_first": false,
+     "note": "Jordan is unavailable Thu after 3pm; Kwame is away from Oct 28.",
+     "receipts": [
+       {"label": "Brief §5", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L38", "quote": "sponsor meetings and demos must be requested from the sponsor at least seven"},
+       {"label": "Brief §4", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L46", "quote": "The sponsor demo must take place during Week 10, no later than"},
+       {"label": "Wk9 notes · Sofia · p5", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p5", "quote": "Tyler said he hasn't emailed Dana about the demo yet but will do it this week."},
+       {"label": "Tasks · r33", "file": "03_Team4_tasks.xlsx", "loc": "r33", "quote": "schedule demo w/ Dana | Ty | ASAP | in progress"}
+     ]},
+    {"rank": 2, "action": "Finish the accessibility review before Oct 28", "owner": "Kwame",
+     "date": "2026-10-27", "date_label": "Tue Oct 27 · 6 days",
+     "reason": "Kwame is away Oct 28–Nov 1. Volunteer screens can be reviewed now; coordinator screens land around Monday.",
+     "stakes": "Accessibility review = 15% of M3",
+     "confidence": {"level": "medium", "why": "Dates are certain; the tracker also lists a 'WCAG review' for Mei that looks like the same work."},
+     "talk_first": false,
+     "note": "Confirm one owner: the tracker lists both Kwame and \"Mei?\".",
+     "receipts": [
+       {"label": "Availability · r7", "file": "04_team availability.xlsx", "loc": "r7", "quote": "OCT 28 - NOV 1"},
+       {"label": "Wk9 notes · Sofia · p4", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p4", "quote": "He wants to do the accessibility review before he leaves but he needs the final screens for that too."},
+       {"label": "Tasks · r31", "file": "03_Team4_tasks.xlsx", "loc": "r31", "quote": "WCAG review | Mei? | 10/27"}
+     ]},
+    {"rank": 3, "action": "Decide whether hours tracking is in or out", "owner": "Whole team",
+     "date": "2026-10-23", "date_label": "Fri Oct 23 · 2 days",
+     "reason": "The rubric requires sponsor requests since M2 in the traceability matrix, which is due Friday.",
+     "stakes": "Traceability = 15% of M3",
+     "confidence": {"level": "medium", "why": "Sponsor raised it in Week 7; Week 9 left it TBD. Decide in the group chat, since the next meeting is after Friday."},
+     "talk_first": true,
+     "note": "Next meeting (Tue Oct 27) is after the matrix is due.",
+     "receipts": [
+       {"label": "Brief M3 rubric", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L6", "quote": "Requirements the sponsor has raised since M2 must be"},
+       {"label": "Wk7 notes · L4", "file": "02_Meeting_Notes/wk 7.txt", "loc": "L4", "quote": "dana asked abt hours tracking again, said its a big deal for the high school volunteers + their parents"},
+       {"label": "Wk9 notes · Sofia · p7", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p7", "quote": "is that in or out? Nobody knew so I left it as \"TBD.\""}
+     ]}
+  ],
+  "also": [
+    {"action": "Choose an owner for the privacy plan", "owner": "Team", "date_label": "Fri Oct 30 · 9 days", "stakes": "10% of M3",
+     "reason": "Raised in Weeks 8 and 9 without an owner.", "confidence": {"level": "high", "why": "Two meetings, no owner in tracker."}, "talk_first": true,
+     "receipts": [{"label": "Tasks · r34", "file": "03_Team4_tasks.xlsx", "loc": "r34", "quote": "privacy plan | ? | 10/30?"}]}
+  ],
+  "disagreements": [
+    {"topic": "Peer evaluations due",
+     "sides": [
+       {"says": "Nov 6", "receipt": {"label": "Tasks · r35", "quote": "peer evals | everyone | nov 6?"}},
+       {"says": "Fri Oct 30, with M3", "receipt": {"label": "Brief §5", "quote": "Each student completes a confidential peer evaluation form, due on the same date as M3"}}],
+     "trust": "Fri Oct 30", "confidence": "high", "why": "The course brief is the authority on course dates."},
+    {"topic": "Build the prototype in React?",
+     "sides": [
+       {"says": "In progress, Week 10", "receipt": {"label": "Tasks · r26", "quote": "build app in react | Jordan | wk 10 | in progress"}},
+       {"says": "Figma for M3", "receipt": {"label": "Wk8 notes · Priya · p11", "quote": "DECISION: For M3 we are doing a clickable Figma prototype, not coded."}}],
+     "trust": "Figma for M3", "confidence": "high", "why": "A recorded decision beats a stale tracker row."}
+  ],
+  "missing": [
+    {"item": "Contribution log for M3", "impact": "−5 points if missing", "receipt": {"label": "Brief §4", "quote": "Required with every milestone submission: a contribution log (see Section 5). A missing log costs five points"}},
+    {"item": "Updated project plan, Weeks 11–15", "impact": "10% of M3", "receipt": {"label": "Brief M3 rubric", "quote": "Revised plan for Weeks 11 to 15 with owners and dates for M4 and M5"}},
+    {"item": "Dated sponsor feedback notes + responses", "impact": "part of the 15% demo score", "receipt": {"label": "Brief M3 rubric", "quote": "The demo took place by Oct 29. Submission includes dated notes of"}}
+  ],
+  "answered": [
+    {"question": "ask dr okafor about the late policy??", "answer": "10% per calendar day, up to 3 days. Extension requests must arrive by Wed Oct 28, 11:59pm (48h before).",
+     "receipt": {"label": "Brief §5", "quote": "Team milestones lose 10% per calendar day late, up to three days."}}
+  ],
+  "questions": [
+    {"text": "If the demo lands Thursday after 3pm, who runs it?", "talk_first": true},
+    {"text": "Three M3 pieces wait on the coordinator screens. Can anyone take something off Mei's plate this week?", "talk_first": true},
+    {"text": "Is the sponsor's current sign-up spreadsheet still coming? The privacy plan needs it.", "talk_first": false}
+  ],
+  "load": {
+    "note": "Counts aren't contribution. Use this to start a conversation, not to judge one.",
+    "people": [
+      {"name": "Mei",    "items": ["Coordinator screens"], "blocks": 2, "invisible": ["Design iterations on 9 volunteer screens", "Competitive review"]},
+      {"name": "Jordan", "items": ["Link coordinator roster flow"], "blocks": 0, "invisible": []},
+      {"name": "Kwame",  "items": ["Accessibility review"], "blocks": 0, "invisible": ["8 stakeholder interviews"]},
+      {"name": "Sofia",  "items": ["Traceability matrix"], "blocks": 0, "invisible": ["Assembling M1 + M2 reports"]},
+      {"name": "Tyler",  "items": ["Request sponsor demo"], "blocks": 0, "invisible": ["Sponsor communication"]},
+      {"name": "Priya",  "items": ["Submit M3"], "blocks": 0, "invisible": ["Coordination, final reads"]}
+    ]
+  },
+  "since_last": null
+}

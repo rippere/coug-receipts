@@ -1,0 +1,92 @@
+ Coug AI Build Challenge: Kickoff
+ Friday, October 23, 2026 · The Commons, Pullman · WSU MIS Advisory Board
+
+  Your challenge: build an AI-powered tool that turns a team's own project materials into a clear, honest
+  picture of where the project stands and what to do next. Aim for something that names a specific task,
+  person, date, and reason, in language a busy teammate can absorb in ten seconds.
+
+
+ The scenario
+ Meet Team X, six students in UNIV 497: Interdisciplinary Capstone Studio, a fictional 15-week course. Their
+ sponsor is Palouse Harvest Food Share, a food bank whose volunteer coordinator, Dana Whitfield, wants a better
+ way for volunteers to sign up for shifts. The team is designing that solution. Teammates go by their major.
+ For this kit, today is Wednesday, October 21, 2026, Week 9. The team just held its weekly meeting. Their next
+ graded milestone, a working prototype and sponsor demo, is due Friday, October 30. Everyone has been busy,
+ notes have been written by whoever remembered, and the task list was last touched whenever someone felt like it.
+ Nobody is quite sure where things stand.
+ Teammate                                Role                        Teammate                               Role
+ MIS Student                             Team lead                   Marketing Student                      Sponsor liaison
+ Comp Sci Student                        Tech / prototype lead       Communication Student                  Writing / docs lead
+ Digital Tech Student                    Design and UX               Psychology Student                     Research lead
+
+ Team X is your test data, not your target. Your tool should work just as well for a marketing campaign, a lab report,
+ or a policy brief.
+
+ What's in your packet
+ File                                     What it is
+ 00_README.txt                            Kit overview, the team roster, and the date to treat as "today." Read this first.
+ 01_Project_Brief_UNIV497.pdf             The instructor's brief: deliverables, due dates, grading rubric, and course policies.
+ 02_Meeting_Notes/                        Notes from the team's weekly meetings, written by different teammates in different
+                                          styles and formats.
+ 03_TeamX_tasks.xlsx                      The team's task list, kept the way student teams really keep them.
+ 04_team availability.xlsx                Class schedules, work hours, and dates people are away.
+ 05_Week10_Update/                        One week later: new meeting notes and an updated task list. Save this until your tool
+                                          works on Weeks 1 to 9.
+
+ The materials don't always agree with each other, just like a real team's. A good tool notices, and says how sure it
+ is.
+
+ Pick a direction
+ Choose one and go deep, or bring an original idea that tackles the same problem.
+  • The tracker that builds itself. Reconstruct the plan the team is actually working from, using the brief and
+    meeting notes.
+  • The early warning system. Find what's about to go wrong before the next deadline, and say what to do about it
+    this week.
+  • The fair share view. Show how work is really distributed and help the team start an honest, respectful
+    conversation.
+  • The team check-in coach. Run the weekly check-in: a short status, the three things that matter most, and
+    questions for the next meeting.
+
+
+Coug AI Build Challenge | Student kickoff guide                                                                                   Page 1
+ How to get started
+  • Spend the first 15 minutes choosing one insight. One team, one moment, one insight. Don't build a whole
+    project management platform.
+  • Read the packet like a teammate would. Skim everything before you prompt anything. Note what surprises
+    you.
+  • Do dates and counts in code, not in the AI. Let the AI read, connect, and explain. A demo that gets a due date
+    wrong is over.
+  • Test constantly on Team X, then try the Week 10 update. If you can, try a group project of your own (with your
+    teammates' permission).
+  • Stop building at 1:30 pm and rehearse your five-minute demo.
+
+ Today's timeline
+ Time                            What happens
+ 9:30 am                         Kickoff. Form teams, get your packet, walk through the challenge.
+ 10:00 am to 2:00 pm             Build time. Advisory Board members float between teams for questions and feedback.
+ 2:00 pm                         Team demos: five minutes each, then questions from the judges.
+ 3:00 pm                         Judging, feedback, and wrap-up.
+
+ How you'll be evaluated
+ Judges score five areas. They are looking for real, useful work, not polish.
+ Area                                 Weight       In short
+ Working demonstration                30%          Something real runs live on the sample project.
+ Team impact                          25%          The guidance is specific enough that a team would act on it this week.
+ Works for any project                15%          Nothing is hard-coded to Team X, their course, or their major.
+ Responsible AI thinking              15%          Protects teammates' dignity, shows its sources, and knows when to defer to
+                                                   people.
+ Presentation                         15%          Five clear minutes: the problem, the demo, the honest limitations.
+
+ Bonus: show your tool working on one of your own real group projects, with your teammates' permission.
+
+ Ground rules
+  • Use only fictional or permitted data. No real grades, student records, or personal information.
+  • Support the team, don't judge it. Flag risks without assigning blame. Ask yourself: would a teammate be
+    comfortable seeing this about themselves?
+  • Keep humans in charge. Your tool should say when it's unsure and when a conversation is the right next step.
+
+
+
+
+Coug AI Build Challenge | Student kickoff guide                                                                             Page 2
+
