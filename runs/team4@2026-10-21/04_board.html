@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receipts · team4 · 2026-10-21</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: three cards above the fold (the ten-second read), dense sections below. Light theme for projectors. */
+:root{
+  --paper:#FAFAF7; --card:#FFFFFF; --ink:#0F172A; --muted:#475569; --line:#E2E8F0;
+  --blue:#1E40AF; --blue-soft:#EEF2FF; --amber:#B45309; --amber-soft:#FEF3C7; --stub:#F1F0EA; --ok:#166534; --ok-soft:#DCFCE7;
+  --sans:"Fira Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Fira Code",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 18px/1.55 var(--sans)}
+.wrap{max-width:72rem;margin:0 auto;padding:1.5rem max(16px,env(safe-area-inset-right,0px)) 4rem max(16px,env(safe-area-inset-left,0px));display:grid;gap:2.25rem}
+h1,h2,h3{margin:0;line-height:1.2;text-wrap:balance}
+h2{font-size:1.3rem;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:3px}
+
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.75rem;border-bottom:1px solid var(--line);padding-bottom:1rem}
+.brand{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap}
+.brand h1{font-size:1.6rem;font-weight:700;letter-spacing:-.01em}
+.brand span{font:500 .9rem var(--mono);color:var(--muted)}
+.count{font:600 1rem var(--mono);color:var(--amber);background:var(--amber-soft);padding:.3rem .7rem;border-radius:6px}
+
+section{display:grid;gap:.9rem;min-width:0}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+@media (max-width:900px){.cards{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.1rem 0;display:grid;gap:.55rem;align-content:start;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.rank{font:600 .85rem var(--mono);color:var(--muted)}
+.when{font:600 .85rem var(--mono);color:var(--amber);background:var(--amber-soft);padding:.15rem .5rem;border-radius:4px}
+.action{font-size:1.4rem;font-weight:600;line-height:1.25}
+.who{font-size:.95rem}
+.who b{font-weight:600}
+.reason{font-size:1rem;color:var(--muted)}
+.note{font-size:.88rem;color:var(--muted);border-left:2px solid var(--line);padding-left:.6rem}
+.facts{display:flex;flex-wrap:wrap;gap:.35rem .9rem;font-size:.85rem;color:var(--muted)}
+.conf{font-family:var(--mono);cursor:help}
+.talk{font:500 .78rem var(--mono);color:var(--blue);background:var(--blue-soft);padding:.15rem .45rem;border-radius:4px}
+.stubs{margin:.2rem -1.1rem 0;padding:.6rem 1.1rem .8rem;border-top:1.5px dashed var(--line);background:var(--stub);border-radius:0 0 10px 10px;display:flex;flex-wrap:wrap;gap:.4rem}
+.stubs.flat{margin:0;border-radius:6px;border:1px dashed var(--line)}
+details{font:.78rem var(--mono)}
+summary{cursor:pointer;list-style:none;border:1px solid var(--line);background:var(--card);padding:.15rem .45rem;border-radius:4px;color:var(--blue);transition:border-color .2s}
+summary::-webkit-details-marker{display:none}
+summary:hover{border-color:var(--blue)}
+details[open]{flex-basis:100%}
+blockquote{margin:.4rem 0 0;padding:.45rem .6rem;background:var(--card);border:1px solid var(--line);border-radius:4px;font:.9rem/1.45 var(--sans);color:var(--ink)}
+blockquote small{display:block;margin-top:.25rem;font:.74rem var(--mono);color:var(--muted)}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.95rem;min-width:38rem}
+th,td{text-align:left;vertical-align:top;padding:.6rem .8rem;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:500 .74rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--stub)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media (max-width:900px){.pair{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;background:var(--card);display:grid;gap:.6rem;align-content:start;min-width:0}
+.panel ul{margin:0;padding-left:1.1rem;display:grid;gap:.5rem}
+.bar{display:grid;grid-template-columns:6rem 1fr 2.5rem;gap:.6rem;align-items:center;font-size:.92rem}
+.bar i{display:block;height:.6rem;background:var(--blue);border-radius:3px;opacity:.75}
+.bar .mono{text-align:right;font-variant-numeric:tabular-nums}
+.now{font:600 .78rem var(--mono);padding:.1rem .45rem;border-radius:4px;background:var(--stub);color:var(--muted)}
+.now.done{background:var(--ok-soft);color:var(--ok)}
+footer{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+
+
+<header>
+  <div class="brand"><h1>Receipts</h1><span>team4 · Wednesday, October 21</span></div>
+  <div class="count">M3 due Fri Oct 30 · 9 days</div>
+</header>
+
+<section aria-labelledby="s-top">
+  <h2 id="s-top">This week: three things</h2>
+  <div class="cards">
+    
+    <article class="card">
+      <div class="top"><span class="rank">#1</span><span class="when">Thu Oct 22 · tomorrow</span></div>
+      <div class="action">Schedule demo w/ Dana</div>
+      <div class="who">Owner: <b>Tyler</b></div>
+      <p class="reason">Needs 7 days' notice and must happen by Thu Oct 29; still open.</p>
+      <p class="note">Kwame away Wed Oct 28–Sun Nov 1; Jordan busy 15:00–23:59 that day</p>
+      <div class="facts"><span>0.5 pts of course grade at stake</span><span class="conf" title="course rule from the brief, and the latest notes say it is not done">●●● High</span></div>
+      <div class="stubs">
+  <details><summary>Brief · pg2L38</summary><blockquote>“sponsor meetings and demos must be requested from the sponsor at least seven”<small>01_Project_Brief_UNIV497.pdf · pg2L38</small></blockquote></details>
+  <details><summary>Brief · pg1L46</summary><blockquote>“The sponsor demo must take place during Week 10, no later than”<small>01_Project_Brief_UNIV497.pdf · pg1L46</small></blockquote></details>
+  <details><summary>Notes Tue Oct 13 · Priya · p17</summary><blockquote>“Sponsor demo needs to be booked with Dana. Tyler is the liaison.”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p17</small></blockquote></details>
+  <details><summary>Notes Tue Oct 13 · Priya · p23</summary><blockquote>“Priya: text Tyler re: demo + privacy plan”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p23</small></blockquote></details>
+</div>
+    </article>
+    
+    <article class="card">
+      <div class="top"><span class="rank">#2</span><span class="when">Tue Oct 27 · in 6 days</span></div>
+      <div class="action">Finish accessibility check before Kwame is away</div>
+      <div class="who">Owner: <b>Kwame</b></div>
+      <p class="reason">Kwame is away Wed Oct 28–Sun Nov 1; 4 working days left.</p>
+      
+      <div class="facts"><span>0.5 pts of course grade at stake</span><span class="conf" title="availability sheet and owner both on record; tracker may list the same work under another name">●●● High</span></div>
+      <div class="stubs">
+  <details><summary>Notes Tue Oct 13 · Priya · p13</summary><blockquote>“Kwame does the accessibility review (WCAG checklist) once Mei's screens are final.”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p13</small></blockquote></details>
+  <details><summary>Notes Tue Oct 13 · Priya · p22</summary><blockquote>“Kwame: accessibility checklist, start once screens are done”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p22</small></blockquote></details>
+  <details><summary>Notes Tue Oct 20 · Sofia · p4</summary><blockquote>“wants to do the accessibility review before he leaves”<small>02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx · p4</small></blockquote></details>
+  <details><summary>Task list · r30</summary><blockquote>“accessibility check | Kwame |  | not started”<small>03_Team4_tasks.xlsx · r30</small></blockquote></details>
+</div>
+    </article>
+    
+    <article class="card">
+      <div class="top"><span class="rank">#3</span><span class="when">Fri Oct 30 · in 9 days</span></div>
+      <div class="action">Pick an owner for privacy plan</div>
+      <div class="who">Owner: <b>Team</b> <span class="talk">Talk as a team</span></div>
+      <p class="reason">The task list has no owner for it.</p>
+      
+      <div class="facts"><span>0.5 pts of course grade at stake</span><span class="conf" title="the task list has no owner">●●● High</span></div>
+      <div class="stubs">
+  <details><summary>Task list · r34</summary><blockquote>“privacy plan | ? | 10/30?”<small>03_Team4_tasks.xlsx · r34</small></blockquote></details>
+  <details><summary>Notes Tue Oct 13 · Priya · p16</summary><blockquote>“Data & privacy plan: nobody has it yet.”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p16</small></blockquote></details>
+  <details><summary>Notes Tue Oct 20 · Sofia · p6</summary><blockquote>“wasn't sure what it's supposed to include”<small>02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx · p6</small></blockquote></details>
+</div>
+    </article>
+    
+  </div>
+</section>
+
+
+
+
+<section aria-labelledby="s-also">
+  <h2 id="s-also">Also this week</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Action</th><th>Owner</th><th>When</th><th>Why</th><th>Confidence</th></tr></thead>
+    <tbody>
+    
+      <tr><td>Set a date for competitive review</td><td>Team</td>
+          <td class="mono">this week</td><td class="muted">The task list has no date for it.</td>
+          <td class="conf" title="the task list has no date">●●● High</td></tr>
+    
+      <tr><td>Set a date for link flows in figma</td><td>Team</td>
+          <td class="mono">this week</td><td class="muted">The task list has no date for it.</td>
+          <td class="conf" title="the task list has no date">●●● High</td></tr>
+    
+      <tr><td>Set a date for get Dana's current signup spreadsheet</td><td>Team</td>
+          <td class="mono">this week</td><td class="muted">The task list has no date for it.</td>
+          <td class="conf" title="the task list has no date">●●● High</td></tr>
+    
+    </tbody>
+  </table></div>
+</section>
+
+
+
+<section aria-labelledby="s-dis">
+  <h2 id="s-dis">The documents disagree</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Topic</th><th>One source says</th><th>Another says</th><th>We trust</th></tr></thead>
+    <tbody>
+    
+      <tr><td>Accessibility check: owner</td>
+        <td>Kwame<div class="stubs flat">
+  <details><summary>Notes Tue Oct 13 · Priya · p13</summary><blockquote>“Kwame does the accessibility review (WCAG checklist) once Mei's screens are final.”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p13</small></blockquote></details>
+  <details><summary>Notes Tue Oct 13 · Priya · p22</summary><blockquote>“Kwame: accessibility checklist, start once screens are done”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p22</small></blockquote></details>
+</div></td><td>Mei<div class="stubs flat">
+  <details><summary>Task list · r31</summary><blockquote>“WCAG review | Mei? | 10/27”<small>03_Team4_tasks.xlsx · r31</small></blockquote></details>
+</div></td>
+        
+        <td><b>Ask the team</b><br><span class="muted">same work listed under different owners</span></td></tr>
+    
+      <tr><td>Schedule demo w/ Dana: owner</td>
+        <td>Tyler<div class="stubs flat">
+  <details><summary>Notes Tue Oct 13 · Priya · p17</summary><blockquote>“Sponsor demo needs to be booked with Dana. Tyler is the liaison.”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p17</small></blockquote></details>
+  <details><summary>Notes Tue Oct 20 · Sofia · p5</summary><blockquote>“hasn't emailed Dana about the demo yet”<small>02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx · p5</small></blockquote></details>
+</div></td><td>Priya<div class="stubs flat">
+  <details><summary>Notes Tue Oct 13 · Priya · p23</summary><blockquote>“Priya: text Tyler re: demo + privacy plan”<small>02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx · p23</small></blockquote></details>
+</div></td>
+        
+        <td><b>Ask the team</b><br><span class="muted">same work listed under different owners</span></td></tr>
+    
+      <tr><td>Build app in react: owner</td>
+        <td>Jordan<div class="stubs flat">
+  <details><summary>Notes Tue Sep 29 · Kwame · p11</summary><blockquote>“Jordan set up a React starter project on GitHub.”<small>02_Meeting_Notes/Team4_Week6_Notes_KA.docx · p11</small></blockquote></details>
+  <details><summary>Task list · r26</summary><blockquote>“build app in react | Jordan | wk 10 | in progress”<small>03_Team4_tasks.xlsx · r26</small></blockquote></details>
+</div></td><td>Priya<div class="stubs flat">
+  <details><summary>Notes Tue Sep 29 · Kwame · p11</summary><blockquote>“Priya asked him to keep it small until requirements are done.”<small>02_Meeting_Notes/Team4_Week6_Notes_KA.docx · p11</small></blockquote></details>
+</div></td>
+        
+        <td><b>Ask the team</b><br><span class="muted">same work listed under different owners</span></td></tr>
+    
+    </tbody>
+  </table></div>
+</section>
+
+
+<div class="pair">
+  
+  <section class="panel" aria-labelledby="s-miss">
+    <h2 id="s-miss">Not on your task list yet</h2>
+    <ul><li><b>Contribution log table</b> <span class="muted">· required by the brief · due Fri Oct 30</span><div class="stubs flat">
+  <details><summary>Brief · pg2L41</summary><blockquote>“Each milestone submission includes a short table listing what each team member”<small>01_Project_Brief_UNIV497.pdf · pg2L41</small></blockquote></details>
+</div></li><li><b>Note on AI tool usage</b> <span class="muted">· required by the brief · due Fri Oct 30</span><div class="stubs flat">
+  <details><summary>Brief · pg3L5</summary><blockquote>“Note in each submission where AI tools”<small>01_Project_Brief_UNIV497.pdf · pg3L5</small></blockquote></details>
+</div></li><li><b>Usability test with at least five participants from sponsor's user group</b> <span class="muted">· required by the brief · due Fri Nov 20</span><div class="stubs flat">
+  <details><summary>Brief · pg2L23</summary><blockquote>“M4 requires a usability test with at least five participants from the sponsor's actual user group”<small>01_Project_Brief_UNIV497.pdf · pg2L23</small></blockquote></details>
+</div></li></ul>
+  </section>
+  
+  
+  <section class="panel" aria-labelledby="s-ans">
+    <h2 id="s-ans">Already answered in the brief</h2>
+    <ul><li><span class="muted">“ask dr okafor about the late policy??”</span><br>10% off per day late, up to 3 days; extension requests must arrive by Wed Oct 28, 23:59 (48.0h notice).<div class="stubs flat">
+  <details><summary>Brief · pg2L29</summary><blockquote>“Team milestones lose 10% per calendar day late, up to three days.”<small>01_Project_Brief_UNIV497.pdf · pg2L29</small></blockquote></details>
+</div></li></ul>
+  </section>
+  
+  
+  <section class="panel" aria-labelledby="s-q">
+    <h2 id="s-q">Questions for the next meeting</h2>
+    <ul><li>Who takes peer evals?</li></ul>
+  </section>
+  
+  
+  <section class="panel" aria-labelledby="s-load">
+    <h2 id="s-load">Who's carrying what</h2>
+    
+    <div class="bar"><span>Jordan</span><i style="width:75.0%"></i><span class="mono">3</span></div>
+    
+    <div class="bar"><span>Kwame</span><i style="width:100.0%"></i><span class="mono">4</span></div>
+    
+    <div class="bar"><span>Mei</span><i style="width:75.0%"></i><span class="mono">3</span></div>
+    
+    <div class="bar"><span>Priya</span><i style="width:75.0%"></i><span class="mono">3</span></div>
+    
+    <div class="bar"><span>Sofia</span><i style="width:75.0%"></i><span class="mono">3</span></div>
+    
+    <div class="bar"><span>Tyler</span><i style="width:50.0%"></i><span class="mono">2</span></div>
+    
+    <p class="muted">Counts aren't contribution. Use this to start a conversation, not to judge one.</p>
+  </section>
+  
+</div>
+
+<footer>Built from 12 documents and 196 quoted claims. Dates and counts are computed by code; every line links to its source. Reasons for absences are never shown.</footer>
+</div>
+</body>
+</html>

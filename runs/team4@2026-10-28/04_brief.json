@@ -1,0 +1,722 @@
+{
+  "project": "team4",
+  "today": "2026-10-28",
+  "today_label": "Wednesday, October 28",
+  "countdown": {
+    "label": "M3 due Fri Oct 30",
+    "days": 2
+  },
+  "top": [
+    {
+      "rank": 1,
+      "action": "Find a new owner for WCAG review",
+      "owner": "Whole team",
+      "date": "2026-10-28",
+      "date_label": "Wed Oct 28 \u00b7 today",
+      "reason": "Kwame is away Wed Oct 28\u2013Sun Nov 1 and the work is still open.",
+      "note": "",
+      "stakes": "0.5 pts of course grade at stake",
+      "confidence": {
+        "level": "high",
+        "word": "High",
+        "dots": "\u25cf\u25cf\u25cf",
+        "why": "availability sheet and owner both on record; tracker may list the same work under another name"
+      },
+      "talk_first": false,
+      "detectors": [
+        "D2"
+      ],
+      "item_id": "i10",
+      "item_title": "WCAG review",
+      "receipts": [
+        {
+          "label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p13",
+          "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx",
+          "loc": "p13",
+          "quote": "Kwame does the accessibility review (WCAG checklist) once Mei's screens are final.",
+          "private": false
+        },
+        {
+          "label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p22",
+          "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx",
+          "loc": "p22",
+          "quote": "Kwame: accessibility checklist, start once screens are done",
+          "private": false
+        },
+        {
+          "label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p4",
+          "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx",
+          "loc": "p4",
+          "quote": "wants to do the accessibility review before he leaves",
+          "private": false
+        },
+        {
+          "label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L7",
+          "file": "02_Meeting_Notes/wk10 notes - oct 27.txt",
+          "loc": "L7",
+          "quote": "kwame did the accessibility checklist on the 9 volunteer screens (sat)",
+          "private": false
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "action": "Set a date for hours tracking screens",
+      "owner": "Team",
+      "date": null,
+      "date_label": "this week",
+      "reason": "The task list has no date for it.",
+      "note": "",
+      "stakes": "0.5 pts of course grade at stake",
+      "confidence": {
+        "level": "high",
+        "word": "High",
+        "dots": "\u25cf\u25cf\u25cf",
+        "why": "the task list has no date"
+      },
+      "talk_first": true,
+      "detectors": [
+        "D5",
+        "D7"
+      ],
+      "item_id": "i21",
+      "item_title": "hours tracking screens",
+      "receipts": [
+        {
+          "label": "Notes wk 7 \u00b7 L4",
+          "file": "02_Meeting_Notes/wk 7.txt",
+          "loc": "L4",
+          "quote": "told her wed look at it",
+          "private": false
+        },
+        {
+          "label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L8",
+          "file": "02_Meeting_Notes/wk10 notes - oct 27.txt",
+          "loc": "L8",
+          "quote": "mei said she can mock up 1-2 screens for it by thurs",
+          "private": false
+        },
+        {
+          "label": "Task list (Tue Oct 27) \u00b7 r37",
+          "file": "Team4_tasks (updated oct 27).xlsx",
+          "loc": "r37",
+          "quote": "hours tracking screens | Mei | thurs",
+          "private": false
+        },
+        {
+          "label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p7",
+          "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx",
+          "loc": "p7",
+          "quote": "Dana mentioned the hours tracking thing to Tyler a couple weeks ago, is that in or out?",
+          "private": false
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "action": "Decide privacy plan",
+      "owner": "Whole team",
+      "date": "2026-10-30",
+      "date_label": "Fri Oct 30 \u00b7 in 2 days",
+      "reason": "Raised in 2 meetings since Tue Oct 13 without a decision.",
+      "note": "",
+      "stakes": "0.5 pts of course grade at stake",
+      "confidence": {
+        "level": "med",
+        "word": "Medium",
+        "dots": "\u25cf\u25cf\u25cb",
+        "why": "raised in 2 meetings, never settled"
+      },
+      "talk_first": true,
+      "detectors": [
+        "D7"
+      ],
+      "item_id": "i11",
+      "item_title": "privacy plan",
+      "receipts": [
+        {
+          "label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p16",
+          "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx",
+          "loc": "p16",
+          "quote": "Data & privacy plan: nobody has it yet. Maybe Tyler since he has been talking to Dana about what info they collect? Need to ask him.",
+          "private": false
+        },
+        {
+          "label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p6",
+          "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx",
+          "loc": "p6",
+          "quote": "wasn't sure what it's supposed to include",
+          "private": false
+        }
+      ]
+    }
+  ],
+  "also": [
+    {
+      "rank": 4,
+      "action": "Pick an owner for peer evals",
+      "owner": "Team",
+      "date": "2026-10-30",
+      "date_label": "Fri Oct 30 \u00b7 in 2 days",
+      "reason": "The task list has no owner for it.",
+      "note": "",
+      "stakes": "10 pts of course grade at stake",
+      "confidence": {
+        "level": "high",
+        "word": "High",
+        "dots": "\u25cf\u25cf\u25cf",
+        "why": "the task list has no owner"
+      },
+      "talk_first": true,
+      "detectors": [
+        "D5"
+      ],
+      "item_id": "i07",
+      "item_title": "peer evals",
+      "receipts": [
+        {
+          "label": "Task list (Tue Oct 27) \u00b7 r35",
+          "file": "Team4_tasks (updated oct 27).xlsx",
+          "loc": "r35",
+          "quote": "peer evals | everyone | 10/30",
+          "private": false
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "action": "Check in on workload this week",
+      "owner": "Whole team",
+      "date": null,
+      "date_label": "this week",
+      "reason": "Sofia holds 4 open items; the team median is 1.5.",
+      "note": "",
+      "stakes": "1 pts of course grade at stake",
+      "confidence": {
+        "level": "med",
+        "word": "Medium",
+        "dots": "\u25cf\u25cf\u25cb",
+        "why": "counts from the task list; they miss invisible work"
+      },
+      "talk_first": true,
+      "detectors": [
+        "D8"
+      ],
+      "item_id": null,
+      "item_title": null,
+      "receipts": [
+        {
+          "label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p14",
+          "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx",
+          "loc": "p14",
+          "quote": "Sofia does the traceability matrix (features vs. requirements from M2).",
+          "private": false
+        },
+        {
+          "label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p21",
+          "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx",
+          "loc": "p21",
+          "quote": "Sofia: traceability matrix draft by Fri 10/23",
+          "private": false
+        },
+        {
+          "label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p7",
+          "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx",
+          "loc": "p7",
+          "quote": "I'm working on the traceability matrix",
+          "private": false
+        },
+        {
+          "label": "Task list (Tue Oct 27) \u00b7 r32",
+          "file": "Team4_tasks (updated oct 27).xlsx",
+          "loc": "r32",
+          "quote": "traceability matrix | Sofia | 2026-10-23 | in progress",
+          "private": false
+        }
+      ]
+    },
+    {
+      "rank": 6,
+      "action": "Set a date for get Dana's current signup spreadsheet",
+      "owner": "Team",
+      "date": null,
+      "date_label": "this week",
+      "reason": "The task list has no date for it.",
+      "note": "",
+      "stakes": "0.5 pts of course grade at stake",
+      "confidence": {
+        "level": "high",
+        "word": "High",
+        "dots": "\u25cf\u25cf\u25cf",
+        "why": "the task list has no date"
+      },
+      "talk_first": false,
+      "detectors": [
+        "D5"
+      ],
+      "item_id": "i35",
+      "item_title": "get Dana's current signup spreadsheet",
+      "receipts": [
+        {
+          "label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p18",
+          "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx",
+          "loc": "p18",
+          "quote": "Tyler: ask if Dana can share their current sign-up spreadsheet (for requirements)",
+          "private": false
+        },
+        {
+          "label": "Task list (Tue Oct 27) \u00b7 r21",
+          "file": "Team4_tasks (updated oct 27).xlsx",
+          "loc": "r21",
+          "quote": "get Dana's current signup spreadsheet | Tyler | ?",
+          "private": false
+        }
+      ]
+    }
+  ],
+  "disagreements": [
+    {
+      "topic": "Submit M3: date",
+      "sides": [
+        {
+          "says": "Fri Oct 30",
+          "receipts": [
+            {
+              "label": "Brief \u00b7 pg1L28",
+              "file": "01_Project_Brief_UNIV497.pdf",
+              "loc": "pg1L28",
+              "quote": "M3 Prototype milestone and sponsor demo (see Section 4) 10 Fri, Oct 30 20%",
+              "private": false
+            },
+            {
+              "label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p8",
+              "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx",
+              "loc": "p8",
+              "quote": "Milestone 3: prototype + sponsor demo, due Fri Oct 30",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Fri Nov 20",
+          "receipts": [
+            {
+              "label": "Brief \u00b7 pg1L29",
+              "file": "01_Project_Brief_UNIV497.pdf",
+              "loc": "pg1L29",
+              "quote": "M4 Usability test report (minimum five test participants) 13 Fri, Nov 20 15%",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Fri Dec 11",
+          "receipts": [
+            {
+              "label": "Brief \u00b7 pg1L30",
+              "file": "01_Project_Brief_UNIV497.pdf",
+              "loc": "pg1L30",
+              "quote": "M5 Final presentation (in class, Dec 8 to 10) and final report 15 Fri, Dec 11 25%",
+              "private": false
+            }
+          ]
+        }
+      ],
+      "trust": "Fri Oct 30",
+      "why": "the course brief is the authority on course dates",
+      "confidence": "High"
+    },
+    {
+      "topic": "Peer evals: date",
+      "sides": [
+        {
+          "says": "Fri Oct 30",
+          "receipts": [
+            {
+              "label": "Brief \u00b7 pg1L31",
+              "file": "01_Project_Brief_UNIV497.pdf",
+              "loc": "pg1L31",
+              "quote": "PE Peer evaluations and individual contribution (submitted 10, 15 Oct 30; Dec 11 10%",
+              "private": false
+            },
+            {
+              "label": "Brief \u00b7 pg2L45",
+              "file": "01_Project_Brief_UNIV497.pdf",
+              "loc": "pg2L45",
+              "quote": "Each student completes a confidential peer evaluation form, due on the same date as M3",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Fri Nov 6",
+          "receipts": [
+            {
+              "label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p8",
+              "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx",
+              "loc": "p8",
+              "quote": "peer evals are due Nov 6 I think?",
+              "private": false
+            }
+          ]
+        }
+      ],
+      "trust": "Fri Oct 30",
+      "why": "the course brief is the authority on course dates",
+      "confidence": "High"
+    },
+    {
+      "topic": "Schedule demo w/ Dana: date",
+      "sides": [
+        {
+          "says": "Thu Oct 29",
+          "receipts": [
+            {
+              "label": "Brief \u00b7 pg1L46",
+              "file": "01_Project_Brief_UNIV497.pdf",
+              "loc": "pg1L46",
+              "quote": "The sponsor demo must take place during Week 10, no later than",
+              "private": false
+            },
+            {
+              "label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L4",
+              "file": "02_Meeting_Notes/wk10 notes - oct 27.txt",
+              "loc": "L4",
+              "quote": "she can do thurs 10/29 at 4:30 at the warehouse",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Thu Sep 10",
+          "receipts": [
+            {
+              "label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3",
+              "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx",
+              "loc": "p3",
+              "quote": "she can meet Thursday Sept 10 at 3pm at the food bank warehouse on Grand Ave.",
+              "private": false
+            }
+          ]
+        }
+      ],
+      "trust": "Thu Oct 29",
+      "why": "the course brief is the authority on course dates",
+      "confidence": "High"
+    },
+    {
+      "topic": "Schedule demo w/ Dana: owner",
+      "sides": [
+        {
+          "says": "Tyler",
+          "receipts": [
+            {
+              "label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3",
+              "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx",
+              "loc": "p3",
+              "quote": "she can meet Thursday Sept 10 at 3pm at the food bank warehouse on Grand Ave.",
+              "private": false
+            },
+            {
+              "label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p17",
+              "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx",
+              "loc": "p17",
+              "quote": "Sponsor demo needs to be booked with Dana. Tyler is the liaison.",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Jordan",
+          "receipts": [
+            {
+              "label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3",
+              "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx",
+              "loc": "p3",
+              "quote": "he'll call in if he can.",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Sofia, Tyler, Priya, Kwame",
+          "receipts": [
+            {
+              "label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3",
+              "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx",
+              "loc": "p3",
+              "quote": "Me, Tyler, Priya and Kwame will go in person.",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Mei",
+          "receipts": [
+            {
+              "label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3",
+              "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx",
+              "loc": "p3",
+              "quote": "Mei might come.",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Priya",
+          "receipts": [
+            {
+              "label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p23",
+              "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx",
+              "loc": "p23",
+              "quote": "Priya: text Tyler re: demo + privacy plan",
+              "private": false
+            }
+          ]
+        }
+      ],
+      "trust": "Ask the team",
+      "why": "same work listed under different owners",
+      "confidence": "Medium"
+    },
+    {
+      "topic": "Privacy plan: owner",
+      "sides": [
+        {
+          "says": "Tyler",
+          "receipts": [
+            {
+              "label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p6",
+              "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx",
+              "loc": "p6",
+              "quote": "Tyler said he can look at it",
+              "private": false
+            },
+            {
+              "label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L9",
+              "file": "02_Meeting_Notes/wk10 notes - oct 27.txt",
+              "loc": "L9",
+              "quote": "tyler said hed help w/ whatever she needs",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Sofia",
+          "receipts": [
+            {
+              "label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L9",
+              "file": "02_Meeting_Notes/wk10 notes - oct 27.txt",
+              "loc": "L9",
+              "quote": "privacy plan: sofia took it",
+              "private": false
+            }
+          ]
+        },
+        {
+          "says": "Sofia, Tyler",
+          "receipts": [
+            {
+              "label": "Task list (Tue Oct 27) \u00b7 r34",
+              "file": "Team4_tasks (updated oct 27).xlsx",
+              "loc": "r34",
+              "quote": "privacy plan | Sofia (Tyler help) | 10/30?",
+              "private": false
+            }
+          ]
+        }
+      ],
+      "trust": "Ask the team",
+      "why": "same work listed under different owners",
+      "confidence": "Medium"
+    }
+  ],
+  "missing": [
+    {
+      "item": "Sponsor demo and feedback notes",
+      "impact": "required by the brief",
+      "due": "Thu Oct 29",
+      "receipts": [
+        {
+          "label": "Brief \u00b7 pg2L11",
+          "file": "01_Project_Brief_UNIV497.pdf",
+          "loc": "pg2L11",
+          "quote": "Sponsor demo and The demo took place by Oct 29. Submission includes dated notes of 15%",
+          "private": false
+        }
+      ]
+    },
+    {
+      "item": "Contribution log",
+      "impact": "\u22125 points if missing",
+      "due": "Fri Oct 30",
+      "receipts": [
+        {
+          "label": "Brief \u00b7 pg2L19",
+          "file": "01_Project_Brief_UNIV497.pdf",
+          "loc": "pg2L19",
+          "quote": "Required with every milestone submission: a contribution log (see Section 5). A missing log costs five points",
+          "private": false
+        }
+      ]
+    },
+    {
+      "item": "Contribution log table",
+      "impact": "required by the brief",
+      "due": "Fri Oct 30",
+      "receipts": [
+        {
+          "label": "Brief \u00b7 pg2L41",
+          "file": "01_Project_Brief_UNIV497.pdf",
+          "loc": "pg2L41",
+          "quote": "Each milestone submission includes a short table listing what each team member",
+          "private": false
+        }
+      ]
+    },
+    {
+      "item": "AI usage note",
+      "impact": "required by the brief",
+      "due": "Fri Oct 30",
+      "receipts": [
+        {
+          "label": "Brief \u00b7 pg3L5",
+          "file": "01_Project_Brief_UNIV497.pdf",
+          "loc": "pg3L5",
+          "quote": "Note in each submission where AI tools",
+          "private": false
+        }
+      ]
+    },
+    {
+      "item": "Working prototype",
+      "impact": "required by the brief",
+      "due": "Fri Dec 11",
+      "receipts": [
+        {
+          "label": "Brief \u00b7 pg2L2",
+          "file": "01_Project_Brief_UNIV497.pdf",
+          "loc": "pg2L2",
+          "quote": "Working prototype Covers every core user flow listed in your M1 scope agreement. A 35%",
+          "private": false
+        }
+      ]
+    }
+  ],
+  "answered": [
+    {
+      "question": "We should double check",
+      "answer": "The brief says Fri Oct 30.",
+      "receipts": [
+        {
+          "label": "Brief \u00b7 pg1L31",
+          "file": "01_Project_Brief_UNIV497.pdf",
+          "loc": "pg1L31",
+          "quote": "PE Peer evaluations and individual contribution (submitted 10, 15 Oct 30; Dec 11 10%",
+          "private": false
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "text": "Who takes peer evals?",
+      "talk_first": true
+    },
+    {
+      "text": "Sofia has 4 open items. Can anyone take one?",
+      "talk_first": true
+    }
+  ],
+  "load": {
+    "note": "Counts aren't contribution. Use this to start a conversation, not to judge one.",
+    "people": [
+      {
+        "name": "Jordan",
+        "open_items": 2,
+        "blocks": 0
+      },
+      {
+        "name": "Kwame",
+        "open_items": 2,
+        "blocks": 0
+      },
+      {
+        "name": "Mei",
+        "open_items": 1,
+        "blocks": 0
+      },
+      {
+        "name": "Priya",
+        "open_items": 1,
+        "blocks": 0
+      },
+      {
+        "name": "Sofia",
+        "open_items": 4,
+        "blocks": 0
+      },
+      {
+        "name": "Tyler",
+        "open_items": 1,
+        "blocks": 0
+      }
+    ]
+  },
+  "since_last": {
+    "prev_today": "2026-10-21",
+    "prev_label": "Wed Oct 21",
+    "flagged": [
+      {
+        "was": "Schedule demo w/ Dana",
+        "by": "Thu Oct 22",
+        "owner": "Tyler",
+        "now": "Done",
+        "receipts": [
+          {
+            "label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L4",
+            "file": "02_Meeting_Notes/wk10 notes - oct 27.txt",
+            "loc": "L4",
+            "quote": "she can do thurs 10/29 at 4:30 at the warehouse",
+            "private": false
+          }
+        ]
+      },
+      {
+        "was": "Finish accessibility check before Kwame is away",
+        "by": "Tue Oct 27",
+        "owner": "Kwame",
+        "now": "Still open",
+        "receipts": [
+          {
+            "label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L7",
+            "file": "02_Meeting_Notes/wk10 notes - oct 27.txt",
+            "loc": "L7",
+            "quote": "the 5 coordinator screens not reviewed yet, he'll try tonight before he leaves",
+            "private": false
+          }
+        ]
+      },
+      {
+        "was": "Pick an owner for privacy plan",
+        "by": "Fri Oct 30",
+        "owner": "Team",
+        "now": "In progress",
+        "receipts": [
+          {
+            "label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L9",
+            "file": "02_Meeting_Notes/wk10 notes - oct 27.txt",
+            "loc": "L9",
+            "quote": "privacy plan: sofia took it",
+            "private": false
+          }
+        ]
+      }
+    ]
+  },
+  "counts": {
+    "docs": 13,
+    "claims": 236,
+    "findings": 38
+  }
+}

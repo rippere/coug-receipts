@@ -1,0 +1,2523 @@
+{
+  "project": "team4",
+  "today": "2026-10-28",
+  "next_deadline": {
+    "name": "M3",
+    "date": "2026-10-30",
+    "days": 2
+  },
+  "people": [
+    "Dana",
+    "Jordan Ellis",
+    "Kwame Asante",
+    "Mei Lin Zhou",
+    "Priya Raman",
+    "Sofia Alvarez",
+    "Tyler Brandt"
+  ],
+  "items": [
+    {
+      "item_id": "i01",
+      "title": "course calendar",
+      "owner": [],
+      "due": "2026-08-24",
+      "due_basis": "brief",
+      "status": "unknown",
+      "status_from": null,
+      "claims": [
+        "c001",
+        "c002"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i02",
+      "title": "late_penalty",
+      "owner": [],
+      "due": null,
+      "due_basis": null,
+      "status": "unknown",
+      "status_from": null,
+      "claims": [
+        "c003"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i03",
+      "title": "team charter",
+      "owner": [
+        "Sofia Alvarez"
+      ],
+      "due": "2026-09-04",
+      "due_basis": "brief",
+      "status": "done",
+      "status_from": "c203",
+      "claims": [
+        "c004",
+        "c026",
+        "c039",
+        "c047",
+        "c049",
+        "c050",
+        "c051",
+        "c052",
+        "c053",
+        "c056",
+        "c057",
+        "c058",
+        "c059",
+        "c060",
+        "c061",
+        "c062",
+        "c072",
+        "c175",
+        "c203"
+      ],
+      "stakes_pct": 5.0,
+      "milestone": "M0 Team charter (roles, meeting norms, communication and conflict plan)",
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i04",
+      "title": "submit proposal",
+      "owner": [
+        "Priya Raman"
+      ],
+      "due": "2026-09-25",
+      "due_basis": "brief",
+      "status": "done",
+      "status_from": "c211",
+      "claims": [
+        "c005",
+        "c071",
+        "c127",
+        "c128",
+        "c134",
+        "c179",
+        "c211"
+      ],
+      "stakes_pct": 10.0,
+      "milestone": "M1 Project proposal and scope agreement signed by sponsor",
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i05",
+      "title": "submit report",
+      "owner": [
+        "Priya Raman"
+      ],
+      "due": "2026-10-09",
+      "due_basis": "brief",
+      "status": "done",
+      "status_from": "c218",
+      "claims": [
+        "c006",
+        "c075",
+        "c132",
+        "c136",
+        "c142",
+        "c149",
+        "c151",
+        "c152",
+        "c218"
+      ],
+      "stakes_pct": 15.0,
+      "milestone": "M2 Research and requirements report (minimum five stakeholder interviews, personas, prioritized requirements)",
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i06",
+      "title": "submit M3",
+      "owner": [
+        "Priya Raman"
+      ],
+      "due": "2026-10-30",
+      "due_basis": "brief",
+      "status": "open",
+      "status_from": "c174",
+      "claims": [
+        "c007",
+        "c008",
+        "c009",
+        "c012",
+        "c019",
+        "c078",
+        "c079",
+        "c093",
+        "c174",
+        "c219",
+        "c231"
+      ],
+      "stakes_pct": 25.0,
+      "milestone": "M5 Final presentation (in class, Dec 8 to 10) and final report",
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": true
+    },
+    {
+      "item_id": "i07",
+      "title": "peer evals",
+      "owner": [],
+      "due": "2026-10-30",
+      "due_basis": "brief",
+      "status": "open",
+      "status_from": null,
+      "claims": [
+        "c010",
+        "c024",
+        "c118",
+        "c119",
+        "c145",
+        "c173",
+        "c230"
+      ],
+      "stakes_pct": 10.0,
+      "milestone": "Peer evaluations and individual contribution",
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i08",
+      "title": "schedule demo w/ Dana",
+      "owner": [
+        "Tyler Brandt"
+      ],
+      "due": "2026-10-29",
+      "due_basis": "brief",
+      "status": "done",
+      "status_from": "c159",
+      "claims": [
+        "c011",
+        "c015",
+        "c022",
+        "c064",
+        "c066",
+        "c067",
+        "c068",
+        "c085",
+        "c086",
+        "c092",
+        "c105",
+        "c106",
+        "c107",
+        "c109",
+        "c121",
+        "c159",
+        "c160",
+        "c177",
+        "c227",
+        "c228"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i09",
+      "title": "traceability matrix",
+      "owner": [
+        "Sofia Alvarez"
+      ],
+      "due": "2026-10-23",
+      "due_basis": "newest source",
+      "status": "in_progress",
+      "status_from": "c226",
+      "claims": [
+        "c013",
+        "c083",
+        "c090",
+        "c113",
+        "c114",
+        "c115",
+        "c226"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i10",
+      "title": "WCAG review",
+      "owner": [
+        "Kwame Asante"
+      ],
+      "due": "2026-10-27",
+      "due_basis": "newest source",
+      "status": "open",
+      "status_from": "c167",
+      "claims": [
+        "c014",
+        "c082",
+        "c091",
+        "c102",
+        "c103",
+        "c104",
+        "c166",
+        "c167",
+        "c224",
+        "c225"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": true
+    },
+    {
+      "item_id": "i11",
+      "title": "privacy plan",
+      "owner": [
+        "Sofia Alvarez"
+      ],
+      "due": "2026-10-30",
+      "due_basis": "newest source",
+      "status": "in_progress",
+      "status_from": "c171",
+      "claims": [
+        "c016",
+        "c084",
+        "c110",
+        "c111",
+        "c112",
+        "c171",
+        "c172",
+        "c229"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i12",
+      "title": "timeline",
+      "owner": [
+        "Priya Raman"
+      ],
+      "due": "2026-09-19",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c209",
+      "claims": [
+        "c017",
+        "c055",
+        "c183",
+        "c209"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i13",
+      "title": "contribution log",
+      "owner": [],
+      "due": null,
+      "due_basis": null,
+      "status": "unknown",
+      "status_from": null,
+      "claims": [
+        "c018",
+        "c023"
+      ],
+      "stakes_pct": 1.0,
+      "milestone": "M3 Prototype milestone and sponsor demo",
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i14",
+      "title": "late policy",
+      "owner": [],
+      "due": null,
+      "due_basis": null,
+      "status": "unknown",
+      "status_from": null,
+      "claims": [
+        "c020"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i15",
+      "title": "extension request",
+      "owner": [],
+      "due": null,
+      "due_basis": null,
+      "status": "unknown",
+      "status_from": null,
+      "claims": [
+        "c021"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i16",
+      "title": "team concerns",
+      "owner": [],
+      "due": "2026-10-30",
+      "due_basis": "brief",
+      "status": "unknown",
+      "status_from": null,
+      "claims": [
+        "c025"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i17",
+      "title": "AI use",
+      "owner": [],
+      "due": null,
+      "due_basis": null,
+      "status": "unknown",
+      "status_from": null,
+      "claims": [
+        "c027",
+        "c028"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i18",
+      "title": "sponsor time",
+      "owner": [],
+      "due": null,
+      "due_basis": null,
+      "status": "unknown",
+      "status_from": null,
+      "claims": [
+        "c029"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i19",
+      "title": "problem statement/background",
+      "owner": [
+        "Sofia Alvarez"
+      ],
+      "due": "2026-09-19",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c206",
+      "claims": [
+        "c030",
+        "c180",
+        "c206"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i20",
+      "title": "scope + deliverables",
+      "owner": [
+        "Priya Raman"
+      ],
+      "due": "2026-09-19",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c207",
+      "claims": [
+        "c031",
+        "c032",
+        "c033",
+        "c037",
+        "c038",
+        "c122",
+        "c123",
+        "c124",
+        "c125",
+        "c126",
+        "c181",
+        "c207"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i21",
+      "title": "hours tracking screens",
+      "owner": [
+        "Mei Lin Zhou"
+      ],
+      "due": null,
+      "due_basis": null,
+      "status": "open",
+      "status_from": "c169",
+      "claims": [
+        "c034",
+        "c116",
+        "c117",
+        "c154",
+        "c155",
+        "c168",
+        "c169",
+        "c232",
+        "c233"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i22",
+      "title": "email dana re kickoff",
+      "owner": [
+        "Tyler Brandt"
+      ],
+      "due": "2026-09-11",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c158",
+      "claims": [
+        "c042",
+        "c054",
+        "c063",
+        "c158",
+        "c204"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i23",
+      "title": "tech approach",
+      "owner": [
+        "Jordan Ellis"
+      ],
+      "due": "2026-09-19",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c208",
+      "claims": [
+        "c069",
+        "c070",
+        "c080",
+        "c182",
+        "c208"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i24",
+      "title": "kickoff questions",
+      "owner": [
+        "Kwame Asante"
+      ],
+      "due": "2026-09-08",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c205",
+      "claims": [
+        "c073",
+        "c176",
+        "c205"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i25",
+      "title": "competitive review",
+      "owner": [
+        "Mei Lin Zhou"
+      ],
+      "due": null,
+      "due_basis": null,
+      "status": "done",
+      "status_from": "c217",
+      "claims": [
+        "c074",
+        "c141",
+        "c217"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i26",
+      "title": "volunteer screens",
+      "owner": [
+        "Mei Lin Zhou"
+      ],
+      "due": "2026-10-16",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c221",
+      "claims": [
+        "c076",
+        "c087",
+        "c094",
+        "c130",
+        "c221"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i27",
+      "title": "coordinator screens",
+      "owner": [
+        "Mei Lin Zhou"
+      ],
+      "due": "2026-10-20",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c164",
+      "claims": [
+        "c077",
+        "c088",
+        "c095",
+        "c096",
+        "c164",
+        "c222"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i28",
+      "title": "link flows in figma",
+      "owner": [
+        "Jordan Ellis"
+      ],
+      "due": null,
+      "due_basis": null,
+      "status": "done",
+      "status_from": "c165",
+      "claims": [
+        "c081",
+        "c089",
+        "c097",
+        "c098",
+        "c099",
+        "c165",
+        "c223"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i29",
+      "title": "rule",
+      "owner": [],
+      "due": "2026-10-27",
+      "due_basis": "newest source",
+      "status": "open",
+      "status_from": null,
+      "claims": [
+        "c120"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i30",
+      "title": "get scope agreement signed",
+      "owner": [
+        "Tyler Brandt"
+      ],
+      "due": "2026-09-24",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c210",
+      "claims": [
+        "c129",
+        "c135",
+        "c184",
+        "c185",
+        "c210"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i31",
+      "title": "interviews (8)",
+      "owner": [
+        "Kwame Asante"
+      ],
+      "due": "2026-10-05",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c212",
+      "claims": [
+        "c131",
+        "c137",
+        "c138",
+        "c146",
+        "c153",
+        "c212"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i32",
+      "title": "personas",
+      "owner": [
+        "Kwame Asante",
+        "Mei Lin Zhou"
+      ],
+      "due": "2026-10-07",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c214",
+      "claims": [
+        "c139",
+        "c147",
+        "c214"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i33",
+      "title": "requirements list",
+      "owner": [
+        "Sofia Alvarez"
+      ],
+      "due": "2026-10-07",
+      "due_basis": "newest source",
+      "status": "done",
+      "status_from": "c215",
+      "claims": [
+        "c140",
+        "c148",
+        "c215"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i34",
+      "title": "build app in react",
+      "owner": [
+        "Jordan Ellis"
+      ],
+      "due": "2026-10-30",
+      "due_basis": "newest source",
+      "status": "in_progress",
+      "status_from": "c220",
+      "claims": [
+        "c143",
+        "c144",
+        "c220"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i35",
+      "title": "get Dana's current signup spreadsheet",
+      "owner": [
+        "Tyler Brandt"
+      ],
+      "due": null,
+      "due_basis": null,
+      "status": "open",
+      "status_from": "c150",
+      "claims": [
+        "c150",
+        "c216"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i36",
+      "title": "prototype milestone",
+      "owner": [],
+      "due": "2026-10-30",
+      "due_basis": "newest source",
+      "status": "open",
+      "status_from": null,
+      "claims": [
+        "c156"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i37",
+      "title": "swap thurs shift",
+      "owner": [
+        "Jordan Ellis"
+      ],
+      "due": "2026-10-29",
+      "due_basis": "newest source",
+      "status": "in_progress",
+      "status_from": "c162",
+      "claims": [
+        "c162",
+        "c235"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i38",
+      "title": "practice demo",
+      "owner": [
+        "Sofia Alvarez"
+      ],
+      "due": "2026-10-28",
+      "due_basis": "newest source",
+      "status": "open",
+      "status_from": "c163",
+      "claims": [
+        "c163",
+        "c236"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i39",
+      "title": "add hours tracking to matrix",
+      "owner": [
+        "Sofia Alvarez"
+      ],
+      "due": null,
+      "due_basis": null,
+      "status": "in_progress",
+      "status_from": "c170",
+      "claims": [
+        "c170",
+        "c234"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    },
+    {
+      "item_id": "i40",
+      "title": "user interview synthesis",
+      "owner": [
+        "Kwame Asante"
+      ],
+      "due": "2026-10-07",
+      "due_basis": "newest source",
+      "status": "in_progress",
+      "status_from": "c213",
+      "claims": [
+        "c213"
+      ],
+      "stakes_pct": 0.5,
+      "milestone": null,
+      "blocks": [],
+      "blocked_by": [],
+      "alias_merged": false
+    }
+  ],
+  "findings": [
+    {
+      "detector": "D4",
+      "item_id": "i05",
+      "item_title": "submit report",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-10-09",
+            "claims": [
+              "c006",
+              "c075",
+              "c132",
+              "c136",
+              "c151",
+              "c218"
+            ]
+          },
+          {
+            "says": "2026-10-08",
+            "claims": [
+              "c149"
+            ]
+          }
+        ],
+        "trust": "2026-10-09",
+        "why": "the course brief is the authority on course dates"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "brief settles it"
+      },
+      "receipts": [
+        "c006",
+        "c075",
+        "c132",
+        "c136",
+        "c151",
+        "c218",
+        "c149"
+      ],
+      "days_left": -19,
+      "stakes_pct": 15.0,
+      "score": 0.9375,
+      "id": "f01"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i04",
+      "item_title": "submit proposal",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-09-25",
+            "claims": [
+              "c005",
+              "c071",
+              "c134",
+              "c179",
+              "c211"
+            ]
+          },
+          {
+            "says": "2026-09-19",
+            "claims": [
+              "c127"
+            ]
+          },
+          {
+            "says": "2027-06-15",
+            "claims": [
+              "c128"
+            ]
+          }
+        ],
+        "trust": "2026-09-25",
+        "why": "the course brief is the authority on course dates"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "brief settles it"
+      },
+      "receipts": [
+        "c005",
+        "c071",
+        "c134",
+        "c179",
+        "c211",
+        "c127",
+        "c128"
+      ],
+      "days_left": -33,
+      "stakes_pct": 10.0,
+      "score": 0.9091,
+      "id": "f02"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i03",
+      "item_title": "team charter",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-09-04",
+            "claims": [
+              "c004",
+              "c052",
+              "c060",
+              "c072"
+            ]
+          },
+          {
+            "says": "2026-09-03",
+            "claims": [
+              "c051",
+              "c203"
+            ]
+          },
+          {
+            "says": "2026-08-28",
+            "claims": [
+              "c053"
+            ]
+          },
+          {
+            "says": "2026-09-01",
+            "claims": [
+              "c056"
+            ]
+          },
+          {
+            "says": "2026-09-11",
+            "claims": [
+              "c175"
+            ]
+          }
+        ],
+        "trust": "2026-09-04",
+        "why": "the course brief is the authority on course dates"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "brief settles it"
+      },
+      "receipts": [
+        "c004",
+        "c052",
+        "c060",
+        "c072",
+        "c051",
+        "c203",
+        "c053",
+        "c056",
+        "c175"
+      ],
+      "days_left": -54,
+      "stakes_pct": 5.0,
+      "score": 0.8333,
+      "id": "f03"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i03",
+      "item_title": "team charter",
+      "facts": {
+        "field": "status",
+        "sides": [
+          {
+            "says": "decided",
+            "claims": [
+              "c057",
+              "c058"
+            ]
+          },
+          {
+            "says": "in progress",
+            "claims": [
+              "c051",
+              "c053",
+              "c060",
+              "c072"
+            ]
+          }
+        ],
+        "trust": "done",
+        "why": "newer task progress supersedes an older decision",
+        "status_from": "c203"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "newest dated status evidence"
+      },
+      "receipts": [
+        "c057",
+        "c058",
+        "c051",
+        "c053",
+        "c060",
+        "c072",
+        "c203"
+      ],
+      "days_left": -54,
+      "stakes_pct": 5.0,
+      "score": 0.8333,
+      "id": "f04"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i05",
+      "item_title": "submit report",
+      "facts": {
+        "field": "owner",
+        "sides": [
+          {
+            "says": [
+              "Sofia Alvarez"
+            ],
+            "claims": [
+              "c142",
+              "c149",
+              "c152"
+            ]
+          },
+          {
+            "says": [
+              "Priya Raman"
+            ],
+            "claims": [
+              "c151",
+              "c218"
+            ]
+          }
+        ],
+        "trust": null,
+        "why": "same work listed under different owners"
+      },
+      "people": [
+        "Sofia Alvarez",
+        "Priya Raman"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "two names for what looks like the same work"
+      },
+      "receipts": [
+        "c142",
+        "c149",
+        "c152",
+        "c151",
+        "c218"
+      ],
+      "days_left": -19,
+      "stakes_pct": 15.0,
+      "score": 0.6562,
+      "id": "f05"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i04",
+      "item_title": "submit proposal",
+      "facts": {
+        "field": "owner",
+        "sides": [
+          {
+            "says": [
+              "Sofia Alvarez"
+            ],
+            "claims": [
+              "c128"
+            ]
+          },
+          {
+            "says": [
+              "Priya Raman"
+            ],
+            "claims": [
+              "c211"
+            ]
+          }
+        ],
+        "trust": null,
+        "why": "same work listed under different owners"
+      },
+      "people": [
+        "Sofia Alvarez",
+        "Priya Raman"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "two names for what looks like the same work"
+      },
+      "receipts": [
+        "c128",
+        "c211"
+      ],
+      "days_left": -33,
+      "stakes_pct": 10.0,
+      "score": 0.6364,
+      "id": "f06"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i03",
+      "item_title": "team charter",
+      "facts": {
+        "field": "owner",
+        "sides": [
+          {
+            "says": [
+              "Sofia Alvarez"
+            ],
+            "claims": [
+              "c051",
+              "c056",
+              "c203"
+            ]
+          },
+          {
+            "says": [
+              "Mei Lin Zhou"
+            ],
+            "claims": [
+              "c059"
+            ]
+          },
+          {
+            "says": [
+              "Priya Raman"
+            ],
+            "claims": [
+              "c060",
+              "c072",
+              "c175"
+            ]
+          }
+        ],
+        "trust": null,
+        "why": "same work listed under different owners"
+      },
+      "people": [
+        "Sofia Alvarez",
+        "Mei Lin Zhou",
+        "Priya Raman"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "two names for what looks like the same work"
+      },
+      "receipts": [
+        "c051",
+        "c056",
+        "c203",
+        "c059",
+        "c060",
+        "c072",
+        "c175"
+      ],
+      "days_left": -54,
+      "stakes_pct": 5.0,
+      "score": 0.5833,
+      "id": "f07"
+    },
+    {
+      "detector": "D2",
+      "item_id": "i10",
+      "item_title": "WCAG review",
+      "facts": {
+        "owner": "Kwame Asante",
+        "away_from": "2026-10-28",
+        "away_to": "2026-11-01",
+        "finish_by": "2026-10-27",
+        "work_until": "2026-10-30",
+        "slack_days": 0
+      },
+      "people": [
+        "Kwame Asante"
+      ],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "availability sheet and owner both on record; tracker may list the same work under another name"
+      },
+      "receipts": [
+        "c082",
+        "c091",
+        "c102",
+        "c103",
+        "c104",
+        "c166",
+        "c167",
+        "c224",
+        "c100",
+        "c201",
+        "c101"
+      ],
+      "days_left": -1,
+      "stakes_pct": 0.5,
+      "score": 0.3333,
+      "id": "f08"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i06",
+      "item_title": "submit M3",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-10-30",
+            "claims": [
+              "c007",
+              "c078",
+              "c174",
+              "c219",
+              "c231"
+            ]
+          },
+          {
+            "says": "2026-11-20",
+            "claims": [
+              "c008"
+            ]
+          },
+          {
+            "says": "2026-12-11",
+            "claims": [
+              "c009"
+            ]
+          }
+        ],
+        "trust": "2026-10-30",
+        "why": "the course brief is the authority on course dates"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "brief settles it"
+      },
+      "receipts": [
+        "c007",
+        "c078",
+        "c174",
+        "c219",
+        "c231",
+        "c008",
+        "c009"
+      ],
+      "days_left": 2,
+      "stakes_pct": 25.0,
+      "score": 0.3205,
+      "id": "f09"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i07",
+      "item_title": "peer evals",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-10-30",
+            "claims": [
+              "c010",
+              "c024",
+              "c173",
+              "c230"
+            ]
+          },
+          {
+            "says": "2026-11-06",
+            "claims": [
+              "c118"
+            ]
+          }
+        ],
+        "trust": "2026-10-30",
+        "why": "the course brief is the authority on course dates"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "brief settles it"
+      },
+      "receipts": [
+        "c010",
+        "c024",
+        "c173",
+        "c230",
+        "c118"
+      ],
+      "days_left": 2,
+      "stakes_pct": 10.0,
+      "score": 0.303,
+      "id": "f10"
+    },
+    {
+      "detector": "D5",
+      "item_id": "i07",
+      "item_title": "peer evals",
+      "facts": {
+        "missing": [
+          "owner"
+        ],
+        "due": "2026-10-30",
+        "due_uncertain": false
+      },
+      "people": [],
+      "talk_first": true,
+      "confidence": {
+        "level": "high",
+        "why": "the task list has no owner"
+      },
+      "receipts": [
+        "c230"
+      ],
+      "days_left": 2,
+      "stakes_pct": 10.0,
+      "score": 0.303,
+      "id": "f11"
+    },
+    {
+      "detector": "D9",
+      "item_id": "i07",
+      "item_title": "peer evals",
+      "facts": {
+        "question_claims": [
+          "c119"
+        ],
+        "answer_claim": "c010",
+        "answer_date": "2026-10-30"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "the course brief answers this"
+      },
+      "receipts": [
+        "c119",
+        "c010"
+      ],
+      "days_left": 2,
+      "stakes_pct": 10.0,
+      "score": 0.303,
+      "id": "f12"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i10",
+      "item_title": "WCAG review",
+      "facts": {
+        "field": "owner",
+        "sides": [
+          {
+            "says": [
+              "Kwame Asante"
+            ],
+            "claims": [
+              "c082",
+              "c091",
+              "c102",
+              "c103",
+              "c104",
+              "c166",
+              "c167",
+              "c224"
+            ]
+          },
+          {
+            "says": [
+              "Mei Lin Zhou"
+            ],
+            "claims": [
+              "c225"
+            ]
+          }
+        ],
+        "trust": null,
+        "why": "same work listed under different owners"
+      },
+      "people": [
+        "Kwame Asante",
+        "Mei Lin Zhou"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "two names for what looks like the same work"
+      },
+      "receipts": [
+        "c082",
+        "c091",
+        "c102",
+        "c103",
+        "c104",
+        "c166",
+        "c167",
+        "c224",
+        "c225"
+      ],
+      "days_left": -1,
+      "stakes_pct": 0.5,
+      "score": 0.2333,
+      "id": "f13"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i12",
+      "item_title": "timeline",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-09-25",
+            "claims": [
+              "c183"
+            ]
+          },
+          {
+            "says": "2026-09-19",
+            "claims": [
+              "c209"
+            ]
+          }
+        ],
+        "trust": "2026-09-19",
+        "why": "newest dated source"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "med",
+        "why": "newest source wins; check with the team"
+      },
+      "receipts": [
+        "c183",
+        "c209"
+      ],
+      "days_left": -39,
+      "stakes_pct": 0.5,
+      "score": 0.2333,
+      "id": "f14"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i19",
+      "item_title": "problem statement/background",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-09-25",
+            "claims": [
+              "c180"
+            ]
+          },
+          {
+            "says": "2026-09-19",
+            "claims": [
+              "c206"
+            ]
+          }
+        ],
+        "trust": "2026-09-19",
+        "why": "newest dated source"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "med",
+        "why": "newest source wins; check with the team"
+      },
+      "receipts": [
+        "c180",
+        "c206"
+      ],
+      "days_left": -39,
+      "stakes_pct": 0.5,
+      "score": 0.2333,
+      "id": "f15"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i20",
+      "item_title": "scope + deliverables",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-09-25",
+            "claims": [
+              "c181"
+            ]
+          },
+          {
+            "says": "2026-09-19",
+            "claims": [
+              "c207"
+            ]
+          }
+        ],
+        "trust": "2026-09-19",
+        "why": "newest dated source"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "med",
+        "why": "newest source wins; check with the team"
+      },
+      "receipts": [
+        "c181",
+        "c207"
+      ],
+      "days_left": -39,
+      "stakes_pct": 0.5,
+      "score": 0.2333,
+      "id": "f16"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i22",
+      "item_title": "email dana re kickoff",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-09-11",
+            "claims": [
+              "c054",
+              "c204"
+            ]
+          },
+          {
+            "says": "2026-10-23",
+            "claims": [
+              "c158"
+            ]
+          }
+        ],
+        "trust": "2026-09-11",
+        "why": "newest dated source"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "med",
+        "why": "newest source wins; check with the team"
+      },
+      "receipts": [
+        "c054",
+        "c204",
+        "c158"
+      ],
+      "days_left": -47,
+      "stakes_pct": 0.5,
+      "score": 0.2333,
+      "id": "f17"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i23",
+      "item_title": "tech approach",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-09-25",
+            "claims": [
+              "c182"
+            ]
+          },
+          {
+            "says": "2026-09-19",
+            "claims": [
+              "c208"
+            ]
+          }
+        ],
+        "trust": "2026-09-19",
+        "why": "newest dated source"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "med",
+        "why": "newest source wins; check with the team"
+      },
+      "receipts": [
+        "c182",
+        "c208"
+      ],
+      "days_left": -39,
+      "stakes_pct": 0.5,
+      "score": 0.2333,
+      "id": "f18"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i23",
+      "item_title": "tech approach",
+      "facts": {
+        "field": "owner",
+        "sides": [
+          {
+            "says": [
+              "Jordan Ellis"
+            ],
+            "claims": [
+              "c069",
+              "c080",
+              "c182",
+              "c208"
+            ]
+          },
+          {
+            "says": [
+              "Priya Raman"
+            ],
+            "claims": [
+              "c070"
+            ]
+          }
+        ],
+        "trust": null,
+        "why": "same work listed under different owners"
+      },
+      "people": [
+        "Jordan Ellis",
+        "Priya Raman"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "two names for what looks like the same work"
+      },
+      "receipts": [
+        "c069",
+        "c080",
+        "c182",
+        "c208",
+        "c070"
+      ],
+      "days_left": -39,
+      "stakes_pct": 0.5,
+      "score": 0.2333,
+      "id": "f19"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i31",
+      "item_title": "interviews (8)",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-10-09",
+            "claims": [
+              "c131"
+            ]
+          },
+          {
+            "says": "2026-10-05",
+            "claims": [
+              "c146",
+              "c212"
+            ]
+          }
+        ],
+        "trust": "2026-10-05",
+        "why": "newest dated source"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "med",
+        "why": "newest source wins; check with the team"
+      },
+      "receipts": [
+        "c131",
+        "c146",
+        "c212"
+      ],
+      "days_left": -23,
+      "stakes_pct": 0.5,
+      "score": 0.2333,
+      "id": "f20"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i32",
+      "item_title": "personas",
+      "facts": {
+        "field": "owner",
+        "sides": [
+          {
+            "says": [
+              "Mei Lin Zhou",
+              "Kwame Asante"
+            ],
+            "claims": [
+              "c139"
+            ]
+          },
+          {
+            "says": [
+              "Kwame Asante",
+              "Mei Lin Zhou"
+            ],
+            "claims": [
+              "c147",
+              "c214"
+            ]
+          }
+        ],
+        "trust": null,
+        "why": "same work listed under different owners"
+      },
+      "people": [
+        "Mei Lin Zhou",
+        "Kwame Asante",
+        "Kwame Asante",
+        "Mei Lin Zhou"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "two names for what looks like the same work"
+      },
+      "receipts": [
+        "c139",
+        "c147",
+        "c214"
+      ],
+      "days_left": -21,
+      "stakes_pct": 0.5,
+      "score": 0.2333,
+      "id": "f21"
+    },
+    {
+      "detector": "D3",
+      "item_id": "i08",
+      "item_title": "schedule demo w/ Dana",
+      "facts": {
+        "component": "Sponsor demo and feedback notes",
+        "penalty_points": null,
+        "milestone": null,
+        "milestone_due": "2026-10-29"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "required by the brief; nowhere in the task list"
+      },
+      "receipts": [
+        "c015"
+      ],
+      "days_left": 1,
+      "stakes_pct": 0.5,
+      "score": 0.1667,
+      "id": "f22"
+    },
+    {
+      "detector": "D3",
+      "item_id": "i13",
+      "item_title": "contribution log",
+      "facts": {
+        "component": "Contribution log",
+        "penalty_points": 5,
+        "milestone": "M3 Prototype milestone and sponsor demo",
+        "milestone_due": "2026-10-30"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "required by the brief; nowhere in the task list"
+      },
+      "receipts": [
+        "c018"
+      ],
+      "days_left": 2,
+      "stakes_pct": 1.0,
+      "score": 0.1667,
+      "id": "f23"
+    },
+    {
+      "detector": "D3",
+      "item_id": "i13",
+      "item_title": "contribution log",
+      "facts": {
+        "component": "Contribution log table",
+        "penalty_points": null,
+        "milestone": "M3 Prototype milestone and sponsor demo",
+        "milestone_due": "2026-10-30"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "required by the brief; nowhere in the task list"
+      },
+      "receipts": [
+        "c023"
+      ],
+      "days_left": 2,
+      "stakes_pct": 1.0,
+      "score": 0.1667,
+      "id": "f24"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i08",
+      "item_title": "schedule demo w/ Dana",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-10-29",
+            "claims": [
+              "c011",
+              "c159"
+            ]
+          },
+          {
+            "says": "2026-09-10",
+            "claims": [
+              "c064",
+              "c066",
+              "c067",
+              "c068"
+            ]
+          }
+        ],
+        "trust": "2026-10-29",
+        "why": "the course brief is the authority on course dates"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "brief settles it"
+      },
+      "receipts": [
+        "c011",
+        "c159",
+        "c064",
+        "c066",
+        "c067",
+        "c068"
+      ],
+      "days_left": 1,
+      "stakes_pct": 0.5,
+      "score": 0.1667,
+      "id": "f25"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i08",
+      "item_title": "schedule demo w/ Dana",
+      "facts": {
+        "field": "owner",
+        "sides": [
+          {
+            "says": [
+              "Tyler Brandt"
+            ],
+            "claims": [
+              "c064",
+              "c085",
+              "c105",
+              "c106",
+              "c109",
+              "c159",
+              "c227"
+            ]
+          },
+          {
+            "says": [
+              "Jordan Ellis"
+            ],
+            "claims": [
+              "c066"
+            ]
+          },
+          {
+            "says": [
+              "Sofia Alvarez",
+              "Tyler Brandt",
+              "Priya Raman",
+              "Kwame Asante"
+            ],
+            "claims": [
+              "c067"
+            ]
+          },
+          {
+            "says": [
+              "Mei Lin Zhou"
+            ],
+            "claims": [
+              "c068"
+            ]
+          },
+          {
+            "says": [
+              "Priya Raman"
+            ],
+            "claims": [
+              "c092"
+            ]
+          }
+        ],
+        "trust": null,
+        "why": "same work listed under different owners"
+      },
+      "people": [
+        "Tyler Brandt",
+        "Jordan Ellis",
+        "Sofia Alvarez",
+        "Tyler Brandt",
+        "Priya Raman",
+        "Kwame Asante",
+        "Mei Lin Zhou",
+        "Priya Raman"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "two names for what looks like the same work"
+      },
+      "receipts": [
+        "c064",
+        "c085",
+        "c105",
+        "c106",
+        "c109",
+        "c159",
+        "c227",
+        "c066",
+        "c067",
+        "c068",
+        "c092"
+      ],
+      "days_left": 1,
+      "stakes_pct": 0.5,
+      "score": 0.1167,
+      "id": "f26"
+    },
+    {
+      "detector": "D8",
+      "item_id": null,
+      "item_title": null,
+      "facts": {
+        "person": "Sofia Alvarez",
+        "open_items": 4,
+        "blocks_others": 0,
+        "items": [
+          "i09",
+          "i11",
+          "i38",
+          "i39"
+        ],
+        "team_median": 1.5
+      },
+      "people": [
+        "Sofia Alvarez"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "counts from the task list; they miss invisible work"
+      },
+      "receipts": [
+        "c083",
+        "c090",
+        "c113",
+        "c114",
+        "c115",
+        "c226"
+      ],
+      "days_left": 2,
+      "stakes_pct": 1.0,
+      "score": 0.1167,
+      "id": "f27"
+    },
+    {
+      "detector": "D3",
+      "item_id": "i17",
+      "item_title": "AI use",
+      "facts": {
+        "component": "AI usage note",
+        "penalty_points": null,
+        "milestone": null,
+        "milestone_due": "2026-10-30"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "required by the brief; nowhere in the task list"
+      },
+      "receipts": [
+        "c027"
+      ],
+      "days_left": 2,
+      "stakes_pct": 0.5,
+      "score": 0.1111,
+      "id": "f28"
+    },
+    {
+      "detector": "D5",
+      "item_id": "i21",
+      "item_title": "hours tracking screens",
+      "facts": {
+        "missing": [
+          "date"
+        ],
+        "due": null,
+        "due_uncertain": false
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "the task list has no date"
+      },
+      "receipts": [
+        "c155",
+        "c169",
+        "c232"
+      ],
+      "days_left": 2,
+      "stakes_pct": 0.5,
+      "score": 0.1111,
+      "id": "f29"
+    },
+    {
+      "detector": "D5",
+      "item_id": "i35",
+      "item_title": "get Dana's current signup spreadsheet",
+      "facts": {
+        "missing": [
+          "date"
+        ],
+        "due": null,
+        "due_uncertain": false
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "the task list has no date"
+      },
+      "receipts": [
+        "c150",
+        "c216"
+      ],
+      "days_left": 2,
+      "stakes_pct": 0.5,
+      "score": 0.1111,
+      "id": "f30"
+    },
+    {
+      "detector": "D5",
+      "item_id": "i39",
+      "item_title": "add hours tracking to matrix",
+      "facts": {
+        "missing": [
+          "date"
+        ],
+        "due": null,
+        "due_uncertain": false
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "the task list has no date"
+      },
+      "receipts": [
+        "c170",
+        "c234"
+      ],
+      "days_left": 2,
+      "stakes_pct": 0.5,
+      "score": 0.1111,
+      "id": "f31"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i11",
+      "item_title": "privacy plan",
+      "facts": {
+        "field": "owner",
+        "sides": [
+          {
+            "says": [
+              "Tyler Brandt"
+            ],
+            "claims": [
+              "c110",
+              "c172"
+            ]
+          },
+          {
+            "says": [
+              "Sofia Alvarez"
+            ],
+            "claims": [
+              "c171"
+            ]
+          },
+          {
+            "says": [
+              "Sofia Alvarez",
+              "Tyler Brandt"
+            ],
+            "claims": [
+              "c229"
+            ]
+          }
+        ],
+        "trust": null,
+        "why": "same work listed under different owners"
+      },
+      "people": [
+        "Tyler Brandt",
+        "Sofia Alvarez",
+        "Sofia Alvarez",
+        "Tyler Brandt"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "two names for what looks like the same work"
+      },
+      "receipts": [
+        "c110",
+        "c172",
+        "c171",
+        "c229"
+      ],
+      "days_left": 2,
+      "stakes_pct": 0.5,
+      "score": 0.0778,
+      "id": "f32"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i34",
+      "item_title": "build app in react",
+      "facts": {
+        "field": "owner",
+        "sides": [
+          {
+            "says": [
+              "Jordan Ellis"
+            ],
+            "claims": [
+              "c143",
+              "c220"
+            ]
+          },
+          {
+            "says": [
+              "Priya Raman",
+              "Jordan Ellis"
+            ],
+            "claims": [
+              "c144"
+            ]
+          }
+        ],
+        "trust": null,
+        "why": "same work listed under different owners"
+      },
+      "people": [
+        "Jordan Ellis",
+        "Priya Raman",
+        "Jordan Ellis"
+      ],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "two names for what looks like the same work"
+      },
+      "receipts": [
+        "c143",
+        "c220",
+        "c144"
+      ],
+      "days_left": 2,
+      "stakes_pct": 0.5,
+      "score": 0.0778,
+      "id": "f33"
+    },
+    {
+      "detector": "D7",
+      "item_id": "i11",
+      "item_title": "privacy plan",
+      "facts": {
+        "meetings_open": 2,
+        "first_raised": "2026-10-13",
+        "decide_by": "2026-10-30",
+        "decide_by_basis": "newest source"
+      },
+      "people": [],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "raised in 2 meetings, never settled"
+      },
+      "receipts": [
+        "c084",
+        "c111",
+        "c112"
+      ],
+      "days_left": 2,
+      "stakes_pct": 0.5,
+      "score": 0.0778,
+      "id": "f34"
+    },
+    {
+      "detector": "D7",
+      "item_id": "i21",
+      "item_title": "hours tracking screens",
+      "facts": {
+        "meetings_open": 2,
+        "first_raised": "2026-10-20",
+        "decide_by": "2026-10-30",
+        "decide_by_basis": null
+      },
+      "people": [],
+      "talk_first": true,
+      "confidence": {
+        "level": "med",
+        "why": "raised in 2 meetings, never settled"
+      },
+      "receipts": [
+        "c116",
+        "c117",
+        "c154"
+      ],
+      "days_left": 2,
+      "stakes_pct": 0.5,
+      "score": 0.0778,
+      "id": "f35"
+    },
+    {
+      "detector": "D4",
+      "item_id": "i10",
+      "item_title": "WCAG review",
+      "facts": {
+        "field": "date",
+        "sides": [
+          {
+            "says": "2026-10-31",
+            "claims": [
+              "c166"
+            ]
+          },
+          {
+            "says": "2026-10-27",
+            "claims": [
+              "c225"
+            ]
+          }
+        ],
+        "trust": "2026-10-31",
+        "why": "newest dated source"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "med",
+        "why": "newest source wins; check with the team"
+      },
+      "receipts": [
+        "c166",
+        "c225"
+      ],
+      "days_left": 3,
+      "stakes_pct": 0.5,
+      "score": 0.0583,
+      "id": "f36"
+    },
+    {
+      "detector": "D3",
+      "item_id": "i06",
+      "item_title": "submit M3",
+      "facts": {
+        "component": "Working prototype",
+        "penalty_points": null,
+        "milestone": "M5 Final presentation (in class, Dec 8 to 10) and final report",
+        "milestone_due": "2026-12-11"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "required by the brief; nowhere in the task list"
+      },
+      "receipts": [
+        "c012"
+      ],
+      "days_left": 44,
+      "stakes_pct": 25.0,
+      "score": 0.0214,
+      "id": "f37"
+    },
+    {
+      "detector": "D3",
+      "item_id": "i06",
+      "item_title": "submit M3",
+      "facts": {
+        "component": "Usability test with 5 participants",
+        "penalty_points": null,
+        "milestone": "M5 Final presentation (in class, Dec 8 to 10) and final report",
+        "milestone_due": "2026-12-11"
+      },
+      "people": [],
+      "talk_first": false,
+      "confidence": {
+        "level": "high",
+        "why": "required by the brief; nowhere in the task list"
+      },
+      "receipts": [
+        "c019"
+      ],
+      "days_left": 44,
+      "stakes_pct": 25.0,
+      "score": 0.0214,
+      "id": "f38"
+    }
+  ],
+  "load": {
+    "Priya Raman": {
+      "open_items": 1,
+      "blocks_others": 0,
+      "items": [
+        "i06"
+      ]
+    },
+    "Sofia Alvarez": {
+      "open_items": 4,
+      "blocks_others": 0,
+      "items": [
+        "i09",
+        "i11",
+        "i38",
+        "i39"
+      ]
+    },
+    "Kwame Asante": {
+      "open_items": 2,
+      "blocks_others": 0,
+      "items": [
+        "i10",
+        "i40"
+      ]
+    },
+    "Mei Lin Zhou": {
+      "open_items": 1,
+      "blocks_others": 0,
+      "items": [
+        "i21"
+      ]
+    },
+    "Jordan Ellis": {
+      "open_items": 2,
+      "blocks_others": 0,
+      "items": [
+        "i34",
+        "i37"
+      ]
+    },
+    "Tyler Brandt": {
+      "open_items": 1,
+      "blocks_others": 0,
+      "items": [
+        "i35"
+      ]
+    }
+  }
+}
