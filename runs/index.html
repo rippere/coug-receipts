@@ -274,6 +274,31 @@ table.rec{width:100%;border-collapse:collapse;font-size:14.5px}
 .agenda h4{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 var(--s2)}
 .agenda ol,.agenda ul{margin:0;padding-left:20px;display:grid;gap:var(--s2)}
 @media (max-width:900px){.coachgrid{grid-template-columns:1fr}}
+.pulse{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:var(--s5);align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--r3);box-shadow:var(--shadow);padding:var(--s4) var(--s5)}
+.donut{position:relative;width:128px;height:128px}
+.donut svg{width:128px;height:128px;transform:rotate(-90deg)}
+.donut circle{fill:none;stroke-width:14}
+.donut .track{stroke:var(--side)}
+.donut .seg{stroke-linecap:butt;transition:stroke-dasharray .9s cubic-bezier(.2,.7,.2,1),stroke-width .15s;cursor:pointer}
+.donut .seg:hover{stroke-width:18}
+.donut .mid{position:absolute;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none}
+.donut .mid b{font:600 26px/1 var(--mono)}
+.donut .mid span{font-size:11.5px;color:var(--muted);margin-top:4px}
+.donut .tip{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:5}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px;min-width:140px}
+.legend li{display:grid;grid-template-columns:10px 1fr auto;gap:var(--s2);align-items:center}
+.legend i{width:10px;height:10px;border-radius:3px}
+.legend b{font:600 13px var(--mono)}
+.pulse-cd{display:flex;align-items:center;gap:var(--s3);border-left:1px solid var(--line);padding-left:var(--s5)}
+.pulse-cd .n{font:600 44px/1 var(--mono);color:var(--accent)}
+.pulse-cd .t{font-size:14px;line-height:1.4}
+.pulse-cd .t b{display:block;font-size:15px}
+.pulse-src{display:grid;gap:6px;border-left:1px solid var(--line);padding-left:var(--s5)}
+.pulse-src div{display:flex;align-items:baseline;gap:var(--s2)}
+.pulse-src b{font:600 18px var(--mono);min-width:3ch;text-align:right}
+.pulse-src span{font-size:13px;color:var(--muted)}
+@media (max-width:1060px){.pulse{grid-template-columns:auto 1fr}.pulse-cd,.pulse-src{border-left:0;padding-left:0}}
+@media (prefers-reduced-motion:reduce){.donut .seg{transition:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -359,15 +384,38 @@ function renderNav() {
 }
 
 function milestone(b) {
-  const cd = b.countdown;
-  if (!cd) return '';
-  const now = parse(b.today), next = new Date(now.getTime() + cd.days * DAY);
-  const prev = (b.items || []).filter(i => /\bm\d\b/i.test(i.title) && i.due && parse(i.due) < now).map(i => parse(i.due)).sort((x, y) => y - x)[0]
-    || new Date(now.getTime() - 14 * DAY);
-  const pct = Math.max(4, Math.min(100, Math.round(100 * (now - prev) / Math.max(DAY, next - prev))));
-  return `<div class="mile" id="countdown"><span class="n">${cd.days}<small>days left</small></span>
-    <div class="t">${esc(cd.label)}<span>${pct}% of the way from the last milestone</span></div>
-    <div class="track" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Time elapsed toward ${esc(cd.label)}"><div class="fill" style="width:${pct}%"></div></div></div>`;
+  const cd = b.countdown, items = b.items || [];
+  const now = parse(b.today);
+  const order = [['done', 'Done', 'var(--ok)'], ['in_progress', 'In progress', 'var(--blue)'], ['open', 'Open', 'var(--accent)'], ['unknown', 'Unclear', '#A8A29E']];
+  const n = Object.fromEntries(order.map(([k]) => [k, items.filter(i => i.status === k).length]));
+  const total = Math.max(1, items.length), R = 52, C = 2 * Math.PI * R, GAP = 3;
+  let off = 0;
+  const segs = order.filter(([k]) => n[k]).map(([k, label, col]) => {
+    const len = C * n[k] / total, seg = `<circle class="seg" r="${R}" cx="64" cy="64" stroke="${col}" data-len="${Math.max(0, len - GAP)}"
+      stroke-dasharray="0 ${C}" stroke-dashoffset="${-off}" data-tip="${label}: ${n[k]} of ${items.length} tasks"><title>${label}: ${n[k]} of ${items.length} tasks</title></circle>`;
+    off += len; return seg; }).join('');
+  const pctDone = Math.round(100 * n.done / total);
+  let win = '';
+  if (cd) {
+    const next = new Date(now.getTime() + cd.days * DAY);
+    const prev = items.filter(i => /\bm\d\b/i.test(i.title) && i.due && parse(i.due) < now).map(i => parse(i.due)).sort((x, y) => y - x)[0] || new Date(now.getTime() - 14 * DAY);
+    const used = Math.round(100 * (now - prev) / Math.max(DAY, next - prev));
+    win = `<div class="pulse-cd"><span class="n">${cd.days}</span><span class="t"><b>days left</b>${esc(cd.label)}<br><span class="muted">${used}% of this milestone's time used</span></span></div>`;
+  }
+  return `<div class="pulse" id="countdown">
+    <div class="donut"><svg viewBox="0 0 128 128" role="img" aria-label="${n.done} of ${items.length} tasks done">
+      <circle r="${R}" cx="64" cy="64" class="track"/>${segs}</svg>
+      <div class="mid"><b>${pctDone}%</b><span>${n.done} of ${items.length} done</span></div><div class="tip" hidden></div></div>
+    <ul class="legend">${order.map(([k, label, col]) => `<li><i style="background:${col}"></i><span>${label}</span><b>${n[k]}</b></li>`).join('')}</ul>
+    ${win}
+    <div class="pulse-src"><div><b>${b.counts.docs}</b><span>files read</span></div><div><b>${b.counts.claims}</b><span>quoted claims</span></div><div><b>${b.counts.findings}</b><span>checks run in code</span></div></div>
+  </div>`;
+}
+function animateDonut() {
+  document.querySelectorAll('.donut .seg').forEach((c, i) => {
+    const C = 2 * Math.PI * 52;
+    requestAnimationFrame(() => setTimeout(() => { c.style.strokeDasharray = `${c.dataset.len} ${C}`; }, 60 + i * 120));
+  });
 }
 
 function card(c, i) {
@@ -447,6 +495,7 @@ function renderMain() {
       <label class="datesel" id="rundate">${icon('cal')}<select id="runsel" aria-label="Run date">${RUNS.map((r, i) => `<option value="${i}" ${i === state.run ? 'selected' : ''}>${esc(short(r.today))}, ${r.today.slice(0, 4)}</option>`).join('')}</select></label></div>
     <div class="hero"><div class="eyebrow">${b.counts.docs} files · ${b.counts.claims} quoted claims</div><h1>${esc(h)}</h1>${sub ? `<p class="sub">${esc(sub)}</p>` : ''}</div>
     <section class="panelwrap" aria-label="${esc(h)}">${VIEWS[state.section](b)}</section>`;
+  animateDonut();
 }
 function render() { renderNav(); renderMain(); }
 function agendaText() { return $('#agenda').innerText.replace(/\n{3,}/g, '\n\n'); }
@@ -542,7 +591,7 @@ const TOUR = [
   {sel: '.card[data-card="0"] .rbtn', k: 'Receipts', title: 'Every line has a receipt', body: 'Open it to see the exact sentences the card came from, with the file and line.', why: 'If we can\'t point to a source, it doesn\'t go on the board.'},
   {sel: '.card[data-card="0"] .conf', k: 'Confidence', title: 'It says how sure it is', body: 'High means the brief or two files agree. Lower means one source, or files that conflict.', why: 'Hover for the one-line reason.'},
   {sel: '.chip.talk', k: 'People first', title: 'Some things are a conversation', body: 'When a card is about someone\'s workload or a role gap, it asks the team to talk instead of handing down a verdict.', why: 'It never ranks people or touches peer evaluations.'},
-  {sel: '#countdown', k: 'Milestone', title: 'Days to the next deadline', body: 'Computed in code from the brief, never guessed by AI.', why: 'A demo that gets a date wrong is over.'},
+  {sel: '#countdown', k: 'Where you stand', title: 'Progress and days left', body: 'How many tasks the files show as done, and the days to the next deadline. All counted in code, never guessed by AI.', why: 'A demo that gets a date wrong is over.'},
   {sel: '#rundate', k: 'Next week', title: 'Run it again next week', body: 'Each run is a snapshot. Switch dates here. The newest run shows what happened to last week\'s warnings under "Since last run".', why: 'That closes the loop: flagged, then done or still open.', last: true},
 ];
 let tourAt = 0;
@@ -616,6 +665,11 @@ document.addEventListener('input', e => {
   if (e.target.id !== 'recq') return;
   state.q = e.target.value; renderMain();
   const i = $('#recq'); i.focus(); i.setSelectionRange(i.value.length, i.value.length);
+});
+document.addEventListener('mouseover', e => {
+  const seg = e.target.closest && e.target.closest('.donut .seg'), tip = $('.donut .tip');
+  if (!tip) return;
+  if (seg) { tip.textContent = seg.dataset.tip; tip.hidden = false; } else tip.hidden = true;
 });
 addEventListener('resize', () => { if (!$('#tour').hidden) startTourAt(tourAt); });
 
