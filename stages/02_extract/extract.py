@@ -50,6 +50,38 @@ KINDS = ["task", "deadline", "decision", "status", "availability", "rule",
 RULES = ["lead_time", "late_penalty", "extension_notice", "week_anchor", "event_by"]
 WEEKDAYS = ["M", "T", "W", "Th", "F", "Sa", "Su"]
 RULE_HINTS = {"late_penalty": "late policy", "extension_notice": "extension request", "week_anchor": "course calendar"}
+NUMBER_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10}
+MONTH_DAY = r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})"
+DAY_CODES = [(r"\bm(?:on)?\b", "M"), (r"\btu(?:e|es|esday)?\b", "T"), (r"\bw(?:ed)?\b", "W"),
+             (r"\bth(?:u|ur|urs|ursday)?\b", "Th"), (r"\bf(?:ri)?\b", "F"), (r"\bsat\b", "Sa"), (r"\bsun\b", "Su")]
+
+
+def derive_availability(c):
+    """Fill away dates / weekly busy times from the claim's own text when the model left them empty.
+    Years are corrected afterwards by fix_away_years."""
+    text = f"{c.get('date_text', '')} {c.get('quote', '')}".lower()
+    if not c.get("away_from"):
+        dates = re.findall(MONTH_DAY, text)
+        if dates:
+            import dateparser
+            parsed = [dateparser.parse(f"{m} {d}") for m, d in dates[:2]]
+            if all(parsed):
+                c["away_from"] = parsed[0].date().isoformat()
+                c["away_to"] = parsed[-1].date().isoformat()
+                return
+    if not c.get("days") and not c.get("away_from"):
+        after = re.search(r"after (\d{1,2})(?::(\d\d))?\s*(am|pm)?", text)
+        span = re.search(r"(\d{1,2})(?::(\d\d))?\s*(am|pm)?\s*-\s*(\d{1,2})(?::(\d\d))?\s*(am|pm)", text)
+        days = [code for pat, code in DAY_CODES if re.search(pat, text)]
+        if days and (after or span):
+            def hhmm(h, m, ampm, default_pm=True):
+                h = int(h) % 12 + (12 if (ampm == "pm" or (not ampm and default_pm)) else 0)
+                return f"{h:02d}:{m or '00'}"
+            c["days"] = days
+            if after:
+                c["from"], c["to"] = hhmm(after[1], after[2], after[3]), "23:59"
+            else:
+                c["from"], c["to"] = hhmm(span[1], span[2], span[3] or span[6]), hhmm(span[4], span[5], span[6])
 
 
 def nullable(t):
@@ -257,12 +289,20 @@ def tidy(raw, doc):
         if code and code[0] not in c.get("deliverable", ""):
             c["deliverable"] = f"{code[0]} {c.get('deliverable', '')}".strip()
     if c.get("rule") == "late_penalty":
-        # The model tends to put max_days in the generic days slot and skip the percentage.
-        if "days" in c and "max_days" not in c:
-            c["max_days"] = c.pop("days")
+        # A late-penalty rule states a percentage; without one it's mislabeled, so drop the label.
         pct = re.search(r"(\d+(?:\.\d+)?)\s*%", c.get("quote", ""))
-        if pct and "pct_per_day" not in c:
+        if not pct:
+            c.pop("rule")
+        else:
             c["pct_per_day"] = float(pct[1])
+            if "days" in c and "max_days" not in c:
+                c["max_days"] = c.pop("days")
+            up_to = re.search(r"up to (\w+) (?:calendar )?days", c["quote"], re.I)
+            if up_to and "max_days" not in c:
+                word = up_to[1].lower()
+                c["max_days"] = int(word) if word.isdigit() else NUMBER_WORDS.get(word)
+    if c.get("kind") == "availability":
+        derive_availability(c)
     if c.get("rule") in RULE_HINTS:
         c["item_hint"] = RULE_HINTS[c["rule"]]  # course-wide rules aren't about one task
     if c.get("kind") == "availability":
