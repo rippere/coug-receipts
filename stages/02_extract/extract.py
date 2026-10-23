@@ -241,6 +241,7 @@ def tidy(raw, doc):
         c["days"] = c.pop("weekly_days")
         c["from"], c["to"] = c.pop("busy_from", None), c.pop("busy_to", None)
     c.setdefault("who_raw", None)
+    c.setdefault("item_hint", c.get("kind", ""))  # never leave the clustering key out
     c["loc"] = c.get("loc", "").strip("[] ")
     if c.get("rule") == "week_anchor":
         # Stage 03 needs week1_monday as an ISO date. Reading an explicit calendar date is parsing,
