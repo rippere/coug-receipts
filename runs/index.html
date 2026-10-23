@@ -6,171 +6,260 @@
 <title>Receipts</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23B45309%22 stroke-width=%222%22%3E%3Cpath d=%22M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
-/* Layout: sidebar of runs (tabs) | main pane with section tabs | slide-in receipt slip. Light, projector-first. */
+/* Layout: setup wizard -> board (runs sidebar | section tabs | cards) -> receipt drawer; guided tour on top. 8px spacing scale. */
 :root{
-  --paper:#F7F6F1; --side:#EFEDE5; --card:#FFFFFF; --slip:#FFFDF6; --ink:#0F172A; --muted:#4B5563; --faint:#6B7280;
-  --line:#E3E0D6; --blue:#1E40AF; --blue-soft:#E8EDFB; --amber:#B45309; --amber-soft:#FDF0D5;
-  --ok:#166534; --ok-soft:#DCFCE7; --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 14px rgba(15,23,42,.05);
-  --sans:"Fira Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"Fira Code",ui-monospace,Menlo,Consolas,monospace;
+  --bg:#F6F5F1; --side:#EEECE5; --card:#FFFFFF; --slip:#FFFDF6;
+  --ink:#111827; --ink-2:#374151; --muted:#6B7280; --line:#E5E2D9;
+  --accent:#B45309; --accent-soft:#FDF2DE; --blue:#1D4ED8; --blue-soft:#EAF0FF; --ok:#15803D; --ok-soft:#E3F6E8;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px;
+  --r1:8px; --r2:12px; --r3:16px;
+  --shadow:0 1px 2px rgba(17,24,39,.05),0 6px 18px rgba(17,24,39,.06);
+  --sans:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
   color-scheme:light;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{height:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
-button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
-:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:var(--r1)}
 svg.i{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .mono{font-family:var(--mono)}
-.shell{display:grid;grid-template-columns:268px minmax(0,1fr);min-height:100%}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);height:44px;padding:0 var(--s5);border-radius:var(--r2);font-weight:600;font-size:15px;transition:background .15s,border-color .15s,color .15s}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.primary:hover{background:#000}
+.btn.ghost{border:1px solid var(--line);background:var(--card);color:var(--ink-2)}
+.btn.ghost:hover{border-color:#CFCBC0;color:var(--ink)}
+.btn.link{height:auto;padding:0;color:var(--muted);font-weight:500;font-size:14px}
+.btn.link:hover{color:var(--ink)}
 
-/* sidebar */
-.side{background:var(--side);border-right:1px solid var(--line);padding:1.5rem 1rem;display:flex;flex-direction:column;gap:1.5rem;position:sticky;top:0;height:100vh}
-.brand{display:grid;gap:.15rem;padding:0 .5rem}
-.brand b{font-size:1.45rem;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:.5rem}
-.brand b svg{width:22px;height:22px;color:var(--amber)}
-.brand span{font:500 .78rem var(--mono);color:var(--faint)}
-.group{display:grid;gap:.35rem}
-.group h2{margin:0 .5rem .2rem;font:600 .72rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
-.run{display:grid;gap:.1rem;text-align:left;padding:.65rem .75rem;border-radius:10px;transition:background .15s}
-.run:hover{background:rgba(255,255,255,.6)}
-.run[aria-selected="true"]{background:var(--card);box-shadow:var(--shadow),inset 3px 0 0 var(--amber)}
-.run .d{font-weight:600}
-.run .s{font:500 .78rem var(--mono);color:var(--faint)}
-.side .note{margin-top:auto;font-size:.8rem;color:var(--faint);padding:0 .5rem;line-height:1.45}
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100%}
+.side{background:var(--side);border-right:1px solid var(--line);padding:var(--s6) var(--s4) var(--s5);display:flex;flex-direction:column;gap:var(--s6);position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:var(--s3);padding:0 var(--s2)}
+.brand .mark{width:36px;height:36px;border-radius:10px;background:var(--ink);color:#fff;display:grid;place-items:center}
+.brand .mark svg{width:20px;height:20px}
+.brand b{display:block;font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.brand span{display:block;font-size:12.5px;color:var(--muted);line-height:1.3}
+.group{display:grid;gap:var(--s1)}
+.label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:0 var(--s2) var(--s2)}
+.run{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);text-align:left;padding:var(--s3);border-radius:var(--r2);transition:background .15s}
+.run:hover{background:rgba(255,255,255,.55)}
+.run[aria-selected="true"]{background:var(--card);box-shadow:var(--shadow)}
+.run .d{font-weight:700;font-size:15px;line-height:1.3}
+.run .s{font-size:12.5px;color:var(--muted)}
+.run .n{font:600 12px var(--mono);color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 8px}
+.side .tools{display:grid;gap:var(--s1);margin-top:auto}
+.side .tools .btn.link{justify-content:flex-start;padding:var(--s2);gap:var(--s2)}
+.side .fine{font-size:12px;color:var(--muted);line-height:1.5;padding:var(--s3) var(--s2) 0;border-top:1px solid var(--line)}
 
-/* main */
-main{min-width:0;padding:2rem clamp(16px,3vw,2.75rem) 4rem}
-.wrap{max-width:74rem;margin:0 auto;display:grid;gap:1.5rem}
-.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:1rem}
-.eyebrow{font:500 .78rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
-h1{margin:.2rem 0 0;font-size:clamp(1.7rem,3vw,2.3rem);font-weight:700;letter-spacing:-.015em;line-height:1.15}
-.count{display:flex;align-items:center;gap:.85rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.65rem 1.1rem;box-shadow:var(--shadow)}
-.count .n{font:600 2.4rem/1 var(--mono);color:var(--amber);font-variant-numeric:tabular-nums}
-.count .t{font-size:.88rem;color:var(--muted);line-height:1.3}
-.count .t b{color:var(--ink);font-weight:600;display:block}
-.tabs{display:flex;gap:.25rem;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
-.tab{display:flex;align-items:center;gap:.45rem;padding:.7rem .9rem;color:var(--muted);font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color .15s,border-color .15s}
+main{min-width:0;padding:var(--s6) clamp(16px,3.5vw,var(--s7)) var(--s7)}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:var(--s5)}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:var(--s4)}
+.eyebrow{font-size:12.5px;font-weight:600;color:var(--muted)}
+h1{font-size:clamp(26px,3vw,32px);font-weight:800;letter-spacing:-.025em;line-height:1.2;margin-top:var(--s1)}
+.count{display:flex;align-items:center;gap:var(--s3);background:var(--card);border:1px solid var(--line);border-radius:var(--r3);padding:var(--s3) var(--s4);box-shadow:var(--shadow)}
+.count .n{font:600 34px/1 var(--mono);color:var(--accent)}
+.count .t{font-size:13.5px;color:var(--muted);line-height:1.35}
+.count .t b{display:block;color:var(--ink);font-weight:700}
+.tabs{display:flex;gap:var(--s1);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tab{display:flex;align-items:center;gap:var(--s2);padding:var(--s3) var(--s4);color:var(--muted);font-weight:600;font-size:15px;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color .15s,border-color .15s}
 .tab:hover{color:var(--ink)}
 .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
-.tab .c{font:600 .72rem var(--mono);background:var(--side);color:var(--muted);border-radius:999px;padding:.05rem .45rem}
+.tab .c{font:600 11.5px var(--mono);background:var(--side);color:var(--muted);border-radius:999px;padding:1px 7px}
 .tab[aria-selected="true"] .c{background:var(--ink);color:#fff}
+.panelwrap{display:grid;gap:var(--s4)}
 
-/* cards */
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
-@media (max-width:1180px){.cards{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);display:grid;grid-template-columns:84px minmax(0,1fr);overflow:hidden}
-.stamp{background:var(--amber-soft);display:grid;align-content:start;justify-items:center;gap:.1rem;padding:1.1rem .4rem;text-align:center;border-right:1px dashed #E9CF9E}
-.stamp .rk{font:600 .72rem var(--mono);color:var(--amber);opacity:.8;margin-bottom:.35rem}
-.stamp .dd{font:600 2.1rem/1 var(--mono);color:var(--amber)}
-.stamp .mm{font:600 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--amber)}
-.stamp .rel{margin-top:.5rem;font:500 .72rem var(--mono);color:var(--ink);background:#fff;border-radius:6px;padding:.1rem .35rem}
-.body{padding:1.1rem 1.15rem 1rem;display:grid;gap:.6rem;align-content:start;min-width:0}
-.action{margin:0;font-size:1.32rem;font-weight:600;line-height:1.25;text-wrap:balance}
-.meta{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
-.chip{display:inline-flex;align-items:center;gap:.35rem;font-size:.86rem;font-weight:500;background:var(--side);border-radius:999px;padding:.15rem .6rem}
+/* ---------- cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+@media (max-width:1060px){.cards{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r3);box-shadow:var(--shadow);padding:20px;display:flex;flex-direction:column;gap:var(--s3);min-width:0}
+.card .top{display:flex;justify-content:space-between;align-items:center;gap:var(--s3)}
+.rank{font:600 12px var(--mono);color:var(--muted);letter-spacing:.04em}
+.when{display:inline-flex;align-items:center;gap:6px;font:600 12.5px var(--mono);color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.card h3{font-size:18px;font-weight:700;line-height:1.35;letter-spacing:-.015em;text-wrap:balance}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2);background:var(--side);border-radius:999px;padding:4px 10px}
 .chip.talk{background:var(--blue-soft);color:var(--blue)}
-.reason{margin:0;color:var(--muted)}
-.note{display:flex;gap:.45rem;align-items:flex-start;font-size:.88rem;color:var(--muted);background:var(--paper);border-radius:8px;padding:.45rem .6rem}
-.note svg{margin-top:.2rem}
-.foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem;padding-top:.6rem;border-top:1px dashed var(--line)}
-.conf{font:500 .82rem var(--mono);color:var(--muted);cursor:help}
-.rbtn{display:inline-flex;align-items:center;gap:.35rem;font:500 .82rem var(--mono);color:var(--blue);padding:.3rem .55rem;border-radius:8px;border:1px solid var(--line);background:var(--card);transition:border-color .15s,background .15s}
+.reason{font-size:15px;color:var(--ink-2);line-height:1.6}
+.note{display:flex;gap:var(--s2);font-size:14px;color:var(--ink-2);background:var(--bg);border-radius:var(--r1);padding:var(--s2) var(--s3);line-height:1.5}
+.note svg{margin-top:3px;color:var(--muted)}
+.foot{margin-top:auto;padding-top:var(--s3);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:var(--s2);flex-wrap:wrap}
+.conf{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);cursor:help}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--ink)}
+.rbtn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--blue);padding:6px 10px;border-radius:var(--r1);border:1px solid var(--line);background:var(--card);transition:border-color .15s,background .15s}
 .rbtn:hover{border-color:var(--blue);background:var(--blue-soft)}
-.empty{color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:2rem;text-align:center}
+.empty{color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:var(--r3);padding:var(--s6);text-align:center}
 
-/* lists and panels */
-.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:1.1rem 1.25rem;display:grid;gap:.8rem;align-content:start;min-width:0}
-.panel h3{margin:0;font-size:1.05rem;font-weight:600}
-.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
-@media (max-width:1000px){.grid2{grid-template-columns:1fr}}
-.rows{display:grid;gap:.75rem}
-.row{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:1rem 1.15rem;display:grid;grid-template-columns:minmax(0,1.4fr) auto minmax(0,1fr) auto;gap:1rem;align-items:center}
-@media (max-width:900px){.row{grid-template-columns:1fr}}
-.row .was{font-weight:600}
-.row .by{font:500 .82rem var(--mono);color:var(--faint)}
-.pill{justify-self:start;font:600 .8rem var(--mono);border-radius:999px;padding:.2rem .65rem;background:var(--amber-soft);color:var(--amber)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r3);box-shadow:var(--shadow);padding:var(--s5);display:grid;gap:var(--s4);align-content:start;min-width:0}
+.panel h3{font-size:16px;font-weight:700}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:var(--s4)}
+.list{display:grid}
+.item{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--s4);padding:var(--s3) 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0;padding-top:0}
+.item:last-child{padding-bottom:0}
+.item .t{font-weight:600;font-size:15px}
+.item .m{font-size:14px;color:var(--muted);margin-top:2px}
+.rows{display:grid;gap:var(--s3)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:var(--r3);box-shadow:var(--shadow);padding:var(--s4) var(--s5);display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:var(--s4);align-items:center}
+.row .t{font-weight:700}
+.row .m{font-size:13.5px;color:var(--muted)}
+.pill{font-size:13px;font-weight:700;border-radius:999px;padding:4px 12px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
 .pill.done{background:var(--ok-soft);color:var(--ok)}
 .pill.prog{background:var(--blue-soft);color:var(--blue)}
-.arrow{color:var(--faint)}
-.vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:.75rem}
-@media (max-width:900px){.vs{grid-template-columns:1fr}}
-.side-box{background:var(--paper);border-radius:10px;padding:.7rem .8rem;display:grid;gap:.45rem;align-content:start}
-.side-box .k{font:600 .7rem var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--faint)}
-.side-box .v{font-weight:600}
-.side-box.verdict{background:var(--ink);color:#fff}
-.side-box.verdict .k{color:#CBD5E1}
-.side-box.verdict .w{color:#E2E8F0;font-size:.88rem}
-ul.plain{margin:0;padding:0;list-style:none;display:grid;gap:.75rem}
-ul.plain li{display:grid;gap:.3rem;padding-bottom:.75rem;border-bottom:1px solid var(--line)}
-ul.plain li:last-child{border-bottom:0;padding-bottom:0}
+.vs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3)}
+.box{background:var(--bg);border-radius:var(--r2);padding:var(--s3) var(--s4);display:grid;gap:var(--s2);align-content:start}
+.box .k{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.box .v{font-weight:700}
+.box.verdict{background:var(--ink);color:#fff}
+.box.verdict .k{color:#9CA3AF}
+.box.verdict .w{font-size:14px;color:#E5E7EB}
+.bar{display:grid;grid-template-columns:72px minmax(0,1fr) 24px;gap:var(--s3);align-items:center;font-size:14.5px;font-weight:600}
+.bar .track{height:8px;background:var(--side);border-radius:999px;overflow:hidden}
+.bar .fill{height:100%;background:var(--ink);border-radius:999px}
+.bar .n{font-family:var(--mono);text-align:right}
+.caution{font-size:13.5px;color:var(--muted);background:var(--bg);border-radius:var(--r1);padding:var(--s2) var(--s3)}
 .muted{color:var(--muted)}
-.bar{display:grid;grid-template-columns:5.5rem minmax(0,1fr) 2rem;gap:.7rem;align-items:center}
-.bar .track{height:10px;background:var(--side);border-radius:999px;overflow:hidden}
-.bar .fill{height:100%;background:var(--blue);border-radius:999px}
-.bar .n{font:600 .9rem var(--mono);text-align:right;font-variant-numeric:tabular-nums}
-.caution{font-size:.86rem;color:var(--muted);background:var(--paper);border-radius:8px;padding:.55rem .7rem}
 
-/* receipt drawer */
-.scrim{position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:20}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);z-index:30;padding:1.25rem;overflow-y:auto;display:grid;align-content:start}
-.slip{background:var(--slip);font-family:var(--mono);font-size:.84rem;color:var(--ink);padding:1.4rem 1.3rem 2.2rem;box-shadow:0 10px 30px rgba(15,23,42,.25);
+/* ---------- receipt drawer ---------- */
+.scrim{position:fixed;inset:0;background:rgba(17,24,39,.32);z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);z-index:30;padding:var(--s5);overflow-y:auto}
+.slip{background:var(--slip);font-family:var(--mono);font-size:13px;color:var(--ink);padding:var(--s5) var(--s5) 40px;box-shadow:0 12px 32px rgba(17,24,39,.25);
   -webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%}
 .slip .top{display:flex;justify-content:space-between;align-items:center}
-.slip .top b{letter-spacing:.25em;font-size:.9rem}
-.slip .close{display:inline-flex;padding:.3rem;border-radius:6px}
-.slip .close:hover{background:var(--side)}
-.slip hr{border:0;border-top:1.5px dashed #CFC9B8;margin:.9rem 0}
-.slip .title{font-family:var(--sans);font-size:1.05rem;font-weight:600;line-height:1.3}
-.slip .src{display:grid;gap:.3rem;margin-bottom:1rem}
+.slip .top b{letter-spacing:.3em;font-size:13px}
+.slip .x{display:inline-flex;padding:6px;border-radius:var(--r1)}
+.slip .x:hover{background:var(--side)}
+.slip hr{border:0;border-top:1.5px dashed #D3CDBC;margin:var(--s4) 0}
+.slip .title{font-family:var(--sans);font-size:17px;font-weight:700;line-height:1.35}
+.slip .src{display:grid;gap:6px;margin-bottom:var(--s4)}
 .slip .lbl{font-weight:600}
-.slip .loc{color:var(--faint);font-size:.76rem;word-break:break-word}
-.slip q{font-family:var(--sans);font-style:italic;font-size:.95rem;line-height:1.45;display:block}
-.slip .priv{font-family:var(--sans);font-size:.88rem;color:var(--muted);background:var(--side);border-radius:6px;padding:.35rem .5rem}
+.slip .loc{color:var(--muted);font-size:11.5px;word-break:break-word}
+.slip q{font-family:var(--sans);font-style:italic;font-size:15px;line-height:1.5}
+.slip .priv{font-family:var(--sans);font-size:13.5px;color:var(--ink-2);background:var(--side);border-radius:6px;padding:6px 10px}
 .slip .tot{display:flex;justify-content:space-between;font-weight:600}
-.slip .fine{color:var(--faint);font-size:.74rem;line-height:1.5;margin-top:.8rem;text-align:center}
+.slip .fine{color:var(--muted);font-size:11.5px;line-height:1.6;margin-top:var(--s3);text-align:center}
+
+/* ---------- setup wizard ---------- */
+.onb{position:fixed;inset:0;z-index:60;background:var(--bg);overflow-y:auto;display:grid;place-items:center;padding:var(--s5) 16px}
+.ob{width:min(620px,100%);background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 50px rgba(17,24,39,.10);padding:var(--s6);display:grid;gap:var(--s5)}
+.ob .bar1{display:flex;justify-content:space-between;align-items:center}
+.stepper{display:flex;align-items:center}
+.st{display:flex;align-items:center;gap:var(--s2);flex:none}
+.st .o{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 12px var(--mono);border:1.5px solid var(--line);color:var(--muted);background:var(--card);transition:all .2s}
+.st .o svg{width:14px;height:14px}
+.st span{font-size:13px;font-weight:600;color:var(--muted)}
+.st.active .o{background:var(--ink);border-color:var(--ink);color:#fff}
+.st.active span{color:var(--ink)}
+.st.done .o{background:var(--ok-soft);border-color:var(--ok-soft);color:var(--ok)}
+.st.done span{color:var(--ink-2)}
+.line{flex:1;height:1.5px;background:var(--line);margin:0 var(--s3);min-width:16px}
+.ob h2{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.25}
+.ob .lead{color:var(--ink-2);margin-top:var(--s2)}
+.field{display:grid;gap:var(--s2)}
+.field label{font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.field input{height:48px;border:1.5px solid var(--line);border-radius:var(--r2);padding:0 var(--s4);font-size:16px;background:var(--card)}
+.field input:focus{outline:none;border-color:var(--ink)}
+.hint{font-size:13.5px;color:var(--muted)}
+.choices{display:grid;gap:var(--s3)}
+.choice{display:flex;align-items:center;gap:var(--s4);text-align:left;border:1.5px solid var(--line);border-radius:var(--r2);padding:var(--s4);transition:border-color .15s,background .15s}
+.choice:hover{border-color:#CFCBC0}
+.choice[aria-checked="true"]{border-color:var(--ink);background:var(--bg)}
+.choice .cal{width:52px;flex:none;border-radius:10px;overflow:hidden;text-align:center;border:1px solid var(--line);background:var(--card)}
+.choice .cal i{display:block;font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;background:var(--accent);color:#fff;padding:2px 0;font-style:normal}
+.choice .cal b{display:block;font:600 20px/1.5 var(--mono)}
+.choice .t{font-weight:700}
+.choice .m{font-size:13.5px;color:var(--muted)}
+.drop{border:1.5px dashed #CFCBC0;border-radius:var(--r2);padding:var(--s4);display:flex;align-items:center;gap:var(--s3);color:var(--ink-2);background:var(--bg)}
+.drop svg{width:22px;height:22px;color:var(--muted)}
+.files{display:grid;max-height:250px;overflow-y:auto;border:1px solid var(--line);border-radius:var(--r2)}
+.file{display:grid;grid-template-columns:84px minmax(0,1fr) auto;gap:var(--s3);align-items:center;padding:10px var(--s4);border-top:1px solid var(--line);font-size:14px}
+.file:first-child{border-top:0}
+.kind{font-size:11.5px;font-weight:700;text-align:center;border-radius:6px;padding:2px 0;background:var(--side);color:var(--ink-2)}
+.kind.brief{background:var(--accent-soft);color:var(--accent)}
+.kind.notes{background:var(--blue-soft);color:var(--blue)}
+.kind.tracker{background:var(--ok-soft);color:var(--ok)}
+.file .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.file .mt{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.rules{display:grid;gap:var(--s3)}
+.rule{display:flex;gap:var(--s3);align-items:flex-start;padding:var(--s3) var(--s4);border-radius:var(--r2);background:var(--bg)}
+.rule .ck{width:22px;height:22px;border-radius:6px;background:var(--ink);color:#fff;display:grid;place-items:center;flex:none;margin-top:1px}
+.rule .ck svg{width:13px;height:13px}
+.rule b{display:block;font-size:15px}
+.rule span{font-size:13.5px;color:var(--muted)}
+.build{display:grid;gap:var(--s3)}
+.stage{display:flex;gap:var(--s3);align-items:center;padding:var(--s3) var(--s4);border:1px solid var(--line);border-radius:var(--r2);transition:background .2s}
+.stage .ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:none;border:2px solid var(--line)}
+.stage.running .ic{border-color:var(--ink);border-right-color:transparent;animation:spin .8s linear infinite}
+.stage.ok{background:var(--bg)}
+.stage.ok .ic{background:var(--ok);border-color:var(--ok);color:#fff}
+.stage.ok .ic svg{width:13px;height:13px}
+.stage b{display:block;font-size:15px}
+.stage span{font-size:13.5px;color:var(--muted)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:var(--s3)}
+.actions .right{display:flex;gap:var(--s3);margin-left:auto}
+
+/* ---------- guided tour ---------- */
+.tour{position:fixed;inset:0;z-index:45;pointer-events:none}
+.spot{position:fixed;border-radius:var(--r3);box-shadow:0 0 0 9999px rgba(17,24,39,.55);transition:all .3s ease;pointer-events:none}
+.coach{position:fixed;width:min(360px,calc(100vw - 32px));background:var(--card);border-radius:var(--r3);box-shadow:0 18px 40px rgba(17,24,39,.3);padding:var(--s5);display:grid;gap:var(--s3);pointer-events:auto;transition:top .3s ease,left .3s ease}
+.coach .k{font:600 12px var(--mono);color:var(--accent)}
+.coach h4{margin:0;font-size:18px;font-weight:800;letter-spacing:-.015em;line-height:1.3}
+.coach p{font-size:14.5px;color:var(--ink-2)}
+.coach .why{font-size:13.5px;color:var(--muted);border-left:3px solid var(--accent-soft);padding-left:var(--s3)}
+.coach .actions .btn{height:38px;padding:0 var(--s4);font-size:14px}
 
 @media (max-width:900px){
   .shell{grid-template-columns:1fr}
-  .side{position:static;height:auto;flex-direction:row;align-items:center;overflow-x:auto;gap:1rem;padding:.8rem 16px}
-  .group{grid-auto-flow:column}
-  .group h2,.side .note,.brand span{display:none}
+  .side{position:static;height:auto;flex-direction:row;align-items:center;overflow-x:auto;gap:var(--s4);padding:var(--s3) 16px}
+  .group{grid-auto-flow:column}.label,.side .tools,.side .fine,.brand span{display:none}
+  .vs{grid-template-columns:1fr}.row{grid-template-columns:1fr}
+  .st span{display:none}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <div class="shell">
   <aside class="side" aria-label="Runs">
-    <div class="brand"><b><svg class="i" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg>Receipts</b><span>early warnings, with sources</span></div>
+    <div class="brand"><span class="mark"><svg class="i" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg></span>
+      <div><b>Receipts</b><span>Early warnings, sourced</span></div></div>
     <div id="runs"></div>
-    <p class="note">Runs on your machine. Dates and counts are computed by code; every line cites the sentence it came from. Reasons for absences are never shown.</p>
+    <div class="tools">
+      <button class="btn link" id="replay-setup"><svg class="i" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Replay setup</button>
+      <button class="btn link" id="replay-tour"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Take the tour</button>
+      <p class="fine">Dates and counts are computed by code. Every line cites the sentence it came from. Reasons for absences are never shown.</p>
+    </div>
   </aside>
   <main><div class="wrap" id="main"></div></main>
 </div>
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Receipts"></aside>
+<div class="onb" id="onb" hidden></div>
+<div class="tour" id="tour" hidden><div class="spot" id="spot"></div><div class="coach" id="coach" role="dialog" aria-live="polite"></div></div>
 
-<script id="data" type="application/json">[{"project": "team4", "today": "2026-10-21", "today_label": "Wednesday, October 21", "countdown": {"label": "M3 due Fri Oct 30", "days": 9}, "top": [{"rank": 1, "action": "Schedule demo w/ Dana", "owner": "Tyler", "date": "2026-10-22", "date_label": "Thu Oct 22 \u00b7 tomorrow", "reason": "Needs 7 days' notice and must happen by Thu Oct 29; still open.", "note": "Kwame away Wed Oct 28\u2013Sun Nov 1; Jordan busy from 3 pm on that day", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "course rule from the brief, and the latest notes say it is not done"}, "talk_first": false, "detectors": ["D1"], "item_id": "i09", "item_title": "schedule demo w/ Dana", "receipts": [{"label": "Brief \u00b7 pg2L38", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L38", "quote": "sponsor meetings and demos must be requested from the sponsor at least seven", "private": false}, {"label": "Brief \u00b7 pg1L46", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L46", "quote": "The sponsor demo must take place during Week 10, no later than", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p17", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p17", "quote": "Sponsor demo needs to be booked with Dana. Tyler is the liaison.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p23", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p23", "quote": "Priya: text Tyler re: demo + privacy plan", "private": false}]}, {"rank": 2, "action": "Finish accessibility check before Kwame is away", "owner": "Kwame", "date": "2026-10-27", "date_label": "Tue Oct 27 \u00b7 in 6 days", "reason": "Kwame is away Wed Oct 28\u2013Sun Nov 1; 4 working days left.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "availability sheet and owner both on record; tracker may list the same work under another name"}, "talk_first": false, "detectors": ["D2"], "item_id": "i31", "item_title": "accessibility check", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p13", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p13", "quote": "Kwame does the accessibility review (WCAG checklist) once Mei's screens are final.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p22", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p22", "quote": "Kwame: accessibility checklist, start once screens are done", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p4", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p4", "quote": "wants to do the accessibility review before he leaves", "private": false}, {"label": "Task list \u00b7 r30", "file": "03_Team4_tasks.xlsx", "loc": "r30", "quote": "accessibility check | Kwame |  | not started", "private": false}]}, {"rank": 3, "action": "Pick an owner for privacy plan", "owner": "Team", "date": "2026-10-30", "date_label": "Fri Oct 30 \u00b7 in 9 days", "reason": "The task list has no owner for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no owner"}, "talk_first": true, "detectors": ["D5", "D7"], "item_id": "i33", "item_title": "privacy plan", "receipts": [{"label": "Task list \u00b7 r34", "file": "03_Team4_tasks.xlsx", "loc": "r34", "quote": "privacy plan | ? | 10/30?", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p16", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p16", "quote": "Data & privacy plan: nobody has it yet.", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p6", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p6", "quote": "wasn't sure what it's supposed to include", "private": false}]}], "also": [{"rank": 4, "action": "Set a date for competitive review", "owner": "Team", "date": null, "date_label": "this week", "reason": "The task list has no date for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no date"}, "talk_first": false, "detectors": ["D5"], "item_id": "i28", "item_title": "competitive review", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p5", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p5", "quote": "Mei is going to look at what other volunteer apps do (SignUpGenius, VolunteerHub, etc).", "private": false}, {"label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p9", "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "loc": "p9", "quote": "Mei already did most of this (SignUpGenius, VolunteerHub, Sign Up Zone).", "private": false}, {"label": "Task list \u00b7 r22", "file": "03_Team4_tasks.xlsx", "loc": "r22", "quote": "competitive review |  |  | done | mei did most of it", "private": false}]}, {"rank": 5, "action": "Set a date for link flows in figma", "owner": "Team", "date": null, "date_label": "this week", "reason": "The task list has no date for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no date"}, "talk_first": false, "detectors": ["D5"], "item_id": "i30", "item_title": "link flows in figma", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p20", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p20", "quote": "Jordan: start linking the volunteer flows this week", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p3", "quote": "Jordan has the sign-up flow and the reminder flow linked in Figma and they work", "private": false}, {"label": "Task list \u00b7 r29", "file": "03_Team4_tasks.xlsx", "loc": "r29", "quote": "link flows in figma | jordan | before demo | in progress", "private": false}]}, {"rank": 6, "action": "Set a date for get Dana's current signup spreadsheet", "owner": "Team", "date": null, "date_label": "this week", "reason": "The task list has no date for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no date"}, "talk_first": false, "detectors": ["D5"], "item_id": "i37", "item_title": "get Dana's current signup spreadsheet", "receipts": [{"label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p18", "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "loc": "p18", "quote": "Tyler: ask if Dana can share their current sign-up spreadsheet (for requirements)", "private": false}, {"label": "Task list \u00b7 r21", "file": "03_Team4_tasks.xlsx", "loc": "r21", "quote": "get Dana's current signup spreadsheet | Tyler | ?", "private": false}]}], "disagreements": [{"topic": "Accessibility check: owner", "sides": [{"says": "Kwame", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p13", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p13", "quote": "Kwame does the accessibility review (WCAG checklist) once Mei's screens are final.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p22", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p22", "quote": "Kwame: accessibility checklist, start once screens are done", "private": false}]}, {"says": "Mei", "receipts": [{"label": "Task list \u00b7 r31", "file": "03_Team4_tasks.xlsx", "loc": "r31", "quote": "WCAG review | Mei? | 10/27", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}, {"topic": "Schedule demo w/ Dana: owner", "sides": [{"says": "Tyler", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p17", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p17", "quote": "Sponsor demo needs to be booked with Dana. Tyler is the liaison.", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p5", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p5", "quote": "hasn't emailed Dana about the demo yet", "private": false}]}, {"says": "Priya", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p23", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p23", "quote": "Priya: text Tyler re: demo + privacy plan", "private": false}]}, {"says": "Priya, Jordan, Mei, Tyler, Sofia, Kwame", "receipts": [{"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p5", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p5", "quote": "we said probably Thursday the 29th", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}, {"topic": "Build app in react: owner", "sides": [{"says": "Jordan", "receipts": [{"label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p11", "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "loc": "p11", "quote": "Jordan set up a React starter project on GitHub.", "private": false}, {"label": "Task list \u00b7 r26", "file": "03_Team4_tasks.xlsx", "loc": "r26", "quote": "build app in react | Jordan | wk 10 | in progress", "private": false}]}, {"says": "Priya", "receipts": [{"label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p11", "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "loc": "p11", "quote": "Priya asked him to keep it small until requirements are done.", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}], "missing": [{"item": "Contribution log table", "impact": "required by the brief", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg2L41", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L41", "quote": "Each milestone submission includes a short table listing what each team member", "private": false}]}, {"item": "Note on AI tool usage", "impact": "required by the brief", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg3L5", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg3L5", "quote": "Note in each submission where AI tools", "private": false}]}, {"item": "Usability test with at least five participants from sponsor's user group", "impact": "required by the brief", "due": "Fri Nov 20", "receipts": [{"label": "Brief \u00b7 pg2L23", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L23", "quote": "M4 requires a usability test with at least five participants from the sponsor's actual user group", "private": false}]}], "answered": [{"question": "ask dr okafor about the late policy??", "answer": "10% off per day late, up to 3 days; extension requests must arrive by Wed Oct 28, 23:59 (48.0h notice).", "receipts": [{"label": "Brief \u00b7 pg2L29", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L29", "quote": "Team milestones lose 10% per calendar day late, up to three days.", "private": false}]}], "questions": [{"text": "Who takes peer evals?", "talk_first": true}], "load": {"note": "Counts aren't contribution. Use this to start a conversation, not to judge one.", "people": [{"name": "Jordan", "open_items": 3, "blocks": 0}, {"name": "Kwame", "open_items": 4, "blocks": 0}, {"name": "Mei", "open_items": 3, "blocks": 0}, {"name": "Priya", "open_items": 3, "blocks": 0}, {"name": "Sofia", "open_items": 3, "blocks": 0}, {"name": "Tyler", "open_items": 2, "blocks": 0}]}, "since_last": null, "counts": {"docs": 12, "claims": 196, "findings": 29}, "run": "team4@2026-10-21"}, {"project": "team4", "today": "2026-10-28", "today_label": "Wednesday, October 28", "countdown": {"label": "M3 due Fri Oct 30", "days": 2}, "top": [{"rank": 1, "action": "Confirm who runs demo w/ Dana", "owner": "Whole team", "date": "2026-10-28", "date_label": "Wed Oct 28 \u00b7 today", "reason": "It's Thu Oct 29 at 4:30 pm; Jordan is busy from 3 pm on that day.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the booked time falls inside a weekly busy block on record"}, "talk_first": true, "detectors": ["D10"], "item_id": "i08", "item_title": "schedule demo w/ Dana", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L4", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L4", "quote": "she can do thurs 10/29 at 4:30 at the warehouse", "private": false}, {"label": "Availability \u00b7 r3", "file": "04_team availability.xlsx", "loc": "r3", "quote": null, "private": true}]}, {"rank": 2, "action": "Find a new owner for WCAG review", "owner": "Whole team", "date": "2026-10-28", "date_label": "Wed Oct 28 \u00b7 today", "reason": "Kwame is away Wed Oct 28\u2013Sun Nov 1 and the work is still open.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "availability sheet and owner both on record; tracker may list the same work under another name"}, "talk_first": false, "detectors": ["D2"], "item_id": "i10", "item_title": "WCAG review", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p13", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p13", "quote": "Kwame does the accessibility review (WCAG checklist) once Mei's screens are final.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p22", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p22", "quote": "Kwame: accessibility checklist, start once screens are done", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p4", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p4", "quote": "wants to do the accessibility review before he leaves", "private": false}, {"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L7", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L7", "quote": "kwame did the accessibility checklist on the 9 volunteer screens (sat)", "private": false}]}, {"rank": 3, "action": "Set a date for hours tracking screens", "owner": "Team", "date": null, "date_label": "this week", "reason": "The task list has no date for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no date"}, "talk_first": true, "detectors": ["D5", "D7"], "item_id": "i21", "item_title": "hours tracking screens", "receipts": [{"label": "Notes wk 7 \u00b7 L4", "file": "02_Meeting_Notes/wk 7.txt", "loc": "L4", "quote": "told her wed look at it", "private": false}, {"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L8", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L8", "quote": "mei said she can mock up 1-2 screens for it by thurs", "private": false}, {"label": "Task list (Tue Oct 27) \u00b7 r37", "file": "Team4_tasks (updated oct 27).xlsx", "loc": "r37", "quote": "hours tracking screens | Mei | thurs", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p7", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p7", "quote": "Dana mentioned the hours tracking thing to Tyler a couple weeks ago, is that in or out?", "private": false}]}], "also": [{"rank": 4, "action": "Decide privacy plan", "owner": "Whole team", "date": "2026-10-30", "date_label": "Fri Oct 30 \u00b7 in 2 days", "reason": "Raised in 2 meetings since Tue Oct 13 without a decision.", "note": "", "stakes": "", "confidence": {"level": "med", "word": "Medium", "dots": "\u25cf\u25cf\u25cb", "why": "raised in 2 meetings, never settled"}, "talk_first": true, "detectors": ["D7"], "item_id": "i11", "item_title": "privacy plan", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p16", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p16", "quote": "Data & privacy plan: nobody has it yet. Maybe Tyler since he has been talking to Dana about what info they collect? Need to ask him.", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p6", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p6", "quote": "wasn't sure what it's supposed to include", "private": false}]}, {"rank": 5, "action": "Pick an owner for peer evals", "owner": "Team", "date": "2026-10-30", "date_label": "Fri Oct 30 \u00b7 in 2 days", "reason": "The task list has no owner for it.", "note": "", "stakes": "10 pts of course grade at stake", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no owner"}, "talk_first": true, "detectors": ["D5"], "item_id": "i07", "item_title": "peer evals", "receipts": [{"label": "Task list (Tue Oct 27) \u00b7 r35", "file": "Team4_tasks (updated oct 27).xlsx", "loc": "r35", "quote": "peer evals | everyone | 10/30", "private": false}]}, {"rank": 6, "action": "Check in on workload this week", "owner": "Whole team", "date": null, "date_label": "this week", "reason": "Sofia holds 4 open items; the team median is 1.5.", "note": "", "stakes": "1 pts of course grade at stake", "confidence": {"level": "med", "word": "Medium", "dots": "\u25cf\u25cf\u25cb", "why": "counts from the task list; they miss invisible work"}, "talk_first": true, "detectors": ["D8"], "item_id": null, "item_title": null, "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p14", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p14", "quote": "Sofia does the traceability matrix (features vs. requirements from M2).", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p21", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p21", "quote": "Sofia: traceability matrix draft by Fri 10/23", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p7", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p7", "quote": "I'm working on the traceability matrix", "private": false}, {"label": "Task list (Tue Oct 27) \u00b7 r32", "file": "Team4_tasks (updated oct 27).xlsx", "loc": "r32", "quote": "traceability matrix | Sofia | 2026-10-23 | in progress", "private": false}]}], "disagreements": [{"topic": "Submit M3: date", "sides": [{"says": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg1L28", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L28", "quote": "M3 Prototype milestone and sponsor demo (see Section 4) 10 Fri, Oct 30 20%", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p8", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p8", "quote": "Milestone 3: prototype + sponsor demo, due Fri Oct 30", "private": false}]}, {"says": "Fri Nov 20", "receipts": [{"label": "Brief \u00b7 pg1L29", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L29", "quote": "M4 Usability test report (minimum five test participants) 13 Fri, Nov 20 15%", "private": false}]}, {"says": "Fri Dec 11", "receipts": [{"label": "Brief \u00b7 pg1L30", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L30", "quote": "M5 Final presentation (in class, Dec 8 to 10) and final report 15 Fri, Dec 11 25%", "private": false}]}], "trust": "Fri Oct 30", "why": "the course brief is the authority on course dates", "confidence": "High"}, {"topic": "Peer evals: date", "sides": [{"says": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg1L31", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L31", "quote": "PE Peer evaluations and individual contribution (submitted 10, 15 Oct 30; Dec 11 10%", "private": false}, {"label": "Brief \u00b7 pg2L45", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L45", "quote": "Each student completes a confidential peer evaluation form, due on the same date as M3", "private": false}]}, {"says": "Fri Nov 6", "receipts": [{"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p8", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p8", "quote": "peer evals are due Nov 6 I think?", "private": false}]}], "trust": "Fri Oct 30", "why": "the course brief is the authority on course dates", "confidence": "High"}, {"topic": "Schedule demo w/ Dana: date", "sides": [{"says": "Thu Oct 29", "receipts": [{"label": "Brief \u00b7 pg1L46", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L46", "quote": "The sponsor demo must take place during Week 10, no later than", "private": false}, {"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L4", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L4", "quote": "she can do thurs 10/29 at 4:30 at the warehouse", "private": false}]}, {"says": "Thu Sep 10", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "she can meet Thursday Sept 10 at 3pm at the food bank warehouse on Grand Ave.", "private": false}]}], "trust": "Thu Oct 29", "why": "the course brief is the authority on course dates", "confidence": "High"}, {"topic": "Schedule demo w/ Dana: owner", "sides": [{"says": "Tyler", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "she can meet Thursday Sept 10 at 3pm at the food bank warehouse on Grand Ave.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p17", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p17", "quote": "Sponsor demo needs to be booked with Dana. Tyler is the liaison.", "private": false}]}, {"says": "Jordan", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "he'll call in if he can.", "private": false}]}, {"says": "Sofia, Tyler, Priya, Kwame", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "Me, Tyler, Priya and Kwame will go in person.", "private": false}]}, {"says": "Mei", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "Mei might come.", "private": false}]}, {"says": "Priya", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p23", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p23", "quote": "Priya: text Tyler re: demo + privacy plan", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}, {"topic": "Privacy plan: owner", "sides": [{"says": "Tyler", "receipts": [{"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p6", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p6", "quote": "Tyler said he can look at it", "private": false}, {"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L9", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L9", "quote": "tyler said hed help w/ whatever she needs", "private": false}]}, {"says": "Sofia", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L9", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L9", "quote": "privacy plan: sofia took it", "private": false}]}, {"says": "Sofia, Tyler", "receipts": [{"label": "Task list (Tue Oct 27) \u00b7 r34", "file": "Team4_tasks (updated oct 27).xlsx", "loc": "r34", "quote": "privacy plan | Sofia (Tyler help) | 10/30?", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}], "missing": [{"item": "Sponsor demo and feedback notes", "impact": "required by the brief", "due": "Thu Oct 29", "receipts": [{"label": "Brief \u00b7 pg2L11", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L11", "quote": "Sponsor demo and The demo took place by Oct 29. Submission includes dated notes of 15%", "private": false}]}, {"item": "Contribution log", "impact": "\u22125 points if missing", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg2L19", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L19", "quote": "Required with every milestone submission: a contribution log (see Section 5). A missing log costs five points", "private": false}]}, {"item": "Contribution log table", "impact": "required by the brief", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg2L41", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L41", "quote": "Each milestone submission includes a short table listing what each team member", "private": false}]}, {"item": "AI usage note", "impact": "required by the brief", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg3L5", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg3L5", "quote": "Note in each submission where AI tools", "private": false}]}, {"item": "Working prototype", "impact": "required by the brief", "due": "Fri Dec 11", "receipts": [{"label": "Brief \u00b7 pg2L2", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L2", "quote": "Working prototype Covers every core user flow listed in your M1 scope agreement. A 35%", "private": false}]}], "answered": [{"question": "We should double check", "answer": "The brief says Fri Oct 30.", "receipts": [{"label": "Brief \u00b7 pg1L31", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L31", "quote": "PE Peer evaluations and individual contribution (submitted 10, 15 Oct 30; Dec 11 10%", "private": false}]}], "questions": [{"text": "Who takes peer evals?", "talk_first": true}, {"text": "Sofia has 4 open items. Can anyone take one?", "talk_first": true}, {"text": "Privacy plan has come up in 2 meetings. Can we decide it now?", "talk_first": true}], "load": {"note": "Counts aren't contribution. Use this to start a conversation, not to judge one.", "people": [{"name": "Jordan", "open_items": 2, "blocks": 0}, {"name": "Kwame", "open_items": 2, "blocks": 0}, {"name": "Mei", "open_items": 1, "blocks": 0}, {"name": "Priya", "open_items": 1, "blocks": 0}, {"name": "Sofia", "open_items": 4, "blocks": 0}, {"name": "Tyler", "open_items": 1, "blocks": 0}]}, "since_last": {"prev_today": "2026-10-21", "prev_label": "Wed Oct 21", "flagged": [{"was": "Schedule demo w/ Dana", "by": "Thu Oct 22", "owner": "Tyler", "now": "Done", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L4", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L4", "quote": "she can do thurs 10/29 at 4:30 at the warehouse", "private": false}]}, {"was": "Finish accessibility check before Kwame is away", "by": "Tue Oct 27", "owner": "Kwame", "now": "Still open", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L7", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L7", "quote": "the 5 coordinator screens not reviewed yet, he'll try tonight before he leaves", "private": false}]}, {"was": "Pick an owner for privacy plan", "by": "Fri Oct 30", "owner": "Team", "now": "In progress", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L9", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L9", "quote": "privacy plan: sofia took it", "private": false}]}]}, "counts": {"docs": 13, "claims": 236, "findings": 39}, "run": "team4@2026-10-28"}]</script>
+<script id="data" type="application/json">[{"project": "team4", "today": "2026-10-21", "today_label": "Wednesday, October 21", "countdown": {"label": "M3 due Fri Oct 30", "days": 9}, "top": [{"rank": 1, "action": "Schedule demo w/ Dana", "owner": "Tyler", "date": "2026-10-22", "date_label": "Thu Oct 22 \u00b7 tomorrow", "reason": "Needs 7 days' notice and must happen by Thu Oct 29; still open.", "note": "Kwame away Wed Oct 28\u2013Sun Nov 1; Jordan busy from 3 pm on that day", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "course rule from the brief, and the latest notes say it is not done"}, "talk_first": false, "detectors": ["D1"], "item_id": "i09", "item_title": "schedule demo w/ Dana", "receipts": [{"label": "Brief \u00b7 pg2L38", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L38", "quote": "sponsor meetings and demos must be requested from the sponsor at least seven", "private": false}, {"label": "Brief \u00b7 pg1L46", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L46", "quote": "The sponsor demo must take place during Week 10, no later than", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p17", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p17", "quote": "Sponsor demo needs to be booked with Dana. Tyler is the liaison.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p23", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p23", "quote": "Priya: text Tyler re: demo + privacy plan", "private": false}]}, {"rank": 2, "action": "Finish accessibility check before Kwame is away", "owner": "Kwame", "date": "2026-10-27", "date_label": "Tue Oct 27 \u00b7 in 6 days", "reason": "Kwame is away Wed Oct 28\u2013Sun Nov 1; 4 working days left.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "availability sheet and owner both on record; tracker may list the same work under another name"}, "talk_first": false, "detectors": ["D2"], "item_id": "i31", "item_title": "accessibility check", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p13", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p13", "quote": "Kwame does the accessibility review (WCAG checklist) once Mei's screens are final.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p22", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p22", "quote": "Kwame: accessibility checklist, start once screens are done", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p4", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p4", "quote": "wants to do the accessibility review before he leaves", "private": false}, {"label": "Task list \u00b7 r30", "file": "03_Team4_tasks.xlsx", "loc": "r30", "quote": "accessibility check | Kwame |  | not started", "private": false}]}, {"rank": 3, "action": "Pick an owner for privacy plan", "owner": "Team", "date": "2026-10-30", "date_label": "Fri Oct 30 \u00b7 in 9 days", "reason": "The task list has no owner for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no owner"}, "talk_first": true, "detectors": ["D5", "D7"], "item_id": "i33", "item_title": "privacy plan", "receipts": [{"label": "Task list \u00b7 r34", "file": "03_Team4_tasks.xlsx", "loc": "r34", "quote": "privacy plan | ? | 10/30?", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p16", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p16", "quote": "Data & privacy plan: nobody has it yet.", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p6", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p6", "quote": "wasn't sure what it's supposed to include", "private": false}]}], "also": [{"rank": 4, "action": "Set a date for competitive review", "owner": "Team", "date": null, "date_label": "this week", "reason": "The task list has no date for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no date"}, "talk_first": false, "detectors": ["D5"], "item_id": "i28", "item_title": "competitive review", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p5", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p5", "quote": "Mei is going to look at what other volunteer apps do (SignUpGenius, VolunteerHub, etc).", "private": false}, {"label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p9", "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "loc": "p9", "quote": "Mei already did most of this (SignUpGenius, VolunteerHub, Sign Up Zone).", "private": false}, {"label": "Task list \u00b7 r22", "file": "03_Team4_tasks.xlsx", "loc": "r22", "quote": "competitive review |  |  | done | mei did most of it", "private": false}]}, {"rank": 5, "action": "Set a date for link flows in figma", "owner": "Team", "date": null, "date_label": "this week", "reason": "The task list has no date for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no date"}, "talk_first": false, "detectors": ["D5"], "item_id": "i30", "item_title": "link flows in figma", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p20", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p20", "quote": "Jordan: start linking the volunteer flows this week", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p3", "quote": "Jordan has the sign-up flow and the reminder flow linked in Figma and they work", "private": false}, {"label": "Task list \u00b7 r29", "file": "03_Team4_tasks.xlsx", "loc": "r29", "quote": "link flows in figma | jordan | before demo | in progress", "private": false}]}, {"rank": 6, "action": "Set a date for get Dana's current signup spreadsheet", "owner": "Team", "date": null, "date_label": "this week", "reason": "The task list has no date for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no date"}, "talk_first": false, "detectors": ["D5"], "item_id": "i37", "item_title": "get Dana's current signup spreadsheet", "receipts": [{"label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p18", "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "loc": "p18", "quote": "Tyler: ask if Dana can share their current sign-up spreadsheet (for requirements)", "private": false}, {"label": "Task list \u00b7 r21", "file": "03_Team4_tasks.xlsx", "loc": "r21", "quote": "get Dana's current signup spreadsheet | Tyler | ?", "private": false}]}], "disagreements": [{"topic": "Accessibility check: owner", "sides": [{"says": "Kwame", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p13", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p13", "quote": "Kwame does the accessibility review (WCAG checklist) once Mei's screens are final.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p22", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p22", "quote": "Kwame: accessibility checklist, start once screens are done", "private": false}]}, {"says": "Mei", "receipts": [{"label": "Task list \u00b7 r31", "file": "03_Team4_tasks.xlsx", "loc": "r31", "quote": "WCAG review | Mei? | 10/27", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}, {"topic": "Schedule demo w/ Dana: owner", "sides": [{"says": "Tyler", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p17", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p17", "quote": "Sponsor demo needs to be booked with Dana. Tyler is the liaison.", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p5", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p5", "quote": "hasn't emailed Dana about the demo yet", "private": false}]}, {"says": "Priya", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p23", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p23", "quote": "Priya: text Tyler re: demo + privacy plan", "private": false}]}, {"says": "Priya, Jordan, Mei, Tyler, Sofia, Kwame", "receipts": [{"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p5", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p5", "quote": "we said probably Thursday the 29th", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}, {"topic": "Build app in react: owner", "sides": [{"says": "Jordan", "receipts": [{"label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p11", "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "loc": "p11", "quote": "Jordan set up a React starter project on GitHub.", "private": false}, {"label": "Task list \u00b7 r26", "file": "03_Team4_tasks.xlsx", "loc": "r26", "quote": "build app in react | Jordan | wk 10 | in progress", "private": false}]}, {"says": "Priya", "receipts": [{"label": "Notes Tue Sep 29 \u00b7 Kwame \u00b7 p11", "file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "loc": "p11", "quote": "Priya asked him to keep it small until requirements are done.", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}], "missing": [{"item": "Contribution log table", "impact": "required by the brief", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg2L41", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L41", "quote": "Each milestone submission includes a short table listing what each team member", "private": false}]}, {"item": "Note on AI tool usage", "impact": "required by the brief", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg3L5", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg3L5", "quote": "Note in each submission where AI tools", "private": false}]}, {"item": "Usability test with at least five participants from sponsor's user group", "impact": "required by the brief", "due": "Fri Nov 20", "receipts": [{"label": "Brief \u00b7 pg2L23", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L23", "quote": "M4 requires a usability test with at least five participants from the sponsor's actual user group", "private": false}]}], "answered": [{"question": "ask dr okafor about the late policy??", "answer": "10% off per day late, up to 3 days; extension requests must arrive by Wed Oct 28, 23:59 (48.0h notice).", "receipts": [{"label": "Brief \u00b7 pg2L29", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L29", "quote": "Team milestones lose 10% per calendar day late, up to three days.", "private": false}]}], "questions": [{"text": "Who takes peer evals?", "talk_first": true}], "load": {"note": "Counts aren't contribution. Use this to start a conversation, not to judge one.", "people": [{"name": "Jordan", "open_items": 3, "blocks": 0}, {"name": "Kwame", "open_items": 4, "blocks": 0}, {"name": "Mei", "open_items": 3, "blocks": 0}, {"name": "Priya", "open_items": 3, "blocks": 0}, {"name": "Sofia", "open_items": 3, "blocks": 0}, {"name": "Tyler", "open_items": 2, "blocks": 0}]}, "since_last": null, "counts": {"docs": 12, "claims": 196, "findings": 29}, "run": "team4@2026-10-21", "docs": [{"file": "00_README.txt", "kind": "other", "doc_date": null, "author": null, "lines": 28}, {"file": "01_Project_Brief_UNIV497.pdf", "kind": "brief", "doc_date": null, "author": null, "lines": 117}, {"file": "02_Meeting_Notes/2026-08-25_Week1_notes_Priya.docx", "kind": "notes", "doc_date": "2026-08-25", "author": "Priya", "lines": 29}, {"file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "kind": "notes", "doc_date": "2026-09-01", "author": "Sofia", "lines": 5}, {"file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "kind": "notes", "doc_date": "2026-10-13", "author": "Priya", "lines": 23}, {"file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "kind": "notes", "doc_date": "2026-10-20", "author": "Sofia", "lines": 9}, {"file": "02_Meeting_Notes/Meeting week 4 - Mei.txt", "kind": "notes", "doc_date": "2026-09-15", "author": "Mei", "lines": 12}, {"file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "kind": "notes", "doc_date": "2026-09-29", "author": "Kwame", "lines": 19}, {"file": "02_Meeting_Notes/wk 7.txt", "kind": "notes", "doc_date": null, "author": null, "lines": 5}, {"file": "02_Meeting_Notes/wk3 notes.txt", "kind": "notes", "doc_date": "2026-09-08", "author": "Jordan", "lines": 12}, {"file": "03_Team4_tasks.xlsx", "kind": "tracker", "doc_date": null, "author": null, "lines": 34}, {"file": "04_team availability.xlsx", "kind": "availability", "doc_date": null, "author": null, "lines": 8}]}, {"project": "team4", "today": "2026-10-28", "today_label": "Wednesday, October 28", "countdown": {"label": "M3 due Fri Oct 30", "days": 2}, "top": [{"rank": 1, "action": "Confirm who runs demo w/ Dana", "owner": "Whole team", "date": "2026-10-28", "date_label": "Wed Oct 28 \u00b7 today", "reason": "It's Thu Oct 29 at 4:30 pm; Jordan is busy from 3 pm on that day.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the booked time falls inside a weekly busy block on record"}, "talk_first": true, "detectors": ["D10"], "item_id": "i08", "item_title": "schedule demo w/ Dana", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L4", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L4", "quote": "she can do thurs 10/29 at 4:30 at the warehouse", "private": false}, {"label": "Availability \u00b7 r3", "file": "04_team availability.xlsx", "loc": "r3", "quote": null, "private": true}]}, {"rank": 2, "action": "Find a new owner for WCAG review", "owner": "Whole team", "date": "2026-10-28", "date_label": "Wed Oct 28 \u00b7 today", "reason": "Kwame is away Wed Oct 28\u2013Sun Nov 1 and the work is still open.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "availability sheet and owner both on record; tracker may list the same work under another name"}, "talk_first": false, "detectors": ["D2"], "item_id": "i10", "item_title": "WCAG review", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p13", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p13", "quote": "Kwame does the accessibility review (WCAG checklist) once Mei's screens are final.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p22", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p22", "quote": "Kwame: accessibility checklist, start once screens are done", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p4", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p4", "quote": "wants to do the accessibility review before he leaves", "private": false}, {"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L7", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L7", "quote": "kwame did the accessibility checklist on the 9 volunteer screens (sat)", "private": false}]}, {"rank": 3, "action": "Set a date for hours tracking screens", "owner": "Team", "date": null, "date_label": "this week", "reason": "The task list has no date for it.", "note": "", "stakes": "", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no date"}, "talk_first": true, "detectors": ["D5", "D7"], "item_id": "i21", "item_title": "hours tracking screens", "receipts": [{"label": "Notes wk 7 \u00b7 L4", "file": "02_Meeting_Notes/wk 7.txt", "loc": "L4", "quote": "told her wed look at it", "private": false}, {"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L8", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L8", "quote": "mei said she can mock up 1-2 screens for it by thurs", "private": false}, {"label": "Task list (Tue Oct 27) \u00b7 r37", "file": "Team4_tasks (updated oct 27).xlsx", "loc": "r37", "quote": "hours tracking screens | Mei | thurs", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p7", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p7", "quote": "Dana mentioned the hours tracking thing to Tyler a couple weeks ago, is that in or out?", "private": false}]}], "also": [{"rank": 4, "action": "Decide privacy plan", "owner": "Whole team", "date": "2026-10-30", "date_label": "Fri Oct 30 \u00b7 in 2 days", "reason": "Raised in 2 meetings since Tue Oct 13 without a decision.", "note": "", "stakes": "", "confidence": {"level": "med", "word": "Medium", "dots": "\u25cf\u25cf\u25cb", "why": "raised in 2 meetings, never settled"}, "talk_first": true, "detectors": ["D7"], "item_id": "i11", "item_title": "privacy plan", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p16", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p16", "quote": "Data & privacy plan: nobody has it yet. Maybe Tyler since he has been talking to Dana about what info they collect? Need to ask him.", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p6", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p6", "quote": "wasn't sure what it's supposed to include", "private": false}]}, {"rank": 5, "action": "Pick an owner for peer evals", "owner": "Team", "date": "2026-10-30", "date_label": "Fri Oct 30 \u00b7 in 2 days", "reason": "The task list has no owner for it.", "note": "", "stakes": "10 pts of course grade at stake", "confidence": {"level": "high", "word": "High", "dots": "\u25cf\u25cf\u25cf", "why": "the task list has no owner"}, "talk_first": true, "detectors": ["D5"], "item_id": "i07", "item_title": "peer evals", "receipts": [{"label": "Task list (Tue Oct 27) \u00b7 r35", "file": "Team4_tasks (updated oct 27).xlsx", "loc": "r35", "quote": "peer evals | everyone | 10/30", "private": false}]}, {"rank": 6, "action": "Check in on workload this week", "owner": "Whole team", "date": null, "date_label": "this week", "reason": "Sofia holds 4 open items; the team median is 1.5.", "note": "", "stakes": "1 pts of course grade at stake", "confidence": {"level": "med", "word": "Medium", "dots": "\u25cf\u25cf\u25cb", "why": "counts from the task list; they miss invisible work"}, "talk_first": true, "detectors": ["D8"], "item_id": null, "item_title": null, "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p14", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p14", "quote": "Sofia does the traceability matrix (features vs. requirements from M2).", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p21", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p21", "quote": "Sofia: traceability matrix draft by Fri 10/23", "private": false}, {"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p7", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p7", "quote": "I'm working on the traceability matrix", "private": false}, {"label": "Task list (Tue Oct 27) \u00b7 r32", "file": "Team4_tasks (updated oct 27).xlsx", "loc": "r32", "quote": "traceability matrix | Sofia | 2026-10-23 | in progress", "private": false}]}], "disagreements": [{"topic": "Submit M3: date", "sides": [{"says": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg1L28", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L28", "quote": "M3 Prototype milestone and sponsor demo (see Section 4) 10 Fri, Oct 30 20%", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p8", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p8", "quote": "Milestone 3: prototype + sponsor demo, due Fri Oct 30", "private": false}]}, {"says": "Fri Nov 20", "receipts": [{"label": "Brief \u00b7 pg1L29", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L29", "quote": "M4 Usability test report (minimum five test participants) 13 Fri, Nov 20 15%", "private": false}]}, {"says": "Fri Dec 11", "receipts": [{"label": "Brief \u00b7 pg1L30", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L30", "quote": "M5 Final presentation (in class, Dec 8 to 10) and final report 15 Fri, Dec 11 25%", "private": false}]}], "trust": "Fri Oct 30", "why": "the course brief is the authority on course dates", "confidence": "High"}, {"topic": "Peer evals: date", "sides": [{"says": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg1L31", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L31", "quote": "PE Peer evaluations and individual contribution (submitted 10, 15 Oct 30; Dec 11 10%", "private": false}, {"label": "Brief \u00b7 pg2L45", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L45", "quote": "Each student completes a confidential peer evaluation form, due on the same date as M3", "private": false}]}, {"says": "Fri Nov 6", "receipts": [{"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p8", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p8", "quote": "peer evals are due Nov 6 I think?", "private": false}]}], "trust": "Fri Oct 30", "why": "the course brief is the authority on course dates", "confidence": "High"}, {"topic": "Schedule demo w/ Dana: date", "sides": [{"says": "Thu Oct 29", "receipts": [{"label": "Brief \u00b7 pg1L46", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L46", "quote": "The sponsor demo must take place during Week 10, no later than", "private": false}, {"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L4", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L4", "quote": "she can do thurs 10/29 at 4:30 at the warehouse", "private": false}]}, {"says": "Thu Sep 10", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "she can meet Thursday Sept 10 at 3pm at the food bank warehouse on Grand Ave.", "private": false}]}], "trust": "Thu Oct 29", "why": "the course brief is the authority on course dates", "confidence": "High"}, {"topic": "Schedule demo w/ Dana: owner", "sides": [{"says": "Tyler", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "she can meet Thursday Sept 10 at 3pm at the food bank warehouse on Grand Ave.", "private": false}, {"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p17", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p17", "quote": "Sponsor demo needs to be booked with Dana. Tyler is the liaison.", "private": false}]}, {"says": "Jordan", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "he'll call in if he can.", "private": false}]}, {"says": "Sofia, Tyler, Priya, Kwame", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "Me, Tyler, Priya and Kwame will go in person.", "private": false}]}, {"says": "Mei", "receipts": [{"label": "Notes Tue Sep 1 \u00b7 Sofia \u00b7 p3", "file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "loc": "p3", "quote": "Mei might come.", "private": false}]}, {"says": "Priya", "receipts": [{"label": "Notes Tue Oct 13 \u00b7 Priya \u00b7 p23", "file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "loc": "p23", "quote": "Priya: text Tyler re: demo + privacy plan", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}, {"topic": "Privacy plan: owner", "sides": [{"says": "Tyler", "receipts": [{"label": "Notes Tue Oct 20 \u00b7 Sofia \u00b7 p6", "file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "loc": "p6", "quote": "Tyler said he can look at it", "private": false}, {"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L9", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L9", "quote": "tyler said hed help w/ whatever she needs", "private": false}]}, {"says": "Sofia", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L9", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L9", "quote": "privacy plan: sofia took it", "private": false}]}, {"says": "Sofia, Tyler", "receipts": [{"label": "Task list (Tue Oct 27) \u00b7 r34", "file": "Team4_tasks (updated oct 27).xlsx", "loc": "r34", "quote": "privacy plan | Sofia (Tyler help) | 10/30?", "private": false}]}], "trust": "Ask the team", "why": "same work listed under different owners", "confidence": "Medium"}], "missing": [{"item": "Sponsor demo and feedback notes", "impact": "required by the brief", "due": "Thu Oct 29", "receipts": [{"label": "Brief \u00b7 pg2L11", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L11", "quote": "Sponsor demo and The demo took place by Oct 29. Submission includes dated notes of 15%", "private": false}]}, {"item": "Contribution log", "impact": "\u22125 points if missing", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg2L19", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L19", "quote": "Required with every milestone submission: a contribution log (see Section 5). A missing log costs five points", "private": false}]}, {"item": "Contribution log table", "impact": "required by the brief", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg2L41", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L41", "quote": "Each milestone submission includes a short table listing what each team member", "private": false}]}, {"item": "AI usage note", "impact": "required by the brief", "due": "Fri Oct 30", "receipts": [{"label": "Brief \u00b7 pg3L5", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg3L5", "quote": "Note in each submission where AI tools", "private": false}]}, {"item": "Working prototype", "impact": "required by the brief", "due": "Fri Dec 11", "receipts": [{"label": "Brief \u00b7 pg2L2", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg2L2", "quote": "Working prototype Covers every core user flow listed in your M1 scope agreement. A 35%", "private": false}]}], "answered": [{"question": "We should double check", "answer": "The brief says Fri Oct 30.", "receipts": [{"label": "Brief \u00b7 pg1L31", "file": "01_Project_Brief_UNIV497.pdf", "loc": "pg1L31", "quote": "PE Peer evaluations and individual contribution (submitted 10, 15 Oct 30; Dec 11 10%", "private": false}]}], "questions": [{"text": "Who takes peer evals?", "talk_first": true}, {"text": "Sofia has 4 open items. Can anyone take one?", "talk_first": true}, {"text": "Privacy plan has come up in 2 meetings. Can we decide it now?", "talk_first": true}], "load": {"note": "Counts aren't contribution. Use this to start a conversation, not to judge one.", "people": [{"name": "Jordan", "open_items": 2, "blocks": 0}, {"name": "Kwame", "open_items": 2, "blocks": 0}, {"name": "Mei", "open_items": 1, "blocks": 0}, {"name": "Priya", "open_items": 1, "blocks": 0}, {"name": "Sofia", "open_items": 4, "blocks": 0}, {"name": "Tyler", "open_items": 1, "blocks": 0}]}, "since_last": {"prev_today": "2026-10-21", "prev_label": "Wed Oct 21", "flagged": [{"was": "Schedule demo w/ Dana", "by": "Thu Oct 22", "owner": "Tyler", "now": "Done", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L4", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L4", "quote": "she can do thurs 10/29 at 4:30 at the warehouse", "private": false}]}, {"was": "Finish accessibility check before Kwame is away", "by": "Tue Oct 27", "owner": "Kwame", "now": "Still open", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L7", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L7", "quote": "the 5 coordinator screens not reviewed yet, he'll try tonight before he leaves", "private": false}]}, {"was": "Pick an owner for privacy plan", "by": "Fri Oct 30", "owner": "Team", "now": "In progress", "receipts": [{"label": "Notes Tue Oct 27 \u00b7 Jordan \u00b7 L9", "file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "loc": "L9", "quote": "privacy plan: sofia took it", "private": false}]}]}, "counts": {"docs": 13, "claims": 236, "findings": 39}, "run": "team4@2026-10-28", "docs": [{"file": "00_README.txt", "kind": "other", "doc_date": null, "author": null, "lines": 28}, {"file": "01_Project_Brief_UNIV497.pdf", "kind": "brief", "doc_date": null, "author": null, "lines": 117}, {"file": "02_Meeting_Notes/2026-08-25_Week1_notes_Priya.docx", "kind": "notes", "doc_date": "2026-08-25", "author": "Priya", "lines": 29}, {"file": "02_Meeting_Notes/2026-09-01_Wk2 meeting - Sofia.docx", "kind": "notes", "doc_date": "2026-09-01", "author": "Sofia", "lines": 5}, {"file": "02_Meeting_Notes/2026-10-13_Week8_notes_Priya.docx", "kind": "notes", "doc_date": "2026-10-13", "author": "Priya", "lines": 23}, {"file": "02_Meeting_Notes/2026-10-20_Wk9 meeting - Sofia.docx", "kind": "notes", "doc_date": "2026-10-20", "author": "Sofia", "lines": 9}, {"file": "02_Meeting_Notes/Meeting week 4 - Mei.txt", "kind": "notes", "doc_date": "2026-09-15", "author": "Mei", "lines": 12}, {"file": "02_Meeting_Notes/Team4_Week6_Notes_KA.docx", "kind": "notes", "doc_date": "2026-09-29", "author": "Kwame", "lines": 19}, {"file": "02_Meeting_Notes/wk 7.txt", "kind": "notes", "doc_date": null, "author": null, "lines": 5}, {"file": "02_Meeting_Notes/wk10 notes - oct 27.txt", "kind": "notes", "doc_date": "2026-10-27", "author": "Jordan", "lines": 10}, {"file": "02_Meeting_Notes/wk3 notes.txt", "kind": "notes", "doc_date": "2026-09-08", "author": "Jordan", "lines": 12}, {"file": "04_team availability.xlsx", "kind": "availability", "doc_date": null, "author": null, "lines": 8}, {"file": "Team4_tasks (updated oct 27).xlsx", "kind": "tracker", "doc_date": "2026-10-27", "author": null, "lines": 37}]}]</script>
 <script>
 const RUNS = JSON.parse(document.getElementById('data').textContent);
-const SECTIONS = [
-  {id: 'week', name: 'This week', count: b => b.top.length + (b.also || []).length},
-  {id: 'since', name: 'Since last run', count: b => b.since_last ? b.since_last.flagged.length : 0, hide: b => !b.since_last},
-  {id: 'disagree', name: 'Disagreements', count: b => b.disagreements.length},
-  {id: 'gaps', name: 'Gaps & answers', count: b => b.missing.length + (b.answered || []).length},
-  {id: 'team', name: 'Team', count: b => (b.questions || []).length},
-];
+const $ = s => document.querySelector(s);
 const ICON = {
   user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
   clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
   talk: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
   file: '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>',
-  arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
   x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  cal: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+  arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
 };
 const icon = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -178,101 +267,71 @@ const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','
 const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const parse = iso => { const [y, m, d] = iso.slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
 const short = iso => { const d = parse(iso); return `${DOW[d.getDay()]} ${MON[d.getMonth()]} ${d.getDate()}`; };
+const KIND = {brief: 'Brief', notes: 'Notes', tracker: 'Task list', availability: 'Schedule', other: 'Other'};
 
-let state = {run: RUNS.length - 1, section: 'week', from: null};
-let slips = [];   // receipt sets referenced by buttons on the current view
+let state = {run: RUNS.length - 1, section: 'week', project: 'Team 4 sample project', from: null};
+let slips = [];
 
-function receiptButton(receipts, title) {
+/* ================= board ================= */
+const SECTIONS = [
+  {id: 'week', name: 'This week', count: b => b.top.length + (b.also || []).length},
+  {id: 'since', name: 'Since last run', count: b => b.since_last ? b.since_last.flagged.length : 0, hide: b => !b.since_last},
+  {id: 'disagree', name: 'Disagreements', count: b => b.disagreements.length},
+  {id: 'gaps', name: 'Gaps & answers', count: b => b.missing.length + (b.answered || []).length},
+  {id: 'team', name: 'Team', count: b => (b.questions || []).length},
+];
+
+function rb(receipts, title, extra = '') {
   if (!receipts || !receipts.length) return '';
   slips.push({receipts, title});
-  return `<button class="rbtn" data-slip="${slips.length - 1}">${icon('file')}${receipts.length} receipt${receipts.length > 1 ? 's' : ''}</button>`;
+  return `<button class="rbtn" ${extra} data-slip="${slips.length - 1}">${icon('file')}${receipts.length} receipt${receipts.length > 1 ? 's' : ''}</button>`;
 }
+const dots = level => { const n = {high: 3, med: 2, medium: 2, low: 1}[level] || 1; return `<span class="dots">${[1,2,3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`; };
 
 function renderRuns() {
   const groups = {};
   RUNS.forEach((b, i) => (groups[b.project] = groups[b.project] || []).push(i));
-  document.getElementById('runs').innerHTML = Object.entries(groups).map(([p, idx]) => `
-    <div class="group" role="tablist" aria-label="${esc(p)} runs"><h2>${esc(p)}</h2>
+  $('#runs').innerHTML = Object.entries(groups).map(([p, idx]) => `
+    <div class="group" role="tablist" aria-label="Runs"><div class="label">${esc(state.project)}</div>
       ${idx.map(i => { const b = RUNS[i]; return `
         <button class="run" role="tab" data-run="${i}" aria-selected="${i === state.run}">
-          <span class="d">${esc(short(b.today))}</span>
-          <span class="s">${b.top.length} to act on · ${b.counts.docs} docs</span>
+          <span><span class="d">${esc(short(b.today))}</span><br><span class="s">${b.counts.docs} files read</span></span>
+          <span class="n">${b.top.length}</span>
         </button>`; }).join('')}
     </div>`).join('');
 }
 
-function card(c) {
-  const d = c.date ? parse(c.date) : null;
-  const rel = (c.date_label || '').split(' · ')[1] || c.date_label || '';
-  return `<article class="card">
-    <div class="stamp">
-      <span class="rk">#${c.rank}</span>
-      ${d ? `<span class="dd">${d.getDate()}</span><span class="mm">${DOW[d.getDay()]} ${MON[d.getMonth()]}</span>` : `<span class="mm">this week</span>`}
-      ${d ? `<span class="rel">${esc(rel)}</span>` : ''}
-    </div>
-    <div class="body">
-      <h3 class="action">${esc(c.action)}</h3>
-      <div class="meta"><span class="chip">${icon('user')}${esc(c.owner)}</span>${c.talk_first ? `<span class="chip talk">${icon('talk')}Talk as a team</span>` : ''}</div>
-      <p class="reason">${esc(c.reason)}</p>
-      ${c.note ? `<div class="note">${icon('clock')}<span>${esc(c.note)}</span></div>` : ''}
-      <div class="foot">
-        <span class="conf" title="${esc(c.confidence.why)}">${esc(c.confidence.dots)} ${esc(c.confidence.word)} confidence</span>
-        ${receiptButton(c.receipts, c.action)}
-      </div>
-    </div>
+function card(c, i) {
+  return `<article class="card" data-card="${i}">
+    <div class="top"><span class="rank">${String(c.rank).padStart(2, '0')}</span><span class="when">${icon('cal')}${esc(c.date_label)}</span></div>
+    <h3>${esc(c.action)}</h3>
+    <div class="chips"><span class="chip">${icon('user')}${esc(c.owner)}</span>${c.talk_first ? `<span class="chip talk">${icon('talk')}Talk as a team</span>` : ''}</div>
+    <p class="reason">${esc(c.reason)}</p>
+    ${c.note ? `<div class="note">${icon('clock')}<span>${esc(c.note)}</span></div>` : ''}
+    <div class="foot"><span class="conf" title="${esc(c.confidence.why)}">${dots(c.confidence.level)}${esc(c.confidence.word)} confidence</span>${rb(c.receipts, c.action)}</div>
   </article>`;
 }
 
-function viewWeek(b) {
-  const top = b.top.length ? `<div class="cards">${b.top.map(card).join('')}</div>` : `<div class="empty">Nothing urgent found for this week.</div>`;
-  const also = (b.also || []).length ? `<div class="panel"><h3>Also this week</h3><ul class="plain">${b.also.map(c => `
-    <li><div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap"><b>${esc(c.action)}</b>${receiptButton(c.receipts, c.action)}</div>
-    <span class="muted">${esc(c.owner)} · ${esc(c.date_label)} · ${esc(c.reason)}</span></li>`).join('')}</ul></div>` : '';
-  return top + also;
-}
-
-function viewSince(b) {
-  const s = b.since_last;
-  return `<p class="muted" style="margin:0">What we flagged on ${esc(s.prev_label)}, and what the newest documents say happened.</p>
-  <div class="rows">${s.flagged.map(x => {
-    const cls = x.now === 'Done' ? 'done' : x.now === 'In progress' ? 'prog' : '';
-    return `<div class="row">
-      <div><div class="was">${esc(x.was)}</div><div class="by">${esc(x.owner)} · flagged for ${esc(x.by)}</div></div>
-      <span class="arrow">${icon('arrow')}</span>
-      <span class="pill ${cls}">${esc(x.now)}</span>
-      ${receiptButton(x.receipts, x.was) || '<span></span>'}
-    </div>`; }).join('')}</div>`;
-}
-
-function viewDisagree(b) {
-  if (!b.disagreements.length) return `<div class="empty">The documents agree on everything current.</div>`;
-  return `<div class="rows">${b.disagreements.map(x => `
-    <div class="panel"><h3>${esc(x.topic)}</h3><div class="vs">
-      ${x.sides.slice(0, 2).map((s, i) => `<div class="side-box"><span class="k">${i ? 'Another source says' : 'One source says'}</span>
-        <span class="v">${esc(s.says)}</span><div>${receiptButton(s.receipts, x.topic)}</div></div>`).join('')}
-      <div class="side-box verdict"><span class="k">We trust</span><span class="v">${esc(x.trust)}</span><span class="w">${esc(x.why)}</span></div>
-    </div></div>`).join('')}</div>`;
-}
-
-function viewGaps(b) {
-  const miss = b.missing.length ? b.missing.map(m => `<li><div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap"><b>${esc(m.item)}</b>${receiptButton(m.receipts, m.item)}</div>
-    <span class="muted">${esc(m.impact)}${m.due ? ` · due ${esc(m.due)}` : ''}</span></li>`).join('') : '<li class="muted">Nothing missing.</li>';
-  const ans = (b.answered || []).length ? b.answered.map(a => `<li><span class="muted">“${esc(a.question)}”</span><span>${esc(a.answer)}</span><div>${receiptButton(a.receipts, a.question)}</div></li>`).join('') : '<li class="muted">No open questions the brief already answers.</li>';
-  return `<div class="grid2"><div class="panel"><h3>Not on your task list yet</h3><ul class="plain">${miss}</ul></div>
-    <div class="panel"><h3>Already answered in the brief</h3><ul class="plain">${ans}</ul></div></div>`;
-}
-
-function viewTeam(b) {
-  const max = Math.max(1, ...b.load.people.map(p => p.open_items));
-  const qs = (b.questions || []).length ? b.questions.map(q => `<li>${esc(q.text)}</li>`).join('') : '<li class="muted">No team questions this week.</li>';
-  return `<div class="grid2">
-    <div class="panel"><h3>Questions for the next meeting</h3><ul class="plain">${qs}</ul></div>
-    <div class="panel"><h3>Who's carrying what</h3>
-      ${b.load.people.map(p => `<div class="bar"><span>${esc(p.name)}</span><div class="track"><div class="fill" style="width:${Math.round(100 * p.open_items / max)}%"></div></div><span class="n">${p.open_items}</span></div>`).join('')}
-      <div class="caution">${esc(b.load.note)}</div></div></div>`;
-}
-
-const VIEWS = {week: viewWeek, since: viewSince, disagree: viewDisagree, gaps: viewGaps, team: viewTeam};
+const VIEWS = {
+  week: b => (b.top.length ? `<div class="cards">${b.top.map(card).join('')}</div>` : `<div class="empty">Nothing urgent found for this week.</div>`)
+    + ((b.also || []).length ? `<div class="panel"><h3>Also this week</h3><div class="list">${b.also.map(c => `
+      <div class="item"><div><div class="t">${esc(c.action)}</div><div class="m">${esc(c.owner)} · ${esc(c.date_label)} · ${esc(c.reason)}</div></div>${rb(c.receipts, c.action)}</div>`).join('')}</div></div>` : ''),
+  since: b => `<p class="muted">What we flagged on ${esc(b.since_last.prev_label)}, and what the newest files say happened.</p>
+    <div class="rows">${b.since_last.flagged.map(x => { const cls = x.now === 'Done' ? 'done' : x.now === 'In progress' ? 'prog' : '';
+      return `<div class="row"><div><div class="t">${esc(x.was)}</div><div class="m">${esc(x.owner)} · flagged for ${esc(x.by)}</div></div>
+        <span class="pill ${cls}">${esc(x.now)}</span>${rb(x.receipts, x.was) || '<span></span>'}</div>`; }).join('')}</div>`,
+  disagree: b => b.disagreements.length ? b.disagreements.map(x => `<div class="panel"><h3>${esc(x.topic)}</h3><div class="vs">
+      ${x.sides.slice(0, 2).map((s, i) => `<div class="box"><span class="k">${i ? 'Another file says' : 'One file says'}</span><span class="v">${esc(s.says)}</span><div>${rb(s.receipts, x.topic)}</div></div>`).join('')}
+      <div class="box verdict"><span class="k">We trust</span><span class="v">${esc(x.trust)}</span><span class="w">${esc(x.why)}</span></div></div></div>`).join('')
+    : `<div class="empty">The files agree on everything current.</div>`,
+  gaps: b => `<div class="grid2">
+    <div class="panel"><h3>Not on your task list yet</h3><div class="list">${b.missing.length ? b.missing.map(m => `<div class="item"><div><div class="t">${esc(m.item)}</div><div class="m">${esc(m.impact)}${m.due ? ` · due ${esc(m.due)}` : ''}</div></div>${rb(m.receipts, m.item)}</div>`).join('') : '<p class="muted">Nothing missing.</p>'}</div></div>
+    <div class="panel"><h3>Already answered in the brief</h3><div class="list">${(b.answered || []).length ? b.answered.map(a => `<div class="item"><div><div class="m">“${esc(a.question)}”</div><div class="t" style="margin-top:4px">${esc(a.answer)}</div></div>${rb(a.receipts, a.question)}</div>`).join('') : '<p class="muted">No open questions the brief already answers.</p>'}</div></div></div>`,
+  team: b => { const max = Math.max(1, ...b.load.people.map(p => p.open_items)); return `<div class="grid2">
+    <div class="panel"><h3>Questions for the next meeting</h3><div class="list">${(b.questions || []).length ? b.questions.map(q => `<div class="item"><div class="t">${esc(q.text)}</div></div>`).join('') : '<p class="muted">No team questions this week.</p>'}</div></div>
+    <div class="panel"><h3>Who's carrying what</h3>${b.load.people.map(p => `<div class="bar"><span>${esc(p.name)}</span><div class="track"><div class="fill" style="width:${Math.round(100 * p.open_items / max)}%"></div></div><span class="n">${p.open_items}</span></div>`).join('')}
+      <div class="caution">${esc(b.load.note)}</div></div></div>`; },
+};
 
 function renderMain() {
   const b = RUNS[state.run];
@@ -280,53 +339,150 @@ function renderMain() {
   const secs = SECTIONS.filter(s => !(s.hide && s.hide(b)));
   if (!secs.find(s => s.id === state.section)) state.section = 'week';
   const cd = b.countdown;
-  document.getElementById('main').innerHTML = `
-    <div class="head">
-      <div><div class="eyebrow">${esc(b.project)} · built from ${b.counts.docs} documents and ${b.counts.claims} quoted claims</div><h1>${esc(b.today_label)}</h1></div>
-      ${cd ? `<div class="count"><span class="n">${cd.days}</span><span class="t"><b>days left</b>${esc(cd.label)}</span></div>` : ''}
-    </div>
-    <div class="tabs" role="tablist" aria-label="Sections">${secs.map(s => `
-      <button class="tab" role="tab" data-sec="${s.id}" aria-selected="${s.id === state.section}">${esc(s.name)}<span class="c">${s.count(b)}</span></button>`).join('')}
-    </div>
-    <section role="tabpanel" style="display:grid;gap:1rem">${VIEWS[state.section](b)}</section>`;
+  $('#main').innerHTML = `
+    <div class="head"><div><div class="eyebrow">${esc(state.project)} · ${b.counts.docs} files · ${b.counts.claims} quoted claims</div><h1>${esc(b.today_label)}</h1></div>
+      ${cd ? `<div class="count" id="countdown"><span class="n">${cd.days}</span><span class="t"><b>days left</b>${esc(cd.label)}</span></div>` : ''}</div>
+    <div class="tabs" role="tablist" aria-label="Sections">${secs.map(s => `<button class="tab" role="tab" data-sec="${s.id}" aria-selected="${s.id === state.section}">${esc(s.name)}<span class="c">${s.count(b)}</span></button>`).join('')}</div>
+    <section class="panelwrap" role="tabpanel">${VIEWS[state.section](b)}</section>`;
 }
+function render() { renderRuns(); renderMain(); }
 
 function openSlip(i) {
   const {receipts, title} = slips[i];
-  const d = document.getElementById('drawer');
-  d.innerHTML = `<div class="slip" role="dialog" aria-modal="true" aria-label="Receipts">
-    <div class="top"><b>RECEIPTS</b><button class="close" id="close" aria-label="Close">${icon('x')}</button></div>
+  $('#drawer').innerHTML = `<div class="slip" role="dialog" aria-modal="true" aria-label="Receipts">
+    <div class="top"><b>RECEIPTS</b><button class="x" id="close" aria-label="Close">${icon('x')}</button></div>
     <hr><div class="title">${esc(title)}</div><hr>
     ${receipts.map(r => `<div class="src"><span class="lbl">${esc(r.label)}</span><span class="loc">${esc(r.file)} · ${esc(r.loc)}</span>
-      ${r.private ? `<span class="priv">Quote withheld: it may include personal details. The card shows only the constraint.</span>` : `<q>${esc(r.quote)}</q>`}</div>`).join('')}
+      ${r.private ? `<span class="priv">Quote withheld because it may include personal details. The card shows only the constraint.</span>` : `<q>${esc(r.quote)}</q>`}</div>`).join('')}
     <hr><div class="tot"><span>SOURCES</span><span>${receipts.length}</span></div>
-    <p class="fine">Every quote was checked word for word against its file.<br>Dates on the board are computed by code.</p>
-  </div>`;
-  d.hidden = false; document.getElementById('scrim').hidden = false;
-  document.getElementById('close').focus();
+    <p class="fine">Every quote was checked word for word against its file.<br>Dates on the board are computed by code.</p></div>`;
+  $('#drawer').hidden = false; $('#scrim').hidden = false; $('#close').focus();
 }
-function closeSlip() {
-  document.getElementById('drawer').hidden = true; document.getElementById('scrim').hidden = true;
-  if (state.from) state.from.focus();
+function closeSlip() { $('#drawer').hidden = true; $('#scrim').hidden = true; if (state.from) state.from.focus(); }
+
+/* ================= setup wizard ================= */
+const STEPS = ['Project', 'Week', 'Files', 'Ground rules'];
+let ob = {step: 0, run: RUNS.length - 1, building: false};
+
+function stepper() {
+  return `<div class="stepper">${STEPS.map((s, i) => `${i ? '<div class="line"></div>' : ''}
+    <div class="st ${i < ob.step ? 'done' : i === ob.step ? 'active' : ''}"><span class="o">${i < ob.step ? icon('check') : i + 1}</span><span>${s}</span></div>`).join('')}</div>`;
+}
+function obBody() {
+  const b = RUNS[ob.run];
+  if (ob.building) return `<div><h2>Building your board</h2><p class="lead">Four steps, each one checked before the next runs.</p></div>
+    <div class="build">${[
+      ['Reading your files', `${b.counts.docs} files: notes, task lists, schedules and the brief`],
+      ['Pulling out what each file says', `${b.counts.claims} claims, every quote checked word for word`],
+      ['Checking dates and deadlines in code', `${b.counts.findings} findings, nothing guessed by AI`],
+      ['Ranking what matters this week', `${b.top.length} things to act on${b.countdown ? `, ${b.countdown.days} days before ${b.countdown.label.split(' due')[0]}` : ''}`],
+    ].map(([t, m], i) => `<div class="stage" id="stage${i}"><span class="ic"></span><div><b>${t}</b><span>${m}</span></div></div>`).join('')}</div>
+    <div class="actions"><span></span><div class="right"><button class="btn primary" id="ob-done" disabled>Show my week ${icon('arrow')}</button></div></div>`;
+  const back = ob.step ? `<button class="btn ghost" id="ob-back">Back</button>` : '';
+  const next = (label) => `<div class="actions">${back}<div class="right"><button class="btn primary" id="ob-next">${label} ${icon('arrow')}</button></div></div>`;
+  if (ob.step === 0) return `<div><h2>Name your project</h2><p class="lead">Receipts reads the files your team already keeps and tells you what needs attention this week.</p></div>
+    <div class="field"><label for="ob-name">Project name</label><input id="ob-name" value="${esc(state.project)}" autocomplete="off"><span class="hint">Only you see this. It labels your runs.</span></div>${next('Continue')}`;
+  if (ob.step === 1) return `<div><h2>Pick the week</h2><p class="lead">Each run is a snapshot of your files on one day. Countdowns are measured from that date.</p></div>
+    <div class="choices" role="radiogroup">${RUNS.map((r, i) => { const d = parse(r.today); return `
+      <button class="choice" role="radio" data-pick="${i}" aria-checked="${i === ob.run}"><span class="cal"><i>${MON[d.getMonth()]}</i><b>${d.getDate()}</b></span>
+      <span><span class="t">${esc(r.today_label)}</span><br><span class="m">${r.counts.docs} files${r.countdown ? ` · ${esc(r.countdown.label)}` : ''}</span></span></button>`; }).join('')}</div>${next('Continue')}`;
+  if (ob.step === 2) return `<div><h2>Add your project files</h2><p class="lead">Meeting notes, the task list, the schedule sheet and the course brief. Word, Excel, PDF and text all work.</p></div>
+    <div class="drop">${icon('upload')}<span><b>Drop a project folder here</b><br><span class="hint">This demo uses the Team 4 sample kit.</span></span></div>
+    <div class="files">${b.docs.map(f => `<div class="file"><span class="kind ${esc(f.kind)}">${esc(KIND[f.kind] || f.kind)}</span>
+      <span class="nm" title="${esc(f.file)}">${esc(f.file.split('/').pop())}</span>
+      <span class="mt">${f.doc_date ? esc(short(f.doc_date)) : 'undated'}${f.author ? ` · ${esc(f.author)}` : ''}</span></div>`).join('')}</div>${next('Continue')}`;
+  return `<div><h2>Ground rules</h2><p class="lead">Receipts supports the team. It doesn't judge it.</p></div>
+    <div class="rules">${[
+      ['Your files stay on hardware you control', 'Nothing goes to a cloud AI service.'],
+      ['Constraints, never reasons', 'It says "away Oct 28 to Nov 1", never why.'],
+      ['It never ranks people', 'Workload questions go to the team as a conversation, and peer evaluations are off limits.'],
+      ['Every line has a receipt', 'Dates come from code. If it can\'t point to a sentence, it doesn\'t say it.'],
+    ].map(([t, m]) => `<div class="rule"><span class="ck">${icon('check')}</span><div><b>${t}</b><span>${m}</span></div></div>`).join('')}</div>${next('Build my board')}`;
+}
+function renderOb() {
+  $('#onb').innerHTML = `<div class="ob" role="dialog" aria-modal="true" aria-label="Set up Receipts">
+    <div class="bar1"><div class="brand"><span class="mark"><svg class="i" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg></span><div><b>Receipts</b><span>Setup</span></div></div>
+      <button class="btn link" id="ob-skip">Skip to board</button></div>
+    ${stepper()}${obBody()}</div>`;
+  const first = $('#onb input, #onb [aria-checked="true"], #ob-next'); if (first) first.focus();
+}
+function openOb() { ob = {step: 0, run: state.run, building: false}; $('#onb').hidden = false; renderOb(); }
+function closeOb(startTour) { $('#onb').hidden = true; state.run = ob.run; state.section = 'week'; render(); if (startTour) setTimeout(() => startTourAt(0), 250); }
+function build() {
+  ob.building = true; ob.step = STEPS.length; renderOb();
+  [0, 1, 2, 3].forEach(i => {
+    setTimeout(() => $(`#stage${i}`)?.classList.add('running'), i * 700);
+    setTimeout(() => { const s = $(`#stage${i}`); if (s) { s.classList.remove('running'); s.classList.add('ok'); s.querySelector('.ic').innerHTML = icon('check'); } }, i * 700 + 650);
+  });
+  setTimeout(() => { const d = $('#ob-done'); if (d) { d.disabled = false; d.focus(); } }, 4 * 700);
 }
 
-function render() { renderRuns(); renderMain(); }
+/* ================= guided tour ================= */
+const TOUR = [
+  {sel: '.card[data-card="0"]', k: 'This week', title: 'Three things, ten seconds', body: 'Each card names a task, a person, a date and the reason. The most urgent deadline comes first.', why: 'Why: busy teammates read the first screen and nothing else.'},
+  {sel: '.card[data-card="0"] .rbtn', k: 'Receipts', title: 'Every line has a receipt', body: 'Open it to see the exact sentences the card came from, with the file and line.', why: 'If we can\'t point to a source, it doesn\'t go on the board.'},
+  {sel: '.card[data-card="0"] .conf', k: 'Confidence', title: 'It says how sure it is', body: 'High means the brief or two files agree. Lower means one source, or files that conflict.', why: 'Hover for the one-line reason.'},
+  {sel: '.chip.talk', k: 'People first', title: 'Some things are a conversation', body: 'When a card is about someone\'s workload or a role gap, it asks the team to talk instead of handing down a verdict.', why: 'It never ranks people or touches peer evaluations.'},
+  {sel: '#countdown', k: 'Countdown', title: 'Days to the next deadline', body: 'Computed in code from the brief, never guessed by AI.', why: 'A demo that gets a date wrong is over.'},
+  {sel: '.run[data-run]:last-child', k: 'Next week', title: 'Run it again next week', body: 'Each run is a snapshot. The newest run shows what happened to last week\'s warnings under "Since last run".', why: 'That closes the loop: flagged, then done or still open.', last: true},
+];
+let tourAt = 0;
+function startTourAt(i) {
+  const steps = TOUR.filter(t => document.querySelector(t.sel));
+  if (!steps.length) return;
+  tourAt = Math.max(0, Math.min(i, steps.length - 1));
+  const t = steps[tourAt], el = document.querySelector(t.sel);
+  el.scrollIntoView({block: 'center', behavior: 'instant'});
+  const r = el.getBoundingClientRect(), pad = 8;
+  Object.assign($('#spot').style, {top: `${r.top - pad}px`, left: `${r.left - pad}px`, width: `${r.width + pad * 2}px`, height: `${r.height + pad * 2}px`});
+  $('#coach').innerHTML = `<span class="k">${tourAt + 1} of ${steps.length} · ${esc(t.k)}</span><h4>${esc(t.title)}</h4><p>${esc(t.body)}</p><p class="why">${esc(t.why)}</p>
+    <div class="actions"><button class="btn link" id="t-skip">Skip tour</button><div class="right">${tourAt ? '<button class="btn ghost" id="t-back">Back</button>' : ''}
+    <button class="btn primary" id="t-next">${tourAt === steps.length - 1 ? 'Done' : 'Next'}</button></div></div>`;
+  $('#tour').hidden = false;
+  const c = $('#coach'), cw = c.offsetWidth, ch = c.offsetHeight, vw = innerWidth, vh = innerHeight;
+  let top = r.bottom + 16, left = Math.min(Math.max(16, r.left), vw - cw - 16);
+  if (top + ch > vh - 16) top = r.top - ch - 16;
+  if (top < 16) { top = Math.min(vh - ch - 16, r.top); left = r.right + 16 + cw < vw ? r.right + 16 : Math.max(16, r.left - cw - 16); }
+  Object.assign(c.style, {top: `${top}px`, left: `${left}px`});
+  $('#t-next').focus();
+  startTourAt.count = steps.length;
+}
+function endTour(goNext) {
+  $('#tour').hidden = true;
+  if (goNext && RUNS.length > 1) { state.run = RUNS.length - 1; state.section = RUNS[state.run].since_last ? 'since' : 'week'; render(); }
+}
+
+/* ================= events ================= */
 document.addEventListener('click', e => {
-  const run = e.target.closest('[data-run]'), sec = e.target.closest('[data-sec]'), slip = e.target.closest('[data-slip]');
+  const t = e.target;
+  const run = t.closest('[data-run]'), sec = t.closest('[data-sec]'), slip = t.closest('[data-slip]'), pick = t.closest('[data-pick]');
+  if (t.closest('#ob-next')) {
+    if (ob.step === 0) state.project = ($('#ob-name').value || '').trim() || state.project;
+    if (ob.step === STEPS.length - 1) return build();
+    ob.step++; return renderOb();
+  }
+  if (t.closest('#ob-back')) { ob.step--; return renderOb(); }
+  if (t.closest('#ob-skip')) return closeOb(false);
+  if (t.closest('#ob-done')) return closeOb(true);
+  if (pick) { ob.run = +pick.dataset.pick; return renderOb(); }
+  if (t.closest('#t-next')) return tourAt === startTourAt.count - 1 ? endTour(true) : startTourAt(tourAt + 1);
+  if (t.closest('#t-back')) return startTourAt(tourAt - 1);
+  if (t.closest('#t-skip')) return endTour(false);
+  if (t.closest('#replay-setup')) return openOb();
+  if (t.closest('#replay-tour')) { state.section = 'week'; renderMain(); return startTourAt(0); }
   if (run) { state.run = +run.dataset.run; render(); }
   else if (sec) { state.section = sec.dataset.sec; renderMain(); }
   else if (slip) { state.from = slip; openSlip(+slip.dataset.slip); }
-  else if (e.target.closest('#close') || e.target.id === 'scrim') closeSlip();
+  else if (t.closest('#close') || t.id === 'scrim') closeSlip();
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && !document.getElementById('drawer').hidden) closeSlip();
-  if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && e.target.matches('[role="tab"]')) {
-    const tabs = [...e.target.parentElement.querySelectorAll('[role="tab"]')];
-    const next = tabs[(tabs.indexOf(e.target) + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
-    next.click(); const again = document.querySelector(`[role="tab"][data-sec="${next.dataset.sec}"],[role="tab"][data-run="${next.dataset.run}"]`); if (again) again.focus();
-  }
+  if (e.key === 'Escape') { if (!$('#drawer').hidden) closeSlip(); else if (!$('#tour').hidden) endTour(false); }
+  if (e.key === 'Enter' && e.target.id === 'ob-name') $('#ob-next').click();
 });
+addEventListener('resize', () => { if (!$('#tour').hidden) startTourAt(tourAt); });
+
 render();
+if (!location.hash.includes('board')) openOb();
 </script>
 </body>
 </html>

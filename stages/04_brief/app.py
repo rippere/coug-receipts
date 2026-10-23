@@ -22,6 +22,9 @@ def main():
             continue
         data = json.loads(brief.read_text())
         data["run"] = name
+        docs = brief.parent / "01_docs.jsonl"  # file list for the setup wizard (metadata only, no text)
+        data["docs"] = [{k: d.get(k) for k in ("file", "kind", "doc_date", "author")} | {"lines": len(d["lines"])}
+                        for d in map(json.loads, docs.read_text().splitlines())] if docs.exists() else []
         runs.append(data)
     runs.sort(key=lambda b: (b["project"], b["today"]))
     payload = json.dumps(runs).replace("</", "<\\/")  # safe inside <script>
