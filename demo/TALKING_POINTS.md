@@ -25,10 +25,11 @@ Wording corrections are listed at the bottom.
 - **Card 3:** *Pick an owner for the privacy plan.* This card carries the **Talk as a team** chip.
 - Scroll down to where the documents disagree: Priya's notes say Kwame owns the accessibility check, while the task list says "Mei?". The board marks it **Ask the team** and shows both sides.
 - Then the item missing from the task list: the brief requires a **contribution log** with the milestone.
+- If there is time, click **Check-in coach** in the sidebar. It drafts the agenda for the next team meeting and labels it "A guide, not a verdict."
 
 ## 3 · A week later (2:20–3:20) · [Ethan]
 **Run it again a week later, and it checks its own work.**
-- Week 10 has 13 docs and 236 claims. Switch to it with the date dropdown or the runs list.
+- Week 10 has 13 docs and 236 claims. Switch to it with the date dropdown at the top right.
 - Under **Since last run**, three things were flagged last week:
   - **The demo is done.** Tyler emailed Dana on Fri 10/23, one day late. It only went ahead because Dr. Okafor made an exception ("she said ok this time"). The tool flagged it on Wednesday. We talk about outcomes and never blame anyone.
   - **The accessibility check is still open.** Five screens haven't been reviewed, and Kwame leaves today.
