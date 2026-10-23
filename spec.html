@@ -1,0 +1,309 @@
+<title>Receipts Team Spec</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: one reading column; the sample board card is the hero; tables scroll in their own boxes */
+:root{
+  --paper:#FAFAF7; --card:#FFFFFF; --ink:#0F172A; --muted:#475569; --line:#E2E8F0;
+  --blue:#1E40AF; --blue-soft:#EEF2FF; --amber:#B45309; --amber-soft:#FEF3C7; --stub:#F1F0EA;
+  --sans:"Fira Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Fira Code",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0E1320; --card:#151C2C; --ink:#E7ECF5; --muted:#A3B0C4; --line:#2A3448;
+  --blue:#93B4FF; --blue-soft:#1C2847; --amber:#F2B45A; --amber-soft:#3A2A12; --stub:#1B2232; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0E1320; --card:#151C2C; --ink:#E7ECF5; --muted:#A3B0C4; --line:#2A3448;
+  --blue:#93B4FF; --blue-soft:#1C2847; --amber:#F2B45A; --amber-soft:#3A2A12; --stub:#1B2232; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--sans)}
+.wrap{max-width:62rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:2.5rem 4rem;display:grid;gap:3rem}
+h1,h2,h3{text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(2.2rem,5vw,3.2rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:1.45rem;font-weight:600;display:flex;align-items:baseline;gap:.6rem}
+h2 .n{font:500 .8rem var(--mono);color:var(--muted)}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0;max-width:65ch}
+.eyebrow{font:500 .78rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.muted{color:var(--muted)}
+section{display:grid;gap:1rem;min-width:0}
+code,.mono{font-family:var(--mono);font-size:.88em}
+a{color:var(--blue)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:3px}
+
+header{display:grid;gap:1rem}
+.thesis{font-size:1.25rem;max-width:52ch}
+.insight{border-left:3px solid var(--amber);padding:.4rem 0 .4rem 1rem;font-size:1.1rem;font-weight:500;max-width:60ch}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{font:500 .78rem var(--mono);border:1px solid var(--line);background:var(--card);padding:.2rem .55rem;border-radius:999px;color:var(--muted)}
+
+/* sample board */
+.board{display:grid;gap:.9rem}
+.boardbar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;font:500 .85rem var(--mono);color:var(--muted)}
+.boardbar b{color:var(--amber);font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+@media (max-width:860px){.cards{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.1rem 0;display:grid;gap:.6rem;align-content:start;min-width:0}
+.card .top{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.rank{font:600 .8rem var(--mono);color:var(--muted)}
+.when{font:600 .8rem var(--mono);color:var(--amber);background:var(--amber-soft);padding:.15rem .5rem;border-radius:4px}
+.action{font-size:1.25rem;font-weight:600;line-height:1.25}
+.who{font-size:.92rem}
+.who span{font-weight:600}
+.reason{font-size:.95rem;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:.4rem .9rem;font-size:.82rem;color:var(--muted)}
+.conf{font-family:var(--mono)}
+.talk{font:500 .74rem var(--mono);color:var(--blue);background:var(--blue-soft);padding:.15rem .45rem;border-radius:4px}
+.stubs{margin:0 -1.1rem;padding:.6rem 1.1rem .8rem;border-top:1.5px dashed var(--line);background:var(--stub);border-radius:0 0 10px 10px;display:flex;flex-wrap:wrap;gap:.4rem}
+.stubs details{font:.74rem var(--mono)}
+.stubs summary{cursor:pointer;list-style:none;border:1px solid var(--line);background:var(--card);padding:.15rem .45rem;border-radius:4px;color:var(--blue);transition:border-color .2s}
+.stubs summary::-webkit-details-marker{display:none}
+.stubs summary:hover{border-color:var(--blue)}
+.stubs details[open]{flex-basis:100%}
+.stubs blockquote{margin:.4rem 0 0;padding:.45rem .6rem;background:var(--card);border:1px solid var(--line);border-radius:4px;font-family:var(--sans);font-size:.85rem;color:var(--ink)}
+.stubs blockquote small{display:block;margin-top:.25rem;font:.72rem var(--mono);color:var(--muted)}
+
+/* before/after */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media (max-width:720px){.pair{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;background:var(--card);display:grid;gap:.5rem;align-content:start}
+.panel ul{margin:0;padding-left:1.1rem;display:grid;gap:.35rem}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:40rem}
+th,td{text-align:left;vertical-align:top;padding:.6rem .8rem;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:500 .74rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--stub)}
+td.k{font-family:var(--mono);font-size:.84rem;white-space:nowrap;color:var(--muted)}
+.blank{display:inline-block;min-width:7rem;border-bottom:1.5px dotted var(--muted);color:var(--muted);font-style:italic}
+.ai{font:600 .72rem var(--mono);color:var(--amber)}
+
+/* timeline */
+.time{display:grid;gap:0;border-left:2px solid var(--line);margin-left:.4rem}
+.time div{display:grid;grid-template-columns:7.5rem 1fr;gap:1rem;padding:.45rem 0 .45rem 1rem;position:relative}
+.time div::before{content:"";position:absolute;left:-6px;top:.85rem;width:10px;height:10px;border-radius:50%;background:var(--card);border:2px solid var(--muted)}
+.time div.hot::before{border-color:var(--amber);background:var(--amber)}
+.time .t{font:500 .85rem var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+@media (max-width:480px){.time div{grid-template-columns:1fr;gap:0}}
+
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media (max-width:720px){.rules{grid-template-columns:1fr}}
+.rules ul{margin:0;padding-left:1.1rem;display:grid;gap:.4rem;font-size:.95rem}
+.never li::marker{content:"✕  ";color:var(--muted)}
+pre{margin:0;overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem;font:.8rem/1.55 var(--mono)}
+footer{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Coug AI Build Challenge · Fri Oct 23, 2026 · Team spec</span>
+  <h1>Receipts</h1>
+  <p class="thesis">Point it at a team's project folder and a "today" date. It returns the three things that matter this week, each with a task, a person, a date, and a reason. Every line opens to the file it came from.</p>
+  <p class="insight">One insight: what will go wrong before the next deadline, who can stop it this week, and how we know.</p>
+  <div class="meta">
+    <span class="chip">Direction: early warning system</span>
+    <span class="chip">Output: check-in coach format</span>
+    <span class="chip">Build stops 1:30 pm</span>
+    <span class="chip">Demos 2:00 pm</span>
+  </div>
+</header>
+
+<section aria-labelledby="s-board">
+  <h2 id="s-board"><span class="n">A</span>What the board says on Wed Oct 21 (Week 9)</h2>
+  <p class="muted">This is the target output for Team 4, built from our fixture. Click a receipt stub to see the quote behind the card.</p>
+  <div class="board">
+    <div class="boardbar"><span>Team 4 · Palouse Harvest Food Share · Wed Oct 21 · Week 9</span><span>M3 due Fri Oct 30 · <b>9 days</b></span></div>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><span class="rank">#1</span><span class="when">Thu Oct 22 · tomorrow</span></div>
+        <div class="action">Request the sponsor demo</div>
+        <div class="who">Owner: <span>Tyler</span></div>
+        <p class="reason">Sponsor requests need 7 days' notice, and the demo must happen by Oct 29.</p>
+        <div class="facts"><span>Demo + feedback = 15% of M3</span><span class="conf" title="Course brief and Week 9 notes agree the request hasn't gone out.">●●● High</span></div>
+        <div class="stubs">
+          <details><summary>Brief §5</summary><blockquote>"sponsor meetings and demos must be requested from the sponsor at least seven…"<small>01_Project_Brief_UNIV497.pdf · pg2</small></blockquote></details>
+          <details><summary>Brief §4</summary><blockquote>"The sponsor demo must take place during Week 10, no later than…"<small>01_Project_Brief_UNIV497.pdf · pg1</small></blockquote></details>
+          <details><summary>Wk9 notes · Sofia · p5</summary><blockquote>"Tyler said he hasn't emailed Dana about the demo yet but will do it this week."<small>2026-10-20_Wk9 meeting - Sofia.docx</small></blockquote></details>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top"><span class="rank">#2</span><span class="when">Tue Oct 27 · 6 days</span></div>
+        <div class="action">Finish the accessibility review before Oct 28</div>
+        <div class="who">Owner: <span>Kwame</span></div>
+        <p class="reason">Kwame is away Oct 28 to Nov 1. Volunteer screens can be reviewed now; coordinator screens land around Monday.</p>
+        <div class="facts"><span>Accessibility = 15% of M3</span><span class="conf" title="Dates are certain. The tracker also lists a 'WCAG review' for Mei that looks like the same work.">●●○ Medium</span></div>
+        <div class="stubs">
+          <details><summary>Availability · r7</summary><blockquote>"OCT 28 - NOV 1"<small>04_team availability.xlsx · reason not shown</small></blockquote></details>
+          <details><summary>Tasks · r31</summary><blockquote>"WCAG review | Mei? | 10/27"<small>03_Team4_tasks.xlsx</small></blockquote></details>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top"><span class="rank">#3</span><span class="when">Fri Oct 23 · 2 days</span></div>
+        <div class="action">Decide whether hours tracking is in or out</div>
+        <div class="who">Owner: <span>Whole team</span> <span class="talk">Group chat</span></div>
+        <p class="reason">The rubric requires sponsor requests raised since M2 in the traceability matrix, which is due Friday.</p>
+        <div class="facts"><span>Traceability = 15% of M3</span><span class="conf" title="Raised by the sponsor in Week 7; left as TBD in Week 9. The next meeting is after Friday.">●●○ Medium</span></div>
+        <div class="stubs">
+          <details><summary>Brief · M3 rubric</summary><blockquote>"Requirements the sponsor has raised since M2 must be…"<small>01_Project_Brief_UNIV497.pdf · pg2</small></blockquote></details>
+          <details><summary>Wk7 notes · L4</summary><blockquote>"dana asked abt hours tracking again, said its a big deal for the high school volunteers + their parents"<small>wk 7.txt</small></blockquote></details>
+          <details><summary>Wk9 notes · Sofia · p7</summary><blockquote>"is that in or out? Nobody knew so I left it as "TBD.""<small>2026-10-20_Wk9 meeting - Sofia.docx</small></blockquote></details>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="s-demo">
+  <h2 id="s-demo"><span class="n">B</span>The demo moment</h2>
+  <div class="pair">
+    <div class="panel">
+      <span class="eyebrow">Run 1 · Wed Oct 21</span>
+      <h3>The tool flags the demo request</h3>
+      <ul>
+        <li>The brief requires 7 days' notice. The demo must happen by Thu Oct 29, so the last day to ask is <b>Thu Oct 22</b>.</li>
+        <li>The Week 9 notes say the request hasn't been sent yet.</li>
+        <li>The card passes on the constraints: Jordan is unavailable Thursday after 3 pm, and Kwame is away from Oct 28.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <span class="eyebrow">Run 2 · Wed Oct 28</span>
+      <h3>"Since last run" shows what happened</h3>
+      <ul>
+        <li>The request went out <b>Fri Oct 23</b>, one day late. The instructor allowed it as an exception.</li>
+        <li>The new top three: confirm who runs Thursday's demo, review the remaining screens for accessibility, and draft the privacy plan.</li>
+        <li>The window for an extension request closes tonight at 11:59 pm (48-hour rule).</li>
+      </ul>
+    </div>
+  </div>
+  <p>The line to say on stage: <b>the tool would have caught it on Wednesday.</b></p>
+</section>
+
+<section aria-labelledby="s-pipe">
+  <h2 id="s-pipe"><span class="n">C</span>Pipeline</h2>
+  <p class="muted">Four stage folders, run in order. Each run writes its files to <code>runs/&lt;project&gt;@&lt;today&gt;/</code>, so you can tell a run's progress by which files exist. A person reads each output before the next stage runs.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Stage</th><th>Who does the work</th><th>Writes</th><th>Human check</th></tr></thead>
+    <tbody>
+      <tr><td class="k">01 ingest</td><td>Code. Turns .docx, .txt, .xlsx and .pdf into located lines with a doc date and author.</td><td class="k">01_docs.jsonl</td><td>Every file appears once, and its date looks right.</td></tr>
+      <tr><td class="k">02 extract</td><td><span class="ai">AI</span> Reads one doc at a time and emits typed claims, each with a quote that must match the source word for word.</td><td class="k">02_claims.jsonl</td><td><b>Main gate.</b> Read the claims and fix wrong ones by hand.</td></tr>
+      <tr><td class="k">03 reconcile</td><td>Code. Resolves dates, merges claims into items, runs the detectors, scores the results.</td><td class="k">03_findings.json</td><td>Compare against the golden file. Fix the code, never the output.</td></tr>
+      <tr><td class="k">04 brief</td><td><span class="ai">AI</span> writes the sentences; code checks them and copies in every number. Renders the board.</td><td class="k">04_board.html</td><td>Read each card aloud. Would the named person be OK seeing it?</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="s-lanes">
+  <h2 id="s-lanes"><span class="n">D</span>Lanes</h2>
+  <p class="muted">One owner per folder. Each lane starts against a hand-made fixture, so nobody waits for the lane before theirs. The schema in <code>_shared/schema.md</code> freezes at 11:05. After that, changing it is a whole-team decision.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Lane</th><th>Owner</th><th>Owns</th><th>Builds against</th><th>First milestone</th></tr></thead>
+    <tbody>
+      <tr><td class="k">A · Ingest</td><td><span class="blank">name</span></td><td class="k">stages/01_ingest/</td><td>the raw kit</td><td>11:30 · docs for both snapshots</td></tr>
+      <tr><td class="k">B · Extract</td><td><span class="blank">name</span></td><td class="k">stages/02_extract/</td><td class="k">fixtures/docs.sample.jsonl</td><td>11:45 · claims for the brief + 2 notes</td></tr>
+      <tr><td class="k">C · Reconcile</td><td><span class="blank">name</span></td><td class="k">stages/03_reconcile/</td><td class="k">fixtures/claims.sample.jsonl</td><td>12:00 · D1, D2, D3 firing</td></tr>
+      <tr><td class="k">D · Board</td><td><span class="blank">name</span></td><td class="k">stages/04_brief/</td><td class="k">fixtures/brief.sample.json</td><td>12:00 · board renders the fixture</td></tr>
+      <tr><td class="k">E · Story</td><td><span class="blank">name</span></td><td class="k">demo/ + voice rules</td><td>golden file</td><td>12:30 · script draft, own-project data</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="s-time">
+  <h2 id="s-time"><span class="n">E</span>Timeline</h2>
+  <div class="time">
+    <div><span class="t">10:45–11:05</span><span>Skim the kit, assign lanes, freeze the schema.</span></div>
+    <div><span class="t">11:05–12:15</span><span>Lanes build in parallel against their fixtures.</span></div>
+    <div class="hot"><span class="t">12:15</span><span>First full run on <code>team4@2026-10-21</code>. Ugly output is fine.</span></div>
+    <div><span class="t">12:15–1:00</span><span>Tune ranking and wording against the golden file. Run Week 10 and check the "since last run" section.</span></div>
+    <div><span class="t">1:00–1:30</span><span>Bonus run on one of our own projects, with teammates' permission. Polish. Write the limitations slide.</span></div>
+    <div class="hot"><span class="t">1:30</span><span>Stop building. Rehearse the five-minute demo twice.</span></div>
+  </div>
+</section>
+
+<section aria-labelledby="s-rules">
+  <h2 id="s-rules"><span class="n">F</span>Rules the tool follows</h2>
+  <div class="rules">
+    <div class="panel">
+      <h3>Always</h3>
+      <ul>
+        <li>Code computes every date and count. The AI reads, connects, and explains.</li>
+        <li>Every sentence on the board has a receipt. If it can't be traced to a file and a quote, it doesn't ship.</li>
+        <li>Lead with the task, then the person: "Demo request → Tyler, by Thu Oct 22".</li>
+        <li>Show constraints without reasons: "away Oct 28 to Nov 1", with no mention of why.</li>
+        <li>Show a confidence level and a one-line reason on every card.</li>
+        <li>Tag cards about a person's load or availability "talk first".</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Never</h3>
+      <ul class="never">
+        <li>Rank or score people, or count anyone's absences or late items.</li>
+        <li>Guess at motive or effort.</li>
+        <li>Suggest going to the instructor about a teammate. The brief and the charter both say to talk as a team first.</li>
+        <li>Draft or hint at peer evaluation content. Those go only to the instructor.</li>
+        <li>Send someone's real project data to a cloud model without their permission.</li>
+        <li>Use red. On a team-facing tool it reads as blame. Amber means "act this week".</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="s-det">
+  <h2 id="s-det"><span class="n">G</span>Detectors</h2>
+  <p class="muted">All nine are plain code. The AI never decides whether a detector fires. None of them mention Team 4, so the tool works on any project.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>ID</th><th>Detector</th><th>Fires when</th><th>Team 4 example</th></tr></thead>
+    <tbody>
+      <tr><td class="k">D1</td><td>Lead-time squeeze</td><td>A notice rule applies and the last day to act is close</td><td>Demo request by Oct 22</td></tr>
+      <tr><td class="k">D2</td><td>Owner unavailable</td><td>The owner is away or busy before the work is due</td><td>Kwame away Oct 28; Jordan busy Thursday after 3 pm</td></tr>
+      <tr><td class="k">D3</td><td>Rubric gap</td><td>A graded item has no task in the tracker</td><td>Contribution log (−5 points), updated plan (10%)</td></tr>
+      <tr><td class="k">D4</td><td>Sources disagree</td><td>Two sources give a different date, owner, or status</td><td>Peer evals: Nov 6 vs Oct 30 (the brief wins)</td></tr>
+      <tr><td class="k">D5</td><td>Unowned or undated</td><td>No owner, or a due date like "?" or "ASAP"</td><td>Privacy plan: owner "?"</td></tr>
+      <tr><td class="k">D6</td><td>Dependency squeeze</td><td>A blocked task can't finish in time</td><td>Roster flow and accessibility review both wait on the coordinator screens</td></tr>
+      <tr><td class="k">D7</td><td>Carried-over question</td><td>A question raised in two or more meetings is still open</td><td>Hours tracking in or out</td></tr>
+      <tr><td class="k">D8</td><td>Load concentration</td><td>One person carries much more than the median</td><td>Raised as a question for the team, never a verdict</td></tr>
+      <tr><td class="k">D9</td><td>Answered by the brief</td><td>An open question that the brief already answers</td><td>"ask dr okafor about the late policy??"</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted">When sources conflict, the brief wins on course dates and rules, the newest dated source wins on status, and a recorded decision beats the tracker. The losing side still appears on the board under "The documents disagree".</p>
+</section>
+
+<section aria-labelledby="s-schema">
+  <h2 id="s-schema"><span class="n">H</span>The claim record (the contract between lanes B and C)</h2>
+<pre>{"id":"c010", "doc_id":"d02", "loc":"p5",
+ "kind":"status",        // task | deadline | decision | status | availability | rule | question | dependency | requirement | person
+ "item_hint":"schedule sponsor demo",
+ "who_raw":"Tyler", "who":["Tyler Brandt"],
+ "date_text":"this week", // copied as written; stage 03 resolves it
+ "status":"open",
+ "quote":"Tyler said he hasn't emailed Dana about the demo yet but will do it this week.",
+ "extract_confidence":"high"}</pre>
+  <p class="muted">The full schema for all four stages is in <code>_shared/schema.md</code>. All 28 sample claims in the fixture were checked by script: each quote appears word for word at its source location.</p>
+</section>
+
+<section aria-labelledby="s-limits">
+  <h2 id="s-limits"><span class="n">I</span>Fallbacks and limits</h2>
+  <div class="pair">
+    <div class="panel">
+      <h3>If something breaks</h3>
+      <ul>
+        <li>Extraction is flaky: fix <code>02_claims.jsonl</code> by hand and say so in the demo. That is the human check doing its job.</li>
+        <li>The UI is late: render <code>04_brief.json</code> as markdown.</li>
+        <li>The API is down: replay the cached runs.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>What we say out loud</h3>
+      <ul>
+        <li>It only knows what's written down. It can't see the group chat, email, or Figma.</li>
+        <li>Extraction from messy notes is imperfect. That's why claims are editable and confidence is shown.</li>
+        <li>It can start a conversation about workload. It can't tell how anyone feels.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>All Team 4 data is the fictional sample kit. The workspace has a <code>CLAUDE.md</code> router, one contract per stage folder, a golden file for Weeks 9 and 10, and verified fixtures.</footer>
+</div>
