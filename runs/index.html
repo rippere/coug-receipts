@@ -148,7 +148,8 @@ h1{font-size:clamp(26px,3vw,32px);font-weight:800;letter-spacing:-.025em;line-he
 .slip .fine{color:var(--muted);font-size:11.5px;line-height:1.6;margin-top:var(--s3);text-align:center}
 
 /* ---------- setup wizard ---------- */
-.onb{position:fixed;inset:0;z-index:60;background:var(--bg);overflow-y:auto;display:grid;place-items:center;padding:var(--s5) 16px}
+.onb{position:fixed;inset:0;z-index:60;background:var(--bg);overflow-y:auto;display:grid;padding:var(--s5) 16px}
+.onb .ob{margin:auto}
 .ob{width:min(620px,100%);background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 50px rgba(17,24,39,.10);padding:var(--s6);display:grid;gap:var(--s5)}
 .ob .bar1{display:flex;justify-content:space-between;align-items:center}
 .stepper{display:flex;align-items:center}
@@ -210,8 +211,8 @@ h1{font-size:clamp(26px,3vw,32px);font-weight:800;letter-spacing:-.025em;line-he
 
 /* ---------- guided tour ---------- */
 .tour{position:fixed;inset:0;z-index:45;pointer-events:none}
-.spot{position:fixed;border-radius:var(--r3);box-shadow:0 0 0 9999px rgba(17,24,39,.55);transition:all .3s ease;pointer-events:none}
-.coach{position:fixed;width:min(360px,calc(100vw - 32px));background:var(--card);border-radius:var(--r3);box-shadow:0 18px 40px rgba(17,24,39,.3);padding:var(--s5);display:grid;gap:var(--s3);pointer-events:auto;transition:top .3s ease,left .3s ease}
+.spot{position:fixed;border-radius:var(--r3);box-shadow:0 0 0 9999px rgba(17,24,39,.55);transition:width .3s ease,height .3s ease;pointer-events:none}
+.coach{position:fixed;width:min(360px,calc(100vw - 32px));background:var(--card);border-radius:var(--r3);box-shadow:0 18px 40px rgba(17,24,39,.3);padding:var(--s5);display:grid;gap:var(--s3);pointer-events:auto}
 .coach .k{font:600 12px var(--mono);color:var(--accent)}
 .coach h4{margin:0;font-size:18px;font-weight:800;letter-spacing:-.015em;line-height:1.3}
 .coach p{font-size:14.5px;color:var(--ink-2)}
@@ -660,12 +661,12 @@ const TOUR = [
   {sel: '#rundate', k: 'Next week', title: 'Run it again next week', body: 'Each run is a snapshot. Switch dates here. The newest run shows what happened to last week\'s warnings under "Since last run".', why: 'That closes the loop: flagged, then done or still open.', last: true},
 ];
 let tourAt = 0;
-function startTourAt(i) {
+function startTourAt(i, keepScroll) {
   const steps = TOUR.filter(t => document.querySelector(t.sel));
   if (!steps.length) return;
   tourAt = Math.max(0, Math.min(i, steps.length - 1));
   const t = steps[tourAt], el = document.querySelector(t.sel);
-  el.scrollIntoView({block: 'center', behavior: 'instant'});
+  if (!keepScroll) el.scrollIntoView({block: 'center', behavior: 'instant'});
   const r = el.getBoundingClientRect(), pad = 8;
   Object.assign($('#spot').style, {top: `${r.top - pad}px`, left: `${r.left - pad}px`, width: `${r.width + pad * 2}px`, height: `${r.height + pad * 2}px`});
   $('#coach').innerHTML = `<span class="k">${tourAt + 1} of ${steps.length} · ${esc(t.k)}</span><h4>${esc(t.title)}</h4><p>${esc(t.body)}</p><p class="why">${esc(t.why)}</p>
@@ -677,7 +678,7 @@ function startTourAt(i) {
   if (top + ch > vh - 16) top = r.top - ch - 16;
   if (top < 16) { top = Math.min(vh - ch - 16, r.top); left = r.right + 16 + cw < vw ? r.right + 16 : Math.max(16, r.left - cw - 16); }
   Object.assign(c.style, {top: `${top}px`, left: `${left}px`});
-  $('#t-next').focus();
+  if (!keepScroll) $('#t-next').focus();
   startTourAt.count = steps.length;
 }
 function endTour(goNext) {
@@ -736,7 +737,8 @@ document.addEventListener('mouseover', e => {
   if (!tip) return;
   if (seg) { tip.textContent = seg.dataset.tip; tip.hidden = false; } else tip.hidden = true;
 });
-addEventListener('resize', () => { if (!$('#tour').hidden) startTourAt(tourAt); });
+addEventListener('resize', () => { if (!$('#tour').hidden) startTourAt(tourAt, true); });
+addEventListener('scroll', () => { if (!$('#tour').hidden) requestAnimationFrame(() => startTourAt(tourAt, true)); }, {passive: true});
 
 render();
 if (!location.hash.includes('board')) openOb();
