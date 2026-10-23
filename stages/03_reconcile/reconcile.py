@@ -157,6 +157,27 @@ def recency(c):
     return (c["_doc_date"] or date.min, -CONF_RANK.get(c.get("extract_confidence"), 2))
 
 
+def status_evidence(claims):
+    """Deciding an owner/date/scope is not completion of the work.
+
+    An explicitly done decision can compete with task progress, but never
+    overrides a newer report. Dependencies describe prerequisites, not progress.
+    """
+    return [c for c in claims
+            if (c["kind"] in ("task", "status")
+                and c.get("status") in ("open", "in_progress", "done"))
+            or (c["kind"] == "decision" and c.get("status") == "done")]
+
+
+def newest_status(claims):
+    # Prefer direct task evidence over a decision on the same dated source.
+    # On a same-day tie, the less-finished status wins: an early warning should never assume "done".
+    unfinished = {"open": 1, "in_progress": 1, "done": 0}
+    return max(status_evidence(claims),
+               key=lambda c: (recency(c)[0], unfinished.get(c.get("status"), 0), recency(c)[1],
+                              c["kind"] != "decision"), default=None)
+
+
 def build_items(groups, ctx, today) -> list[dict]:
     deadlines = [c for g in groups for c in g["claims"] if c["kind"] == "deadline" and c.get("weight_pct")]
     items = []
@@ -165,17 +186,15 @@ def build_items(groups, ctx, today) -> list[dict]:
         tasky = [c for c in cl if c["kind"] in TASKY]
         title = (tasky or cl)[0]["item_hint"]
 
-        # Owners: from task-like claims, most confident and newest first.
+        # Keep the newest named owner; conflicting historical names remain in D4.
         team_owned = any((c.get("who_raw") or "").strip().lower() in TEAM_WORDS for c in cl)
-        owners = []
-        for c in sorted(tasky, key=lambda c: (CONF_RANK.get(c.get("extract_confidence"), 2),
-                                             -(c["_doc_date"] or date.min).toordinal())):
-            for w in c.get("who") or []:
-                if w not in owners:
-                    owners.append(w)
+        owner_claim = max((c for c in cl if c["kind"] in TASKY | {"decision"}
+                           and c.get("who")), key=recency, default=None)
+        owners = list(owner_claim["who"]) if owner_claim else []
 
         # Due date: the brief wins; otherwise the newest dated source.
-        dated = [c for c in cl if c["_date"]]
+        # Only claims that set a due date count; a status report's date ("did it sat") is when work happened.
+        dated = [c for c in cl if c["_date"] and c["kind"] in ("task", "deadline", "rule", "decision")]
         brief_dated = [c for c in dated if c["_doc_kind"] == "brief"]
         if brief_dated:
             due_claim, basis = min(brief_dated, key=lambda c: c["_date"]), "brief"
@@ -184,29 +203,33 @@ def build_items(groups, ctx, today) -> list[dict]:
         else:
             due_claim, basis = None, None
 
-        # Status: a recorded decision closes the item; otherwise the newest task-like claim.
-        if any(c["kind"] == "decision" for c in cl):
-            status, status_from = "done", next(c["id"] for c in cl if c["kind"] == "decision")
-        elif tasky:
-            newest = max(tasky, key=recency)
+        # New progress supersedes old decisions, even an old decision labeled done.
+        newest = newest_status(cl)
+        if newest:
             status, status_from = newest.get("status", "unknown"), newest["id"]
         else:
             status, status_from = ("open" if any(c.get("status") == "open" for c in cl) else "unknown"), None
 
         # Stakes: course percentage points at risk.
         stakes, milestone, milestone_date = 0.5, None, None
+        # The event's authoritative name may be clearer than a tracker alias.
+        stake_names = [title, *(c["deliverable"] for c in cl
+                               if c.get("deliverable") and not c.get("weight_pct"))]
         for d in deadlines:
             if d in cl:
                 stakes, milestone, milestone_date = float(d["weight_pct"]), d["deliverable"], d["_date"]
             for comp in d.get("components", []):
-                if fuzz.token_set_ratio(norm_hint(title), norm_hint(comp["name"])) >= 70:
+                if any(fuzz.token_set_ratio(norm_hint(name), norm_hint(comp["name"])) >= 70
+                       for name in stake_names):
                     stakes = round(d["weight_pct"] * comp["weight_pct"] / 100, 2)
                     milestone, milestone_date = d["deliverable"], d["_date"]
         for c in cl:
             if c.get("penalty_points") and deadlines:
-                d = min(deadlines, key=lambda d: d["_date"] or date.max)
-                stakes = round(d["weight_pct"] * c["penalty_points"] / 100, 2)
-                milestone, milestone_date = d["deliverable"], d["_date"]
+                upcoming = [d for d in deadlines if d["_date"] and d["_date"] >= today]
+                if upcoming:
+                    d = min(upcoming, key=lambda d: d["_date"])
+                    stakes = round(d["weight_pct"] * c["penalty_points"] / 100, 2)
+                    milestone, milestone_date = d["deliverable"], d["_date"]
 
         items.append({
             "item_id": f"i{n:02d}", "title": title, "key": g["key"],
@@ -251,7 +274,7 @@ def link_dependencies(items):
 def finding(detector, item, facts, receipts, conf, why, days_left, people=(), talk_first=False, stakes=None):
     stakes = item["stakes_pct"] if stakes is None else stakes
     norm = stakes / (stakes + 1)                     # saturates: 3 points ~ 0.75
-    urgency = 1 / (1 + max(days_left, 0))
+    urgency = 1 / (1 + max(days_left, 0)) if days_left is not None else 0
     return {
         "detector": detector, "item_id": item["item_id"] if item else None,
         "item_title": item["title"] if item else facts.get("component"),
@@ -285,7 +308,8 @@ def d1_lead_time(items, away, weekly, today):
     out = []
     for it in items:
         rules = [c for c in it["claims"] if c.get("rule") == "lead_time"]
-        events = [c for c in it["claims"] if c["kind"] in ("rule", "deadline") and c["_date"]]
+        # Only upcoming events count; a past meeting filed under the same item is history, not a deadline.
+        events = [c for c in it["claims"] if c["kind"] in ("rule", "deadline") and c["_date"] and c["_date"] >= today]
         if not rules or not events or it["status"] == "done":
             continue
         rule, event = rules[0], min(events, key=lambda c: c["_date"])
@@ -317,15 +341,29 @@ def d1_lead_time(items, away, weekly, today):
     return out
 
 
+def merged_ranges(ranges):
+    """Join overlapping or touching away-ranges from different sources into one span."""
+    out = []
+    for (a, b), ids in sorted(ranges.items()):
+        if out and a <= out[-1][0][1] + timedelta(days=1):
+            (pa, pb), pids = out[-1]
+            out[-1] = ((pa, max(pb, b)), [*pids, *ids])
+        else:
+            out.append(((a, b), list(ids)))
+    return out
+
+
 def d2_owner_unavailable(items, away, today, next_deadline):
     out = []
     for it in items:
-        if it["status"] == "done" or not it["owner"]:
+        # Only work due by the next deadline; that deadline is when the work is actually needed.
+        if it["status"] == "done" or not it["owner"] or not next_deadline:
             continue
-        window_end = max(d for d in (it["due"], it["milestone_date"], None if it["due"] else next_deadline,
-                                     date.min) if d)
+        if it["due"] and (it["due"] > next_deadline or it["due"] < today - timedelta(days=7)):
+            continue  # due after this milestone, or overdue by over a week (stale record, not this week's work)
+        window_end = next_deadline
         for person in it["owner"]:
-            for (a, b), ids in away.get(person, {}).items():
+            for (a, b), ids in merged_ranges(away.get(person, {})):
                 if a <= window_end and b >= today:
                     finish_by = a - timedelta(days=1)
                     task_ids = [c["id"] for c in it["claims"] if person in (c.get("who") or [])]
@@ -342,7 +380,21 @@ def d2_owner_unavailable(items, away, today, next_deadline):
     return out
 
 
-def d3_rubric_gaps(items, docs, today):
+def submission_requirement(claim, item):
+    """An extracted 'artifact' may be a product feature, not a submission.
+
+    Require a deadline association, penalty, or explicit submission obligation.
+    Ambiguous scope stays in the item record for human review, not a rubric gap.
+    """
+    if claim["kind"] != "requirement" or not (claim.get("artifact") or claim.get("penalty_points")):
+        return False
+    return bool(claim.get("penalty_points")
+                or any(c["kind"] == "deadline" and c.get("weight_pct") for c in item["claims"])
+                or re.search(r"\b(required|requires|submission|submit|due)\b",
+                             claim.get("quote", ""), re.I))
+
+
+def d3_rubric_gaps(items, docs, today, next_deadline=None):
     tracker_rows = []
     for d in docs.values():
         if d.get("kind") == "tracker":
@@ -361,7 +413,7 @@ def d3_rubric_gaps(items, docs, today):
             if covered(comp["name"], 65):
                 continue
             stakes = round(d["weight_pct"] * comp["weight_pct"] / 100, 2)
-            days = (d["_date"] - today).days if d["_date"] else 0
+            days = (d["_date"] - today).days if d["_date"] else None
             out.append(finding("D3", None, {
                 "component": comp["name"], "weight_pct": comp["weight_pct"], "milestone": d["deliverable"],
                 "milestone_due": iso(d["_date"]), "stakes_pct": stakes},
@@ -369,11 +421,16 @@ def d3_rubric_gaps(items, docs, today):
                 days, stakes=stakes, talk_first=False))
     for it in items:
         for c in it["claims"]:
-            if c.get("artifact") and not covered(c["artifact"], 80):
-                days = (it["milestone_date"] - today).days if it["milestone_date"] else 0
+            artifact = c.get("artifact") or c.get("item_hint")
+            if submission_requirement(c, it) and not covered(artifact, 80):
+                due = it["milestone_date"] or it["due"] or next_deadline
+                if due and due < today:
+                    continue
+                # Unknown dates must not get the maximum urgency of "due today".
+                days = (due - today).days if due else None
                 out.append(finding("D3", it, {
-                    "component": c["artifact"], "penalty_points": c.get("penalty_points"),
-                    "milestone": it["milestone"], "milestone_due": iso(it["milestone_date"])},
+                    "component": artifact, "penalty_points": c.get("penalty_points"),
+                    "milestone": it["milestone"], "milestone_due": iso(due)},
                     [c["id"]], "high", "required by the brief; nowhere in the task list", days))
     return out
 
@@ -403,7 +460,7 @@ def d4_disagree(items, today, next_deadline):
         # Owners
         by_owner = {}
         for c in cl:
-            if c["kind"] in TASKY and c.get("who"):
+            if c["kind"] in TASKY | {"decision"} and c.get("who"):
                 by_owner.setdefault(tuple(c["who"]), []).append(c)
         if len(by_owner) > 1:
             out.append(finding("D4", it, {
@@ -413,15 +470,23 @@ def d4_disagree(items, today, next_deadline):
                 "two names for what looks like the same work", days,
                 people=[p for o in by_owner for p in o], talk_first=True))
 
-        # Status: a recorded decision vs a task still marked as going
-        decisions = [c for c in cl if c["kind"] == "decision"]
-        stale = [c for c in cl if c["kind"] == "task" and c.get("status") in ("open", "in_progress")]
+        # Only an explicit done decision conflicts with ongoing task progress.
+        # A tentative date/assignment with status=open is not a disagreement.
+        decisions = [c for c in cl if c["kind"] == "decision" and c.get("status") == "done"]
+        stale = [c for c in cl if c["kind"] in ("task", "status")
+                 and c.get("status") in ("open", "in_progress")]
         if decisions and stale:
+            newest = newest_status(cl)
+            trust_decision = newest["kind"] == "decision"
             out.append(finding("D4", it, {
                 "field": "status", "sides": [{"says": "decided", "claims": [c["id"] for c in decisions]},
                                              {"says": "in progress", "claims": [c["id"] for c in stale]}],
-                "trust": "decision", "why": "a recorded decision beats a stale tracker row"},
-                [c["id"] for c in decisions + stale], "high", "decision recorded in meeting notes", days))
+                "trust": "decision" if trust_decision else newest["status"],
+                "why": "a recorded decision beats a stale tracker row" if trust_decision
+                else "newer task progress supersedes an older decision",
+                "status_from": newest["id"]},
+                [*(c["id"] for c in decisions + stale), newest["id"]],
+                "high", "newest dated status evidence", days))
     return out
 
 
@@ -483,23 +548,47 @@ def d7_carried_question(items, today, next_deadline):
     return out
 
 
+def notice_hours(claim):
+    """Use structured hours, or an explicit numeric hour duration in date_text.
+
+    No default policy is invented when extraction omits this field.
+    """
+    hours = claim.get("hours")
+    if isinstance(hours, (int, float)) and not isinstance(hours, bool) and hours > 0:
+        return hours
+    match = re.fullmatch(r"\s*(\d+(?:\.\d+)?)\s*(?:hours?|hrs?)\s*",
+                         claim.get("date_text") or "", re.I)
+    return float(match[1]) if match and float(match[1]) > 0 else None
+
+
 def d9_answered_by_brief(items, all_claims, today, next_deadline):
-    ext = next((c for c in all_claims if c.get("rule") == "extension_notice"), None)
+    ext = next((c for c in all_claims if c.get("rule") == "extension_notice"
+                and c["_doc_kind"] == "brief"), None)
     out = []
     for it in items:
-        questions = [c for c in it["claims"] if c["kind"] == "question" and c.get("status") == "open"]
+        # Unknown question status is unresolved, not answered. A later explicit
+        # completion closes it; a bare decision about the item does not.
+        resolved = [c for c in it["claims"] if c.get("status") == "done"
+                    and c["kind"] in ("question", "task", "status", "decision")]
+        questions = [c for c in it["claims"] if c["kind"] == "question"
+                     and c.get("status") in ("open", "unknown", None)
+                     and not any(recency(r) > recency(c) for r in resolved)]
         answers = [c for c in it["claims"] if c["_doc_kind"] == "brief" and c["kind"] in ("rule", "deadline")]
         if not questions or not answers:
             continue
-        a = answers[0]
+        a = max(answers, key=recency)
         facts = {"question_claims": [q["id"] for q in questions], "answer_claim": a["id"]}
         receipts = [*facts["question_claims"], a["id"]]
         if a.get("rule") == "late_penalty":
-            facts.update(pct_per_day=a["pct_per_day"], max_days=a["max_days"])
+            facts.update(pct_per_day=a.get("pct_per_day"), max_days=a.get("max_days"))
             if ext and next_deadline:
-                cutoff = datetime.combine(next_deadline, datetime.min.time()).replace(hour=23, minute=59)
-                facts.update(extension_notice_hours=ext["hours"],
-                             extension_deadline=(cutoff - timedelta(hours=ext["hours"])).isoformat(timespec="minutes"))
+                hours = notice_hours(ext)
+                if hours is not None:
+                    cutoff = datetime.combine(next_deadline, datetime.min.time()).replace(hour=23, minute=59)
+                    facts.update(extension_notice_hours=hours,
+                                 extension_deadline=(cutoff - timedelta(hours=hours)).isoformat(timespec="minutes"))
+                else:
+                    facts["extension_notice_unresolved"] = True
                 receipts.append(ext["id"])
         elif a["_date"]:
             facts.update(answer_date=iso(a["_date"]))
@@ -527,7 +616,7 @@ def compute_load(items, today, next_deadline):
     return load
 
 
-def d8_load(load, today, next_deadline):
+def d8_load(load, items, today, next_deadline):
     if not load:
         return []
     median = statistics.median(v["open_items"] for v in load.values())
@@ -535,7 +624,10 @@ def d8_load(load, today, next_deadline):
     for person, v in load.items():
         if (v["open_items"] >= 3 and v["open_items"] >= 2 * median) or v["blocks_others"] >= 2:
             days = (next_deadline - today).days if next_deadline else 0
-            f = finding("D8", None, {"person": person, **v, "team_median": median}, [], "med",
+            by_id = {it["item_id"]: it for it in items}
+            receipts = [c["id"] for i in v["items"] for c in by_id[i]["claims"]
+                        if person in (c.get("who") or [])][:6]
+            f = finding("D8", None, {"person": person, **v, "team_median": median}, receipts, "med",
                         "counts from the task list; they miss invisible work", days,
                         people=[person], talk_first=True, stakes=1.0)
             out.append(f)
@@ -551,19 +643,23 @@ def reconcile(claims: list[dict], docs: list[dict], today: date, project: str = 
     items = build_items(groups, ctx, today)
 
     upcoming = [(name, d) for name, d in ctx["milestones"].items() if d >= today]
+    if not upcoming:
+        upcoming = [(c.get("deliverable") or c["item_hint"], c["_date"])
+                    for c in claims if c["kind"] == "deadline" and c.get("weight_pct")
+                    and c["_date"] and c["_date"] >= today]
     next_name, next_deadline = min(upcoming, key=lambda x: x[1]) if upcoming else (None, None)
     away, weekly = availability_blocks(claims)
     load = compute_load(items, today, next_deadline)
 
     findings = (d1_lead_time(items, away, weekly, today)
                 + d2_owner_unavailable(items, away, today, next_deadline)
-                + d3_rubric_gaps(items, ctx["docs"], today)
+                + d3_rubric_gaps(items, ctx["docs"], today, next_deadline)
                 + d4_disagree(items, today, next_deadline)
                 + d5_unowned_undated(items, today, next_deadline)
                 + d6_dependency(items, today)
                 + d7_carried_question(items, today, next_deadline)
                 + d9_answered_by_brief(items, claims, today, next_deadline)
-                + d8_load(load, today, next_deadline))
+                + d8_load(load, items, today, next_deadline))
     findings.sort(key=lambda f: f["score"], reverse=True)
     for n, f in enumerate(findings, 1):
         f["id"] = f"f{n:02d}"
@@ -615,7 +711,7 @@ def main(argv=None):
           f"{len(result['items'])} items · {len(result['findings'])} findings")
     for f in result["findings"][:5]:
         print(f"  {f['score']:.3f}  {f['detector']}  {f['item_title']:<28}  "
-              f"conf={f['confidence']['level']:<4}  days={f['days_left']:<3}  {json.dumps(f['facts'])[:110]}")
+              f"conf={f['confidence']['level']:<4}  days={str(f['days_left']):<3}  {json.dumps(f['facts'])[:110]}")
 
 
 if __name__ == "__main__":

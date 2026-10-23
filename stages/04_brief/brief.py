@@ -10,6 +10,7 @@ Availability quotes are never printed (they can name reasons); the receipt shows
 """
 import argparse
 import datetime as dt
+import difflib
 import json
 import sys
 from pathlib import Path
@@ -105,9 +106,14 @@ def card_text(f, today):
                 others.append(f"{first(k['person'])} away {day_label(k['away_from'])}–{day_label(k['away_to'])}")
             elif k.get("busy_from"):
                 others.append(f"{first(k['person'])} busy {k['busy_from']}–{k['busy_to']} that day")
+        others = list(dict.fromkeys(others))
         return (cap(title), owner, x["latest_action"],
                 f"Needs {x['lead_days']} days' notice and must happen by {day_label(x['event_by'])}; still {x.get('status', 'open')}.",
                 "; ".join(others))
+    if f["detector"] == "D2" and d(x["finish_by"]) < today:
+        return (f"Find a new owner for {title}", "Whole team", today.isoformat(),
+                f"{first(x['owner'])} is away {day_label(x['away_from'])}–{day_label(x['away_to'])} "
+                f"and the work is still open.", "")
     if f["detector"] == "D2":
         return (f"Finish {title} before {first(x['owner'])} is away", first(x["owner"]), x["finish_by"],
                 f"{first(x['owner'])} is away {day_label(x['away_from'])}–{day_label(x['away_to'])}; "
@@ -140,6 +146,7 @@ def make_card(rank, group, claims, docs, today):
                            "dots": CONF_DOTS.get(conf["level"], "●○○"), "why": conf.get("why", "")},
             "talk_first": any(f.get("talk_first") for f in group),
             "detectors": sorted({f["detector"] for f in group}), "item_id": lead.get("item_id"),
+            "item_title": lead.get("item_title"),
             "receipts": receipts_for(ids, claims, docs)}
 
 
@@ -210,12 +217,18 @@ def question_text(f):
     return f"Talk through {title}."
 
 
+def current(finding, items_by_id, today):
+    """A disagreement about work that was due before today is history; keep the board on this week."""
+    due = (items_by_id.get(finding.get("item_id")) or {}).get("due")
+    return not due or d(due) >= today
+
+
 def questions(findings, top_items):
     """One talk-first question per item not already on a top card."""
     out, seen = [], set(top_items)
     for x in findings:
         key = x.get("item_id") or x["id"]
-        if x.get("talk_first") and key not in seen:
+        if x.get("talk_first") and key not in seen and x["detector"] != "D4":
             seen.add(key)
             out.append({"text": question_text(x), "talk_first": True})
     return out[:4]
@@ -226,14 +239,20 @@ def since_last(prev_dir, items_now, claims, docs):
     if not prev_path.exists():
         return None
     prev = json.loads(prev_path.read_text())
-    by_id = {i["item_id"]: i for i in items_now}
-    by_title = {i["title"].lower(): i for i in items_now}
+    # Item ids are per-run, so match last run's cards to this run's items by any name the item goes by.
+    by_title = {}
+    for i in items_now:
+        for name in [i["title"], *(claims[c]["item_hint"] for c in i["claims"] if c in claims)]:
+            by_title.setdefault(name.lower(), i)
     flagged = []
     for card in prev.get("top", []):
-        item = by_id.get(card.get("item_id")) or by_title.get(card["action"].lower())
+        name = (card.get("item_title") or card["action"]).lower()
+        close = difflib.get_close_matches(name, list(by_title), n=1, cutoff=0.6)
+        item = by_title.get(name) or (by_title[close[0]] if close else None)
         status = item["status"] if item else "unknown"
         latest = receipts_for([item["status_from"]], claims, docs, 1) if item and item.get("status_from") else []
-        flagged.append({"was": card["action"], "by": card.get("date_label"), "owner": card.get("owner"),
+        flagged.append({"was": card["action"], "by": day_label(card.get("date")) if card.get("date") else "",
+                        "owner": card.get("owner"),
                         "now": {"done": "Done", "in_progress": "In progress", "open": "Still open"}.get(status, cap(status)),
                         "receipts": latest})
     return {"prev_today": prev.get("today"), "prev_label": day_label(prev.get("today")), "flagged": flagged}
@@ -266,13 +285,15 @@ def build(run_dir: Path, prev_dir: Path | None):
     top, also = cards[:3], cards[3:6]
     top_items = {c["item_id"] for c in top}
 
+    items_by_id = {i["item_id"]: i for i in f["items"]}
     nd = f.get("next_deadline") or {}
     return {
         "project": run_dir.name.split("@")[0], "today": f["today"],
         "today_label": f"{today:%A}, {today:%B} {today.day}",
         "countdown": {"label": f"{nd['name']} due {day_label(nd['date'])}", "days": nd["days"]} if nd.get("date") else None,
         "top": top, "also": also,
-        "disagreements": [disagreement(x, claims, docs) for x in findings if x["detector"] == "D4"][:5],
+        "disagreements": [disagreement(x, claims, docs) for x in findings
+                          if x["detector"] == "D4" and current(x, items_by_id, today)][:5],
         "missing": [missing(x, claims, docs) for x in findings if x["detector"] == "D3"][:5],
         "answered": [answered(x, claims, docs) for x in findings if x["detector"] == "D9"][:3],
         "questions": questions(findings, top_items),

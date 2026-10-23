@@ -22,3 +22,28 @@ Do NOT load: raw docs (only claims), `voice.md` (that's wording, which belongs t
 
 ## Human check
 Diff the top 5 against `_shared/golden-team4.md`. **If a date is wrong, fix the code, never the output.** Add a pytest per detector using the fixture, e.g. D1 must return `latest_action == 2026-10-22` for `today = 2026-10-21`.
+
+## Real-claims reconciliation (issue #1)
+- Run `python -m pytest stages/03_reconcile -q`. Tests cover both the curated
+  claims and the unchanged `claims.spark-wk9.jsonl` lane B output, plus the CLI
+  and findings validator.
+- An assignment or scheduling decision does not complete work. Status comes
+  from the newest task/status evidence or an explicitly `done` decision. Newer
+  task progress supersedes older decisions, including mislabeled assignments.
+  Owner selection uses the newest named claim; historical conflicts stay in D4.
+- A question marked `unknown` remains unresolved for D9 unless later completion
+  evidence answers it. Extension notice uses structured `hours`, falling back to
+  a numeric hour duration in `date_text`. If neither is present, the notice stays
+  unresolved; no cutoff is invented. Date-only deadlines use the existing
+  end-of-day (23:59) convention.
+- Lane B sometimes labels product features as `artifact`. D3 requires a
+  requirement claim with an artifact/penalty and a weighted-deadline association,
+  penalty, or explicit submission obligation (`required`, `requires`,
+  `submission`, `submit`, `due`). Unlinked scope stays in the item record for
+  review. Missing artifact dates fall back to the next milestone; if no date is
+  known, urgency is zero rather than "due today". This conservative heuristic
+  cannot infer missing submission semantics from an ambiguous claim.
+- Projects without upcoming M-code milestones fall back to dated, weighted
+  deadline claims. No project names, people, or calendar dates are hard-coded.
+- Findings carry claim IDs and availability constraints, never availability
+  quotes. Stage 04 must still honor `quote_private` when displaying receipts.

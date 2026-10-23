@@ -73,6 +73,9 @@ def derive_availability(c):
         after = re.search(r"after (\d{1,2})(?::(\d\d))?\s*(am|pm)?", text)
         span = re.search(r"(\d{1,2})(?::(\d\d))?\s*(am|pm)?\s*-\s*(\d{1,2})(?::(\d\d))?\s*(am|pm)", text)
         days = [code for pat, code in DAY_CODES if re.search(pat, text)]
+        spans = re.findall(r"\d{1,2}(?::\d\d)?\s*(?:am|pm)?\s*-\s*\d{1,2}", text)
+        if len(spans) > 1:
+            return  # several day/time groups on one line ("M + W 4-9pm, Th 3-9pm"): too ambiguous to split
         if days and (after or span):
             def hhmm(h, m, ampm, default_pm=True):
                 h = int(h) % 12 + (12 if (ampm == "pm" or (not ampm and default_pm)) else 0)
