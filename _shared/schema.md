@@ -53,7 +53,7 @@ Extra fields by kind:
          "reason":"...","stakes":"Demo = 15% of M3","confidence":{"level":"high","why":"..."},"talk_first":false,
          "receipts":[{"label":"Brief §5","file":"...","quote":"..."}]}],
  "also":[], "disagreements":[{"topic":"","sides":[{"says":"","receipt":{}}],"trust":"","why":""}],
- "missing":[], "questions":[], "load":{"note":"","people":[{"name":"","items":[],"invisible":[]}]},
+ "missing":[], "answered":[], "questions":[], "load":{"note":"","people":[{"name":"","items":[],"invisible":[]}]},
  "since_last":null}
 ```
 The **AI writes only** `action`, `reason`, `why` and `questions` text, and always from `facts`. Every date, count, and day number is copied straight from stage 03.
