@@ -180,8 +180,9 @@ def known_items(docs):
     for d in docs:
         if d["kind"] == "tracker":
             for line in d["lines"]:
-                first = line["text"].split(" | ")[0].strip()
-                if " | " not in line["text"] or first.lower() in {"task", "tasks", "item", "to do", "todo"}:
+                cells = [c.strip() for c in line["text"].split(" | ")]
+                first = cells[0]
+                if sum(1 for c in cells if c) < 2 or first.lower() in {"task", "tasks", "item", "to do", "todo"}:
                     continue  # title row or header row
                 if first and not first.startswith("---"):
                     items.append(first)
