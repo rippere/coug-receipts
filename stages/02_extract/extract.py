@@ -8,17 +8,19 @@ run in parallel. Every quote is checked against its source line in code; claims 
 are dropped and written to 02_dropped.jsonl next to the output so a human can see them.
 Responses are cached in .cache/extract/ by content hash, so reruns are free and work offline.
 
-Env: RECEIPTS_MODEL (default claude-opus-5-5), RECEIPTS_EFFORT (default medium).
+Env: RECEIPTS_PROVIDER = spark (default) | anthropic.
+  spark:     SPARK_BASE_URL / SPARK_API_KEY, read from ~/.config/spark/env when unset (tailnet only).
+  anthropic: ANTHROPIC_API_KEY or an `ant auth login` profile; RECEIPTS_MODEL (default claude-opus-5-5),
+             RECEIPTS_EFFORT (default medium).
 """
 import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-
-import anthropic
 
 ROOT = Path(__file__).resolve().parents[2]
 CACHE = ROOT / ".cache" / "extract"
@@ -29,7 +31,17 @@ if (ROOT / ".env").exists():
         if "=" in line and not line.lstrip().startswith("#"):
             k, v = line.split("=", 1)
             os.environ.setdefault(k.strip(), v.strip().strip('"'))
-MODEL = os.environ.get("RECEIPTS_MODEL", "claude-opus-5-5")
+
+PROVIDER = os.environ.get("RECEIPTS_PROVIDER", "spark")
+if PROVIDER == "spark":
+    # Parse (never source) the Spark client env file for anything not already set.
+    spark_env = Path.home() / ".config" / "spark" / "env"
+    if spark_env.exists():
+        for line in spark_env.read_text().splitlines():
+            if "=" in line and not line.lstrip().startswith("#"):
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip().strip('"'))
+MODEL = os.environ.get("RECEIPTS_MODEL", "claude-opus-5-5" if PROVIDER == "anthropic" else "")
 EFFORT = os.environ.get("RECEIPTS_EFFORT", "medium")
 PROMPT_VERSION = "v1"  # bump to invalidate the cache after a prompt change
 
@@ -37,6 +49,7 @@ KINDS = ["task", "deadline", "decision", "status", "availability", "rule",
          "question", "dependency", "requirement", "person"]
 RULES = ["lead_time", "late_penalty", "extension_notice", "week_anchor", "event_by"]
 WEEKDAYS = ["M", "T", "W", "Th", "F", "Sa", "Su"]
+RULE_HINTS = {"late_penalty": "late policy", "extension_notice": "extension request", "week_anchor": "course calendar"}
 
 
 def nullable(t):
@@ -82,7 +95,9 @@ CLAIM_SCHEMA = {
         "blocked_by": nullable("string"),
     },
 }
-CLAIM_SCHEMA["required"] = list(CLAIM_SCHEMA["properties"])
+# Only the core fields are required; kind-specific ones are omitted when they don't apply,
+# which keeps the output short (the Spark generates ~17-38 tokens/s).
+CLAIM_SCHEMA["required"] = ["loc", "kind", "item_hint", "who", "date_text", "status", "quote", "extract_confidence"]
 CLAIM_SCHEMA["additionalProperties"] = False
 CLAIMS_SCHEMA = {"type": "object", "properties": {"claims": {"type": "array", "items": CLAIM_SCHEMA}},
                  "required": ["claims"], "additionalProperties": False}
@@ -108,7 +123,7 @@ Each line of the document is shown as `[loc] text`. For every claim:
 - `item_hint` is a short noun phrase naming the piece of work. When the claim is about an item in the
   KNOWN ITEMS list, reuse that exact phrase so claims from different documents line up. That applies
   to rules too: a rule about requesting sponsor meetings belongs to the item for scheduling the demo.
-- Set every field that does not apply to null (or [] for lists).
+- Leave out every optional field that does not apply to the claim's kind.
 
 Kinds:
 - task: work someone does (owner, due date, status). status: done | in_progress | open | unknown.
@@ -137,10 +152,41 @@ def doc_text(doc, limit=None):
     return "\n".join(f"[{l['loc']}] {l['text']}" for l in lines)
 
 
+def make_client():
+    if PROVIDER == "spark":
+        from openai import OpenAI
+        return OpenAI(base_url=os.environ["SPARK_BASE_URL"], api_key=os.environ.get("SPARK_API_KEY", "dummy"),
+                      timeout=600, max_retries=1)
+    import anthropic
+    return anthropic.Anthropic()
+
+
 def call(client, system, user, schema, cache_key):
     path = CACHE / f"{cache_key}.json"
     if path.exists():
         return json.loads(path.read_text())
+    data = call_spark(client, system, user, schema) if PROVIDER == "spark" else call_claude(client, system, user, schema)
+    CACHE.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data))
+    return data
+
+
+def call_spark(client, system, user, schema):
+    system_text = system if isinstance(system, str) else "\n\n".join(b["text"] for b in system)
+    resp = client.chat.completions.create(
+        model=MODEL or client.models.list().data[0].id,  # use whatever the Spark is serving
+        messages=[{"role": "system", "content": system_text}, {"role": "user", "content": user}],
+        max_tokens=12000,
+        response_format={"type": "json_schema", "json_schema": {"name": "extraction", "schema": schema}},
+        extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+    )
+    choice = resp.choices[0]
+    if choice.finish_reason != "stop":
+        raise RuntimeError(f"spark: finish_reason={choice.finish_reason}; split the document")
+    return json.loads(choice.message.content)
+
+
+def call_claude(client, system, user, schema):
     response = client.beta.messages.create(
         model=MODEL,
         max_tokens=16000,
@@ -155,14 +201,11 @@ def call(client, system, user, schema, cache_key):
         raise RuntimeError(f"model declined ({response.stop_details}); request id {response._request_id}")
     if response.stop_reason == "max_tokens":
         raise RuntimeError("hit max_tokens; split the document")
-    data = json.loads(next(b.text for b in response.content if b.type == "text"))
-    CACHE.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data))
-    return data
+    return json.loads(next(b.text for b in response.content if b.type == "text"))
 
 
 def key(*parts):
-    return hashlib.sha256(json.dumps([MODEL, EFFORT, PROMPT_VERSION, *parts], sort_keys=True).encode()).hexdigest()[:24]
+    return hashlib.sha256(json.dumps([PROVIDER, MODEL, EFFORT, PROMPT_VERSION, *parts], sort_keys=True).encode()).hexdigest()[:24]
 
 
 def get_roster(client, docs):
@@ -198,6 +241,36 @@ def tidy(raw, doc):
         c["days"] = c.pop("weekly_days")
         c["from"], c["to"] = c.pop("busy_from", None), c.pop("busy_to", None)
     c.setdefault("who_raw", None)
+    c["loc"] = c.get("loc", "").strip("[] ")
+    if c.get("rule") == "week_anchor":
+        # Stage 03 needs week1_monday as an ISO date. Reading an explicit calendar date is parsing,
+        # not date math; anything that isn't a Monday is not a week-1 anchor and is dropped.
+        import dateparser
+        d = dateparser.parse(c.get("week1_monday") or c.get("date_text") or "")
+        if not d or d.weekday() != 0:
+            return None
+        c["week1_monday"] = d.date().isoformat()
+    if c.get("kind") == "deadline":
+        # Keep the milestone code as written ("M3") in the deliverable name; stage 03 keys on it.
+        code = re.search(r"\b[A-Z]{1,3}\d+\b", c.get("quote", ""))
+        if code and code[0] not in c.get("deliverable", ""):
+            c["deliverable"] = f"{code[0]} {c.get('deliverable', '')}".strip()
+    if c.get("rule") == "late_penalty":
+        # The model tends to put max_days in the generic days slot and skip the percentage.
+        if "days" in c and "max_days" not in c:
+            c["max_days"] = c.pop("days")
+        pct = re.search(r"(\d+(?:\.\d+)?)\s*%", c.get("quote", ""))
+        if pct and "pct_per_day" not in c:
+            c["pct_per_day"] = float(pct[1])
+    if c.get("rule") in RULE_HINTS:
+        c["item_hint"] = RULE_HINTS[c["rule"]]  # course-wide rules aren't about one task
+    if c.get("kind") == "availability":
+        if not c.get("person") and len(c.get("who") or []) == 1:
+            c["person"] = c["who"][0]
+        # Constraints, never reasons: the hint is neutral, and the quote (which may name a reason)
+        # is marked so the board cites the file and line without printing it.
+        c["item_hint"] = "availability"
+        c["quote_private"] = True
     return {"doc_id": doc["doc_id"], **c}
 
 
@@ -209,6 +282,18 @@ def check_quote(claim, doc):
     for loc, text in lines.items():
         if claim["quote"] and claim["quote"] in text:
             return {**claim, "loc": loc, "loc_repaired": True}
+    # PDF lines wrap, so a quote can run across consecutive lines. Keep the part on the first line;
+    # it is still verbatim, and the claim's fields carry the full meaning.
+    norm = " ".join(claim["quote"].split())
+    locs = list(lines)
+    for i, loc in enumerate(locs):
+        joined = " ".join(" ".join(lines[l].split()) for l in locs[i:i + 4])
+        start = joined.find(norm)
+        first = " ".join(lines[loc].split())
+        if norm and 0 <= start < len(first) - 15:
+            part = first[start:]
+            if part in lines[loc]:
+                return {**claim, "loc": loc, "quote": part, "quote_trimmed": True}
     return None
 
 
@@ -222,9 +307,25 @@ def extract_doc(client, doc, roster, items):
     data = call(client, system, user, CLAIMS_SCHEMA, key("doc", system, user))
     kept, dropped = [], []
     for raw in data["claims"]:
-        claim = check_quote(tidy(raw, doc), doc)
-        (kept if claim else dropped).append(claim or tidy(raw, doc))
+        tidied = tidy(raw, doc)
+        claim = check_quote(tidied, doc) if tidied else None
+        (kept if claim else dropped).append(claim or {"doc_id": doc["doc_id"], **raw})
     return kept, dropped
+
+
+def fix_away_years(claims, docs):
+    """The model fills away_from/away_to as ISO dates and sometimes guesses the year. When the source
+    text names no year, use the project's year (week-1 anchor, else the newest dated doc)."""
+    anchor = next((c["week1_monday"] for c in claims if c.get("week1_monday")), None)
+    dated = sorted(d["doc_date"] for d in docs if d.get("doc_date"))
+    year = (anchor or (dated[-1] if dated else ""))[:4]
+    if not year:
+        return
+    for c in claims:
+        if c.get("kind") == "availability" and not re.search(r"\b(19|20)\d\d\b", c.get("quote", "")):
+            for k in ("away_from", "away_to"):
+                if re.match(r"^\d{4}-\d\d-\d\d$", c.get(k) or ""):
+                    c[k] = year + c[k][4:]
 
 
 def main():
@@ -234,12 +335,12 @@ def main():
     args = ap.parse_args()
 
     docs = [json.loads(l) for l in args.docs.read_text().splitlines() if l.strip()]
-    client = anthropic.Anthropic()
+    client = make_client()
     roster = get_roster(client, docs)
     items = known_items(docs)
     print(f"roster: {', '.join(p['name'] for p in roster)}; {len(items)} known items", file=sys.stderr)
 
-    with ThreadPoolExecutor(max_workers=8) as pool:
+    with ThreadPoolExecutor(max_workers=4 if PROVIDER == "spark" else 8) as pool:
         results = list(pool.map(lambda d: extract_doc(client, d, roster, items), docs))
 
     claims, dropped = [], []
@@ -247,6 +348,7 @@ def main():
         claims += kept
         dropped += lost
         print(f"  {doc['doc_id']} {doc['file']}: {len(kept)} claims, {len(lost)} dropped", file=sys.stderr)
+    fix_away_years(claims, docs)
     for n, c in enumerate(claims, 1):
         c["id"] = f"c{n:03d}"
 
