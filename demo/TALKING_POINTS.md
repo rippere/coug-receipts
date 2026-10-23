@@ -30,7 +30,7 @@ Wording corrections are listed at the bottom.
 ## 3 · A week later (2:20–3:20) · [Ethan]
 **A week later we run it again, and it reports what happened to last week's warnings.**
 - Week 10 has 13 docs and 236 claims. Switch to it with the date dropdown at the top right.
-- Under Since last run, last week's three warnings:
+- Click the dark recap bar at the top of This week. The recap opens with "1 of 3 warnings resolved. 1 still needs someone." plus 11 tasks finished and 2 new files. Each of last week's warnings shows the quote that settled it:
   - The demo is done. Tyler emailed Dana on Fri 10/23, one day late. It only went ahead because Dr. Okafor made an exception ("she said ok this time"). The tool flagged it on Wednesday. We talk about outcomes and never blame anyone.
   - The accessibility check is still open. Five screens haven't been reviewed, and Kwame leaves today.
   - The privacy plan is in progress.
