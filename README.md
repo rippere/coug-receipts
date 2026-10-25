@@ -99,3 +99,7 @@ The repo is laid out so five lanes could build in parallel without merge conflic
 - **Ethan** ([@echun808](https://github.com/echun808)): app design (a Figma prototype whose navigation we merged in), reconcile fixes on real data
 
 The Team 4 kit in `inputs/` comes from the Coug AI Build Challenge organizers. Everything in it is fictional.
+
+## License
+
+Code: [MIT](LICENSE). The Team 4 sample kit in `inputs/` belongs to the organizers.
