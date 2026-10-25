@@ -18,7 +18,7 @@ TODAY = date(2026, 10, 21)
 
 
 def real_claims():
-    return rc.load_jsonl(FIX / "claims.spark-wk9.jsonl")
+    return rc.load_jsonl(FIX / "claims.real-wk9.jsonl")
 
 
 def run(claims=None, docs=None):
@@ -178,7 +178,7 @@ def test_real_output_has_receipts_and_omits_private_quotes(real_result):
 def test_real_cli_handoff_passes_validator(tmp_path):
     output = tmp_path / "03_findings.json"
     subprocess.run([sys.executable, str(HERE / "reconcile.py"),
-                    str(FIX / "claims.spark-wk9.jsonl"), str(FIX / "docs.sample.jsonl"),
+                    str(FIX / "claims.real-wk9.jsonl"), str(FIX / "docs.sample.jsonl"),
                     "--today", TODAY.isoformat(), "-o", str(output)], check=True, capture_output=True)
     subprocess.run([sys.executable, str(ROOT / "_shared" / "validate.py"),
                     "findings", str(output)], check=True, capture_output=True)

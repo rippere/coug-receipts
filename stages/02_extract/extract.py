@@ -8,8 +8,9 @@ run in parallel. Every quote is checked against its source line in code; claims 
 are dropped and written to 02_dropped.jsonl next to the output so a human can see them.
 Responses are cached in .cache/extract/ by content hash, so reruns are free and work offline.
 
-Env: RECEIPTS_PROVIDER = spark (default) | anthropic.
-  spark:     SPARK_BASE_URL / SPARK_API_KEY, read from ~/.config/spark/env when unset (tailnet only).
+Env: RECEIPTS_PROVIDER = local (default) | anthropic.
+  local:     any OpenAI-compatible server (vLLM, llama.cpp, Ollama) at RECEIPTS_BASE_URL, with
+             RECEIPTS_API_KEY if it needs one; RECEIPTS_MODEL defaults to the first model it serves.
   anthropic: ANTHROPIC_API_KEY or an `ant auth login` profile; RECEIPTS_MODEL (default claude-opus-5-5),
              RECEIPTS_EFFORT (default medium).
 """
@@ -32,15 +33,7 @@ if (ROOT / ".env").exists():
             k, v = line.split("=", 1)
             os.environ.setdefault(k.strip(), v.strip().strip('"'))
 
-PROVIDER = os.environ.get("RECEIPTS_PROVIDER", "spark")
-if PROVIDER == "spark":
-    # Parse (never source) the Spark client env file for anything not already set.
-    spark_env = Path.home() / ".config" / "spark" / "env"
-    if spark_env.exists():
-        for line in spark_env.read_text().splitlines():
-            if "=" in line and not line.lstrip().startswith("#"):
-                k, v = line.split("=", 1)
-                os.environ.setdefault(k.strip(), v.strip().strip('"'))
+PROVIDER = os.environ.get("RECEIPTS_PROVIDER", "local")
 MODEL = os.environ.get("RECEIPTS_MODEL", "claude-opus-5-5" if PROVIDER == "anthropic" else "")
 EFFORT = os.environ.get("RECEIPTS_EFFORT", "medium")
 PROMPT_VERSION = "v1"  # bump to invalidate the cache after a prompt change
@@ -131,7 +124,7 @@ CLAIM_SCHEMA = {
     },
 }
 # Only the core fields are required; kind-specific ones are omitted when they don't apply,
-# which keeps the output short (the Spark generates ~17-38 tokens/s).
+# which keeps the output short (a single local GPU generates ~17-38 tokens/s).
 CLAIM_SCHEMA["required"] = ["loc", "kind", "item_hint", "who", "date_text", "status", "quote", "extract_confidence"]
 CLAIM_SCHEMA["additionalProperties"] = False
 CLAIMS_SCHEMA = {"type": "object", "properties": {"claims": {"type": "array", "items": CLAIM_SCHEMA}},
@@ -188,9 +181,11 @@ def doc_text(doc, limit=None):
 
 
 def make_client():
-    if PROVIDER == "spark":
+    if PROVIDER == "local":
         from openai import OpenAI
-        return OpenAI(base_url=os.environ["SPARK_BASE_URL"], api_key=os.environ.get("SPARK_API_KEY", "dummy"),
+        if "RECEIPTS_BASE_URL" not in os.environ:
+            sys.exit("set RECEIPTS_BASE_URL to an OpenAI-compatible server, or RECEIPTS_PROVIDER=anthropic")
+        return OpenAI(base_url=os.environ["RECEIPTS_BASE_URL"], api_key=os.environ.get("RECEIPTS_API_KEY", "dummy"),
                       timeout=600, max_retries=1)
     import anthropic
     return anthropic.Anthropic()
@@ -200,16 +195,16 @@ def call(client, system, user, schema, cache_key):
     path = CACHE / f"{cache_key}.json"
     if path.exists():
         return json.loads(path.read_text())
-    data = call_spark(client, system, user, schema) if PROVIDER == "spark" else call_claude(client, system, user, schema)
+    data = call_local(client, system, user, schema) if PROVIDER == "local" else call_claude(client, system, user, schema)
     CACHE.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data))
     return data
 
 
-def call_spark(client, system, user, schema):
+def call_local(client, system, user, schema):
     system_text = system if isinstance(system, str) else "\n\n".join(b["text"] for b in system)
     resp = client.chat.completions.create(
-        model=MODEL or client.models.list().data[0].id,  # use whatever the Spark is serving
+        model=MODEL or client.models.list().data[0].id,  # use whatever the server is serving
         messages=[{"role": "system", "content": system_text}, {"role": "user", "content": user}],
         max_tokens=12000,
         response_format={"type": "json_schema", "json_schema": {"name": "extraction", "schema": schema}},
@@ -217,7 +212,7 @@ def call_spark(client, system, user, schema):
     )
     choice = resp.choices[0]
     if choice.finish_reason != "stop":
-        raise RuntimeError(f"spark: finish_reason={choice.finish_reason}; split the document")
+        raise RuntimeError(f"local: finish_reason={choice.finish_reason}; split the document")
     return json.loads(choice.message.content)
 
 
@@ -384,7 +379,7 @@ def main():
     items = known_items(docs)
     print(f"roster: {', '.join(p['name'] for p in roster)}; {len(items)} known items", file=sys.stderr)
 
-    with ThreadPoolExecutor(max_workers=4 if PROVIDER == "spark" else 8) as pool:
+    with ThreadPoolExecutor(max_workers=4 if PROVIDER == "local" else 8) as pool:
         results = list(pool.map(lambda d: extract_doc(client, d, roster, items), docs))
 
     claims, dropped = [], []

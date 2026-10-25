@@ -25,7 +25,7 @@ Diff the top 5 against `_shared/golden-team4.md`. **If a date is wrong, fix the 
 
 ## Real-claims reconciliation (issue #1)
 - Run `python -m pytest stages/03_reconcile -q`. Tests cover both the curated
-  claims and the unchanged `claims.spark-wk9.jsonl` lane B output, plus the CLI
+  claims and the unchanged `claims.real-wk9.jsonl` lane B output, plus the CLI
   and findings validator.
 - An assignment or scheduling decision does not complete work. Status comes
   from the newest task/status evidence or an explicitly `done` decision. Newer
