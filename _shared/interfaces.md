@@ -25,7 +25,7 @@ All stage outputs go in `runs/<p>@<today>/`. The runner `receipts.py` calls the 
 ## Working independently
 - Every lane starts from a fixture: B ← `fixtures/docs.sample.jsonl`, C ← `fixtures/claims.sample.jsonl`, D ← `fixtures/brief.sample.json` (and C's real output once it lands). A doesn't need one.
 - Shared Python deps go in `pyproject.toml`. Ask lane A before adding one.
-- The model is set by the env var `RECEIPTS_MODEL`, and the key by `ANTHROPIC_API_KEY`. Never commit keys; `.env` is gitignored.
+- The provider is set by `RECEIPTS_PROVIDER` (`local` or `anthropic`), the model by `RECEIPTS_MODEL`, and keys by `RECEIPTS_API_KEY` / `ANTHROPIC_API_KEY`. Never commit keys; `.env` is gitignored.
 
 ## Git rules (the sprint version)
 - One branch per lane: `lane/a-ingest`, `lane/b-extract`, `lane/c-reconcile`, `lane/d-board`, `lane/e-story`.

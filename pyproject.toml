@@ -1,6 +1,7 @@
 [project]
 name = "coug-receipts"
 version = "0.1.0"
+description = "Receipts: what will go wrong before the next deadline, who can stop it this week, and how we know."
 requires-python = ">=3.11"
 dependencies = [
     "anthropic",

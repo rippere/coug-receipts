@@ -10,11 +10,11 @@ The demo moment: run it on **Wed Oct 21 (Week 9)**. Card #1 says *"Request the s
 ## Design stance (liberties we're taking, and where they come from)
 | Liberty | Source |
 |---|---|
-| Show **three** cards above the fold. Everything else sits below. | The kickoff's "ten seconds" + Ben's Sept "Edge Board": *the few things that matter today, why, and the exact action.* Win on concept and design, not breadth. |
-| **Receipts are the content.** Every claim opens to its quote, file, author, and date. | pulik.dev "receipts-as-content" credibility pattern. It also covers the 15% "shows its sources" score. |
-| Tag cards with **talk first** whenever a person is the subject | drive-order "Today" block (human-gated tasks named) + kickoff: *"knows when to defer to people"* |
-| **Since last week**: what we flagged, and what actually happened | life-retro kept/broken scoring against evidence |
-| Show **constraints, never reasons** ("away Oct 28–Nov 1", not why) | ntfy signal-only rule. The brief's accommodations policy. |
+| Show **three** cards above the fold. Everything else sits below. | The kickoff's "ten seconds": *the few things that matter today, why, and the exact action.* Win on concept and design, not breadth. |
+| **Receipts are the content.** Every claim opens to its quote, file, author, and date. | Receipts-as-content: credibility comes from showing the evidence. It also covers the 15% "shows its sources" score. |
+| Tag cards with **talk first** whenever a person is the subject | Name the tasks that need a human decision. Kickoff: *"knows when to defer to people"* |
+| **Since last week**: what we flagged, and what actually happened | Score last week's warnings kept/broken against evidence in the newer files |
+| Show **constraints, never reasons** ("away Oct 28–Nov 1", not why) | Share the signal, not the private detail. The brief's accommodations policy. |
 | Use a golden file as the acceptance test; code does dates | "Done = observed" doctrine; kickoff: *"A demo that gets a due date wrong is over."* |
 
 ## Pipeline

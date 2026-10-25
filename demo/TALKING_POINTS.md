@@ -4,7 +4,7 @@ Condensed from Evan's script in `CONTEXT.md` and checked against the real boards
 Practice with the full script. On stage, each part opens with one bold line; say it first, then work through the bullets.
 Wording corrections are listed at the bottom.
 
-**Open on screen:** http://benderman:8790/runs/index.html (Ctrl+Shift+R to refresh). Add `#board` to the URL to skip setup.
+**Open on screen:** `runs/index.html`, served locally (Ctrl+Shift+R to refresh). Add `#board` to the URL to skip setup.
 **Backup:** open `runs/index.html` straight from disk; it needs no server or Wi-Fi.
 
 ---

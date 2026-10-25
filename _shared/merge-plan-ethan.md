@@ -29,8 +29,8 @@ Freeze 1:30 pm, demos 2:00 pm. Keep the setup wizard (Project → Week → Files
 - Milestone progress = elapsed share of the window from the previous milestone date to the next deadline (or from week-1 anchor).
 
 ## Verify before calling done
-Rebuild both runs (`uv run python receipts.py inputs/team4@2026-10-2X --from 04`), then in Playwright (served at
-http://benderman:8790/runs/index.html?v=N): wizard → build → tour (all steps resolve) → every sidebar section renders →
+Rebuild both runs (`uv run python receipts.py inputs/team4@2026-10-2X --from 04`), then in Playwright (served locally at
+`runs/index.html?v=N`): wizard → build → tour (all steps resolve) → every sidebar section renders →
 date dropdown switches runs → receipt drawer opens → no console errors. Commit + push to main.
 
 ## Other workstream
