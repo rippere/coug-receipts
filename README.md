@@ -4,7 +4,7 @@
 
 Receipts reads a student team's project folder (meeting notes, task list, course brief, availability sheet) and returns the three things that matter this week. Each comes with a person, a date, a reason, and a receipt: the exact quote, file, and line it came from.
 
-Built in one afternoon at the **Coug AI Build Challenge** (Oct 23, 2026).
+Built in one afternoon at the Coug AI Build Challenge (Oct 23, 2026).
 
 ![Week 9 board: three cards, each with an owner, a date, and receipts](docs/img/week9-board.png)
 
@@ -31,7 +31,7 @@ Four stages. Each writes a plain file that a person can open and fix before the 
 | 03 | **Reconcile**: detectors for lead-time squeezes, owners who are away, rubric gaps, sources that disagree, and more | code | `03_findings.json` |
 | 04 | **Brief**: ranks the findings, words the cards, and diffs against the previous run | code | `04_brief.json`, board HTML |
 
-The split is the point. **Code does every date and count.** The model only turns documents into quoted claims, and every quote is checked word for word against its source line. A claim that doesn't match is dropped and logged in `02_dropped.jsonl`.
+Code does every date and count. The model only turns documents into quoted claims, and every quote is checked word for word against its source line. A claim that doesn't match is dropped and logged in `02_dropped.jsonl`.
 
 Nothing about Team 4 is hard-coded. The roster comes from the documents, course rules come from the brief, and "today" comes from the input folder's name (`inputs/team4@2026-10-21`). The detectors are listed in [`_shared/detectors.md`](_shared/detectors.md).
 
@@ -41,7 +41,7 @@ A tool that names people can hurt people, so the rules in [`_shared/voice.md`](_
 
 - It shows constraints, never reasons: "away Oct 28 – Nov 1", never why.
 - It never ranks or scores people. The Fair share view says *"Counts aren't contribution."*
-- Cards about a person carry a **Talk as a team** tag. The board starts a conversation. It doesn't hand down verdicts.
+- Cards about a person carry a **Talk as a team** tag, so the team works it out together.
 - If a sentence has no receipt, it doesn't go on the board.
 - Extraction can run on a local model, so team notes never have to leave your machine.
 
@@ -79,7 +79,7 @@ To try your own project, copy its files into `inputs/<name>@<YYYY-MM-DD>/` and r
 ## Limits
 
 - It only knows what's written down. Group chat, email, and Figma are invisible to it.
-- Reading messy notes is imperfect, which is why claims are editable and confidence is always shown.
+- The model sometimes misreads messy notes, so claims are editable and confidence is always shown.
 - Matching "WCAG review" to "accessibility check" is a judgment call. Two rows in the Week 10 disagreements panel are matching errors.
 - It can open a conversation about workload. It can't tell how anyone feels.
 
